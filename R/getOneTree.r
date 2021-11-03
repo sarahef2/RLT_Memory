@@ -27,7 +27,7 @@ getOneTree<- function(x, tree = 1, ...)
                           "SplitValue" = x$FittedForest$SplitValue[[tree]],
                           "LeftNode" = x$FittedForest$LeftNode[[tree]] + 1,
                           "RightNode" = x$FittedForest$RightNode[[tree]] + 1,
-                          "NodeSize" = x$FittedForest$NodeSize[[tree]],
+                          #"NodeSize" = x$FittedForest$NodeSize[[tree]],
                           "NodeAve" = x$FittedForest$NodeAve[[tree]])
     
     # OneTree[OneTree$NodeType == 2, ] = NA
@@ -56,8 +56,9 @@ getOneTree<- function(x, tree = 1, ...)
                           "SplitVar" = newnames[x$FittedForest$SplitVar[[tree]] + 1],
                           "SplitValue" = x$FittedForest$SplitValue[[tree]],
                           "LeftNode" = x$FittedForest$LeftNode[[tree]] + 1,
-                          "RightNode" = x$FittedForest$RightNode[[tree]] + 1,
-                          "NodeSize" = x$FittedForest$NodeSize[[tree]])
+                          "RightNode" = x$FittedForest$RightNode[[tree]] + 1#,
+                          #"NodeSize" = x$FittedForest$NodeSize[[tree]]
+                          )
     
     OneTree[OneTree$NodeType == 3, c(2,3,4,5)] = NA
     

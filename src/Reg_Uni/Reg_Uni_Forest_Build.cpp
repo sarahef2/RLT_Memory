@@ -99,7 +99,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
                                  REG_FOREST.SplitValueList(nt),
                                  REG_FOREST.LeftNodeList(nt),
                                  REG_FOREST.RightNodeList(nt),
-                                 REG_FOREST.NodeSizeList(nt),
+                                 //REG_FOREST.NodeSizeList(nt),
                                  REG_FOREST.NodeAveList(nt));
       
       size_t TreeLength = 1 + size/nmin*3;

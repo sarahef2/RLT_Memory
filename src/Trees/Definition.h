@@ -199,19 +199,20 @@ public:
   arma::vec& SplitValue;
   arma::uvec& LeftNode;
   arma::uvec& RightNode;
-  arma::vec& NodeSize;
+  //arma::vec& NodeSize;
   
   Uni_Tree_Class(arma::uvec& NodeType,
                  arma::uvec& SplitVar,
                  arma::vec& SplitValue,
                  arma::uvec& LeftNode,
-                 arma::uvec& RightNode,
-                 arma::vec& NodeSize) : NodeType(NodeType),
+                 arma::uvec& RightNode//,
+                 //arma::vec& NodeSize
+                   ) : NodeType(NodeType),
                                         SplitVar(SplitVar),
                                         SplitValue(SplitValue),
                                         LeftNode(LeftNode),
-                                        RightNode(RightNode),
-                                        NodeSize(NodeSize) {}
+                                        RightNode(RightNode) {}//,
+                                        //NodeSize(NodeSize) {}
   
   // find the next left and right nodes 
   void find_next_nodes(size_t& NextLeft, size_t& NextRight)
@@ -244,7 +245,7 @@ public:
   arma::field<arma::vec>& SplitValueList;
   arma::field<arma::uvec>& LeftNodeList;
   arma::field<arma::uvec>& RightNodeList;
-  arma::field<arma::vec>& NodeSizeList;  
+  //arma::field<arma::vec>& NodeSizeList;  
   arma::field<arma::vec>& NodeAveList;
 
   Reg_Uni_Forest_Class(arma::field<arma::uvec>& NodeTypeList,
@@ -252,13 +253,13 @@ public:
                        arma::field<arma::vec>& SplitValueList,
                        arma::field<arma::uvec>& LeftNodeList,
                        arma::field<arma::uvec>& RightNodeList,
-                       arma::field<arma::vec>& NodeSizeList,
+                       //arma::field<arma::vec>& NodeSizeList,
                        arma::field<arma::vec>& NodeAveList) : NodeTypeList(NodeTypeList), 
                                                                SplitVarList(SplitVarList), 
                                                                SplitValueList(SplitValueList),
                                                                LeftNodeList(LeftNodeList),
                                                                RightNodeList(RightNodeList),
-                                                               NodeSizeList(NodeSizeList),
+                                                               //NodeSizeList(NodeSizeList),
                                                                NodeAveList(NodeAveList) {}
 };
 
@@ -271,13 +272,14 @@ public:
                      arma::vec& SplitValue,
                      arma::uvec& LeftNode,
                      arma::uvec& RightNode,
-                     arma::vec& NodeSize,
+                     //arma::vec& NodeSize,
                      arma::vec& NodeAve) : Uni_Tree_Class(NodeType, 
                                                           SplitVar,
                                                           SplitValue,
                                                           LeftNode, 
-                                                          RightNode,
-                                                          NodeSize),
+                                                          RightNode//,
+                                                          //NodeSize
+                                                            ),
                                            NodeAve(NodeAve) {}
   
   // initiate tree
@@ -293,7 +295,7 @@ public:
     SplitValue.zeros(TreeLength);
     LeftNode.zeros(TreeLength);
     RightNode.zeros(TreeLength);
-    NodeSize.zeros(TreeLength);    
+    //NodeSize.zeros(TreeLength);    
     NodeAve.zeros(TreeLength);
   }
   
@@ -305,7 +307,7 @@ public:
     SplitValue.resize(TreeLength);
     LeftNode.resize(TreeLength);
     RightNode.resize(TreeLength);
-    NodeSize.resize(TreeLength);    
+    //NodeSize.resize(TreeLength);    
     NodeAve.resize(TreeLength);
   }
   
@@ -331,8 +333,8 @@ public:
     RightNode.resize(NewLength);
     RightNode(span(OldLength, NewLength-1)).zeros();
     
-    NodeSize.resize(NewLength);
-    NodeSize(span(OldLength, NewLength-1)).zeros();    
+    //NodeSize.resize(NewLength);
+    //NodeSize(span(OldLength, NewLength-1)).zeros();    
     
     NodeAve.resize(NewLength);
     NodeAve(span(OldLength, NewLength-1)).zeros();
@@ -348,7 +350,7 @@ public:
   arma::field<arma::vec>& SplitValueList;
   arma::field<arma::uvec>& LeftNodeList;
   arma::field<arma::uvec>& RightNodeList;
-  arma::field<arma::vec>& NodeSizeList;  
+  //arma::field<arma::vec>& NodeSizeList;  
   arma::field<arma::field<arma::vec>>& NodeHazList;
   
   Surv_Uni_Forest_Class(arma::field<arma::uvec>& NodeTypeList,
@@ -356,13 +358,13 @@ public:
                         arma::field<arma::vec>& SplitValueList,
                         arma::field<arma::uvec>& LeftNodeList,
                         arma::field<arma::uvec>& RightNodeList,
-                        arma::field<arma::vec>& NodeSizeList,
+                        //arma::field<arma::vec>& NodeSizeList,
                         arma::field<arma::field<arma::vec>>& NodeHazList) : NodeTypeList(NodeTypeList), 
                                                                             SplitVarList(SplitVarList), 
                                                                             SplitValueList(SplitValueList),
                                                                             LeftNodeList(LeftNodeList),
                                                                             RightNodeList(RightNodeList),
-                                                                            NodeSizeList(NodeSizeList),
+                                                                            //NodeSizeList(NodeSizeList),
                                                                             NodeHazList(NodeHazList) {}
 };
 
@@ -376,13 +378,14 @@ public:
                       arma::vec& SplitValue,
                       arma::uvec& LeftNode,
                       arma::uvec& RightNode,
-                      arma::vec& NodeSize,
+                      //arma::vec& NodeSize,
                       arma::field<arma::vec>& NodeHaz) : Uni_Tree_Class(NodeType, 
                                                                         SplitVar,
                                                                         SplitValue,
                                                                         LeftNode, 
-                                                                        RightNode,
-                                                                        NodeSize),
+                                                                        RightNode//,
+                                                                        //NodeSize
+                                                                          ),
                                                          NodeHaz(NodeHaz) {}
   
   
@@ -399,7 +402,7 @@ public:
     SplitValue.zeros(TreeLength);
     LeftNode.zeros(TreeLength);
     RightNode.zeros(TreeLength);
-    NodeSize.zeros(TreeLength);    
+    //NodeSize.zeros(TreeLength);    
     NodeHaz.set_size(TreeLength);
   }
   
@@ -411,7 +414,7 @@ public:
     SplitValue.resize(TreeLength);
     LeftNode.resize(TreeLength);
     RightNode.resize(TreeLength);
-    NodeSize.resize(TreeLength);    
+    //NodeSize.resize(TreeLength);    
     field_vec_resize(NodeHaz, TreeLength);
   }
   
@@ -437,8 +440,8 @@ public:
     RightNode.resize(NewLength);
     RightNode(span(OldLength, NewLength-1)).zeros();
     
-    NodeSize.resize(NewLength);
-    NodeSize(span(OldLength, NewLength-1)).zeros();    
+    //NodeSize.resize(NewLength);
+    //NodeSize(span(OldLength, NewLength-1)).zeros();    
     
     field_vec_resize(NodeHaz, NewLength);
   }

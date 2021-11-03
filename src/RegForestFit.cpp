@@ -51,10 +51,11 @@ List RegForestUniFit(arma::mat& X,
   arma::field<arma::vec> SplitValue(ntrees);
   arma::field<arma::uvec> LeftNode(ntrees);
   arma::field<arma::uvec> RightNode(ntrees);
-  arma::field<arma::vec> NodeSize(ntrees);
+  //arma::field<arma::vec> NodeSize(ntrees);
   arma::field<arma::vec> NodeAve(ntrees);
 
-  Reg_Uni_Forest_Class REG_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, NodeAve);
+  Reg_Uni_Forest_Class REG_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
+                                  NodeAve);
   
   // other objects
 
@@ -96,7 +97,7 @@ List RegForestUniFit(arma::mat& X,
   Forest_R["SplitValue"] = SplitValue;
   Forest_R["LeftNode"] = LeftNode;
   Forest_R["RightNode"] = RightNode;
-  Forest_R["NodeSize"] = NodeSize;    
+  //Forest_R["NodeSize"] = NodeSize;    
   Forest_R["NodeAve"] = NodeAve;
   
   ReturnList["FittedForest"] = Forest_R;

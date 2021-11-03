@@ -17,7 +17,6 @@ List RegForestUniPred(arma::field<arma::uvec>& NodeType,
           					  arma::field<arma::vec>& SplitValue,
           					  arma::field<arma::uvec>& LeftNode,
           					  arma::field<arma::uvec>& RightNode,
-          					  arma::field<arma::vec>& NodeSize,
           					  arma::field<arma::vec>& NodeAve,
           					  arma::mat& X,
           					  arma::uvec& Ncat,
@@ -26,6 +25,7 @@ List RegForestUniPred(arma::field<arma::uvec>& NodeType,
           					  int usecores,
           					  int verbose)
 {
+  //arma::field<arma::vec>& NodeSize,
   DEBUG_Rcout << "/// THIS IS A DEBUG MODE OF RLT REGRESSION ///" << std::endl;
   DEBUG_Rcout << "Check cores" << std::endl;
   // check number of cores
@@ -33,7 +33,8 @@ List RegForestUniPred(arma::field<arma::uvec>& NodeType,
 
   // convert R object to forest
   
-  Reg_Uni_Forest_Class REG_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, NodeAve);
+  Reg_Uni_Forest_Class REG_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
+                                  NodeAve);
   
   mat PredAll;
   

@@ -110,7 +110,7 @@ void Surv_Uni_Split_A_Node(size_t Node,
     OneTree.LeftNode(Node) = NextLeft;
     OneTree.RightNode(Node) = NextRight;
     
-    OneTree.NodeSize(Node) = left_id.n_elem + obs_id.n_elem;
+    //OneTree.NodeSize(Node) = left_id.n_elem + obs_id.n_elem;
     
     DEBUG_Rcout << "  -- Surv_Split_A_Node goto Lef and Right " << std::endl;
 
@@ -153,7 +153,8 @@ void Surv_Uni_Terminate_Node(size_t Node,
 {
   
   OneTree.NodeType(Node) = 3; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
-  OneTree.NodeSize(Node) = obs_id.n_elem;
+  //OneTree.NodeSize(Node) = obs_id.n_elem;
+  OneTree.SplitValue(Node) = obs_id.n_elem;//New way for saving nodesize- no split value needed for terminal nodes, so we can save it here
   
   if (useobsweight)
   {

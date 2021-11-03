@@ -16,7 +16,6 @@ List SurvForestUniPred(arma::field<arma::uvec>& NodeType,
           					   arma::field<arma::vec>& SplitValue,
           					   arma::field<arma::uvec>& LeftNode,
           					   arma::field<arma::uvec>& RightNode,
-          					   arma::field<arma::vec>& NodeSize,
           					   arma::field<arma::field<arma::vec>>& NodeHaz,
           					   arma::mat& X,
           					   arma::uvec& Ncat,
@@ -26,12 +25,14 @@ List SurvForestUniPred(arma::field<arma::uvec>& NodeType,
           					   int usecores,
           					   int verbose)
 {
+  //arma::field<arma::vec>& NodeSize,
   DEBUG_Rcout << "/// THIS IS A DEBUG MODE OF RLT SURVIVAL PREDICTION///" << std::endl;
 
   // check number of cores
   usecores = checkCores(usecores, verbose);
   
-  Surv_Uni_Forest_Class SURV_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, NodeHaz);
+  Surv_Uni_Forest_Class SURV_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
+                                    NodeHaz);
 
   cube Pred;
   
