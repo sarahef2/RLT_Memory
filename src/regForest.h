@@ -7,7 +7,7 @@
 # include "RLT.h"
 # include "Trees//Trees.h"
 # include "Utility//Utility.h"
-# include "Trees//Reg_Definition.h"
+# include "Reg_Uni//Reg_Definition.h"
 
 using namespace Rcpp;
 using namespace arma;
