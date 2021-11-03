@@ -22,7 +22,7 @@ void Reg_Uni_Forest_Pred(mat& Pred,
 {
   
   size_t N = X.n_rows;
-  size_t ntrees = REG_FOREST.NodeTypeList.size();
+  size_t ntrees = REG_FOREST.SplitValueList.size();//NodeTypeList.size();
   
   Pred.zeros(N, treeindex.n_elem);
 

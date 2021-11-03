@@ -88,15 +88,17 @@ TERMINATENODE:
     size_t NextLeft = Node;
     size_t NextRight = Node;
     
-    OneTree.find_next_nodes(NextLeft, NextRight);
-    
-    DEBUG_Rcout << "  -- Next Left at " << NextLeft << std::endl;
-    DEBUG_Rcout << "  -- Next Right at " << NextRight << std::endl;
     
     // record tree 
     
     OneTree.SplitVar(Node) = OneSplit.var;
     OneTree.SplitValue(Node) = OneSplit.value;
+
+    OneTree.find_next_nodes(NextLeft, NextRight);
+    
+    DEBUG_Rcout << "  -- Current Node " << Node << " has split var "<<OneTree.SplitVar(Node) << std::endl;
+    DEBUG_Rcout << "  -- Next Left at " << NextLeft << " has split var "<<OneTree.SplitVar(NextLeft)  << std::endl;
+    DEBUG_Rcout << "  -- Next Right at " << NextRight << " has split var "<<OneTree.SplitVar(NextRight)  << std::endl;
     OneTree.LeftNode(Node) = NextLeft;
     OneTree.RightNode(Node) = NextRight;    
     
