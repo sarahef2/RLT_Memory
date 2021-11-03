@@ -1,8 +1,14 @@
 .Rproj.user
-.Rproj
+.Rbuildignore
+*.Rproj
 .Rhistory
 .RData
 .Ruserdata
 src/*.o
+src/Reg_Uni/*.o
+src/Surv_Uni/*.o
+src/Trees/*.o
+src/Utility/*.o
+src/Cla_Multi/*.o
 src/*.so
 src/*.dll

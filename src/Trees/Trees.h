@@ -89,25 +89,6 @@ bool cat_reduced_collapse(Cat_Class& a, Cat_Class& b);
 
 // bool cat_reduced_compare_score(Cat_Class& a, Cat_Class& b);
 
-void move_cat_index(size_t& lowindex, size_t& highindex, std::vector<Surv_Cat_Class>& cat_reduced, size_t true_cat, size_t nmin);
-void move_cat_index(size_t& lowindex, size_t& highindex, std::vector<Reg_Cat_Class>& cat_reduced, size_t true_cat, size_t nmin);
-
-double record_cat_split(std::vector<Surv_Cat_Class>& cat_reduced,
-                        size_t best_cat, 
-                        size_t true_cat,
-                        size_t ncat);
-
-double record_cat_split(std::vector<Reg_Cat_Class>& cat_reduced,
-                        size_t best_cat, 
-                        size_t true_cat,
-                        size_t ncat);
-
-double record_cat_split(size_t cat, 
-                        std::vector<Surv_Cat_Class>& cat_reduced);
-                        
-double record_cat_split(arma::uvec& goright_temp, 
-                        std::vector<Surv_Cat_Class>& cat_reduced);                        
-
 void goright_roller(arma::uvec& goright_cat);
 
 // other 

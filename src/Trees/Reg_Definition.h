@@ -16,143 +16,151 @@ using namespace arma;
 //  data class  //
 // ************ //
 
-// class RLT_REG_DATA{
-// public:
-//   arma::mat& X;
-//   arma::vec& Y;
-//   arma::uvec& Ncat;
-//   arma::vec& obsweight;
-//   arma::vec& varweight;
-//   
-//   RLT_REG_DATA(arma::mat& X, 
-//                arma::vec& Y,
-//                arma::uvec& Ncat,
-//                arma::vec& obsweight,
-//                arma::vec& varweight) : X(X), 
-//                Y(Y), 
-//                Ncat(Ncat), 
-//                obsweight(obsweight), 
-//                varweight(varweight) {}
-// };
+class RLT_REG_DATA{
+public:
+  arma::mat& X;
+  arma::vec& Y;
+  arma::uvec& Ncat;
+  arma::vec& obsweight;
+  arma::vec& varweight;
+  
+  RLT_REG_DATA(arma::mat& X, 
+               arma::vec& Y,
+               arma::uvec& Ncat,
+               arma::vec& obsweight,
+               arma::vec& varweight) : X(X), 
+               Y(Y), 
+               Ncat(Ncat), 
+               obsweight(obsweight), 
+               varweight(varweight) {}
+};
 
-// for regression 
+// forest class regression 
 
-// class Reg_Uni_Forest_Class{
-// public:
-//   arma::field<arma::uvec>& NodeTypeList;
-//   arma::field<arma::uvec>& SplitVarList;
-//   arma::field<arma::vec>& SplitValueList;
-//   arma::field<arma::uvec>& LeftNodeList;
-//   arma::field<arma::uvec>& RightNodeList;
-//   arma::field<arma::vec>& NodeSizeList;  
-//   arma::field<arma::vec>& NodeAveList;
-//   
-//   Reg_Uni_Forest_Class(arma::field<arma::uvec>& NodeTypeList,
-//                        arma::field<arma::uvec>& SplitVarList,
-//                        arma::field<arma::vec>& SplitValueList,
-//                        arma::field<arma::uvec>& LeftNodeList,
-//                        arma::field<arma::uvec>& RightNodeList,
-//                        arma::field<arma::vec>& NodeSizeList,
-//                        arma::field<arma::vec>& NodeAveList) : NodeTypeList(NodeTypeList), 
-//                        SplitVarList(SplitVarList), 
-//                        SplitValueList(SplitValueList),
-//                        LeftNodeList(LeftNodeList),
-//                        RightNodeList(RightNodeList),
-//                        NodeSizeList(NodeSizeList),
-//                        NodeAveList(NodeAveList) {}
-// };
-// 
-// class Reg_Uni_Tree_Class : public Uni_Tree_Class{
-// public:
-//   arma::vec& NodeAve;
-//   
-//   Reg_Uni_Tree_Class(arma::uvec& NodeType,
-//                      arma::uvec& SplitVar,
-//                      arma::vec& SplitValue,
-//                      arma::uvec& LeftNode,
-//                      arma::uvec& RightNode,
-//                      arma::vec& NodeSize,
-//                      arma::vec& NodeAve) : Uni_Tree_Class(NodeType, 
-//                      SplitVar,
-//                      SplitValue,
-//                      LeftNode, 
-//                      RightNode,
-//                      NodeSize),
-//                      NodeAve(NodeAve) {}
-//   
-//   // initiate tree
-//   void initiate(size_t TreeLength)
-//   {
-//     if (TreeLength == 0) TreeLength = 1;
-//     
-//     NodeType.zeros(TreeLength);
-//     
-//     SplitVar.set_size(TreeLength);
-//     SplitVar.fill(datum::nan);
-//     
-//     SplitValue.zeros(TreeLength);
-//     LeftNode.zeros(TreeLength);
-//     RightNode.zeros(TreeLength);
-//     NodeSize.zeros(TreeLength);    
-//     NodeAve.zeros(TreeLength);
-//   }
-//   
-//   // trim tree 
-//   void trim(size_t TreeLength)
-//   {
-//     NodeType.resize(TreeLength);
-//     SplitVar.resize(TreeLength);
-//     SplitValue.resize(TreeLength);
-//     LeftNode.resize(TreeLength);
-//     RightNode.resize(TreeLength);
-//     NodeSize.resize(TreeLength);    
-//     NodeAve.resize(TreeLength);
-//   }
-//   
-//   // extend tree 
-//   void extend()
-//   {
-//     // tree is not long enough, extend
-//     size_t OldLength = NodeType.n_elem;
-//     size_t NewLength = (OldLength*1.5 > OldLength + 100)? (size_t) (OldLength*1.5):(OldLength + 100);
-//     
-//     NodeType.resize(NewLength);
-//     NodeType(span(OldLength, NewLength-1)).zeros();
-//     
-//     SplitVar.resize(NewLength);
-//     SplitVar(span(OldLength, NewLength-1)).fill(datum::nan);
-//     
-//     SplitValue.resize(NewLength);
-//     SplitValue(span(OldLength, NewLength-1)).zeros();
-//     
-//     LeftNode.resize(NewLength);
-//     LeftNode(span(OldLength, NewLength-1)).zeros();
-//     
-//     RightNode.resize(NewLength);
-//     RightNode(span(OldLength, NewLength-1)).zeros();
-//     
-//     NodeSize.resize(NewLength);
-//     NodeSize(span(OldLength, NewLength-1)).zeros();    
-//     
-//     NodeAve.resize(NewLength);
-//     NodeAve(span(OldLength, NewLength-1)).zeros();
-//   }
-// };
-// 
-// 
-// class Reg_Cat_Class: public Cat_Class{
-// public:
-//   double y = 0;
-//   
-//   void calculate_score()
-//   {
-//     if (weight > 0)
-//       score = y / weight;
-//   }
-//   
-//   void print(void) {
-//     Rcout << "Category is " << cat << " count is " << count << " weight is " << weight << " y sum is " << y << " score is " << score << std::endl;
-//   }
-// };
+class Reg_Uni_Forest_Class{
+public:
+  arma::field<arma::uvec>& NodeTypeList;
+  arma::field<arma::uvec>& SplitVarList;
+  arma::field<arma::vec>& SplitValueList;
+  arma::field<arma::uvec>& LeftNodeList;
+  arma::field<arma::uvec>& RightNodeList;
+  //arma::field<arma::vec>& NodeSizeList;  
+  arma::field<arma::vec>& NodeAveList;
+  
+  Reg_Uni_Forest_Class(arma::field<arma::uvec>& NodeTypeList,
+                       arma::field<arma::uvec>& SplitVarList,
+                       arma::field<arma::vec>& SplitValueList,
+                       arma::field<arma::uvec>& LeftNodeList,
+                       arma::field<arma::uvec>& RightNodeList,
+                       //arma::field<arma::vec>& NodeSizeList,
+                       arma::field<arma::vec>& NodeAveList) : NodeTypeList(NodeTypeList), 
+                       SplitVarList(SplitVarList), 
+                       SplitValueList(SplitValueList),
+                       LeftNodeList(LeftNodeList),
+                       RightNodeList(RightNodeList),
+                       //NodeSizeList(NodeSizeList),
+                       NodeAveList(NodeAveList) {}
+};
 
+class Reg_Uni_Tree_Class : public Uni_Tree_Class{
+public:
+  arma::vec& NodeAve;
+
+  Reg_Uni_Tree_Class(arma::uvec& NodeType,
+                     arma::uvec& SplitVar,
+                     arma::vec& SplitValue,
+                     arma::uvec& LeftNode,
+                     arma::uvec& RightNode,
+                     //arma::vec& NodeSize,
+                     arma::vec& NodeAve) : Uni_Tree_Class(NodeType,
+                     SplitVar,
+                     SplitValue,
+                     LeftNode,
+                     RightNode),
+                     //NodeSize),
+                     NodeAve(NodeAve) {}
+
+  // initiate tree
+  void initiate(size_t TreeLength)
+  {
+    if (TreeLength == 0) TreeLength = 1;
+
+    NodeType.zeros(TreeLength);
+
+    SplitVar.set_size(TreeLength);
+    SplitVar.fill(datum::nan);
+
+    SplitValue.zeros(TreeLength);
+    LeftNode.zeros(TreeLength);
+    RightNode.zeros(TreeLength);
+    //NodeSize.zeros(TreeLength);
+    NodeAve.zeros(TreeLength);
+  }
+
+  // trim tree
+  void trim(size_t TreeLength)
+  {
+    NodeType.resize(TreeLength);
+    SplitVar.resize(TreeLength);
+    SplitValue.resize(TreeLength);
+    LeftNode.resize(TreeLength);
+    RightNode.resize(TreeLength);
+    //NodeSize.resize(TreeLength);
+    NodeAve.resize(TreeLength);
+  }
+
+  // extend tree
+  void extend()
+  {
+    // tree is not long enough, extend
+    size_t OldLength = NodeType.n_elem;
+    size_t NewLength = (OldLength*1.5 > OldLength + 100)? (size_t) (OldLength*1.5):(OldLength + 100);
+
+    NodeType.resize(NewLength);
+    NodeType(span(OldLength, NewLength-1)).zeros();
+
+    SplitVar.resize(NewLength);
+    SplitVar(span(OldLength, NewLength-1)).fill(datum::nan);
+
+    SplitValue.resize(NewLength);
+    SplitValue(span(OldLength, NewLength-1)).zeros();
+
+    LeftNode.resize(NewLength);
+    LeftNode(span(OldLength, NewLength-1)).zeros();
+
+    RightNode.resize(NewLength);
+    RightNode(span(OldLength, NewLength-1)).zeros();
+
+    //NodeSize.resize(NewLength);
+    //NodeSize(span(OldLength, NewLength-1)).zeros();
+
+    NodeAve.resize(NewLength);
+    NodeAve(span(OldLength, NewLength-1)).zeros();
+  }
+};
+
+
+class Reg_Cat_Class: public Cat_Class{
+public:
+  double y = 0;
+
+  void calculate_score()
+  {
+    if (weight > 0)
+      score = y / weight;
+  }
+
+  void print(void) {
+    Rcout << "Category is " << cat << " count is " << count << " weight is " << weight << " y sum is " << y << " score is " << score << std::endl;
+  }
+};
+
+//Move categorical index
+void move_cat_index(size_t& lowindex, size_t& highindex, std::vector<Reg_Cat_Class>& cat_reduced, size_t true_cat, size_t nmin);
+
+//Record category
+double record_cat_split(std::vector<Reg_Cat_Class>& cat_reduced,
+                        size_t best_cat, 
+                        size_t true_cat,
+                        size_t ncat);
 #endif
