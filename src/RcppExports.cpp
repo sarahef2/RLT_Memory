@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // ClaForestMultiFit
 List ClaForestMultiFit(arma::mat& X, arma::uvec& Y, arma::uvec& Ncat, List& param, List& RLTparam, arma::vec& obsweight, arma::vec& varweight, int usecores, int verbose, arma::umat& ObsTrack);
 RcppExport SEXP _RLT_ClaForestMultiFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP paramSEXP, SEXP RLTparamSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP usecoresSEXP, SEXP verboseSEXP, SEXP ObsTrackSEXP) {
@@ -38,6 +43,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
     Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
     rcpp_result_gen = Rcpp::wrap(EofVar(ObsTrack, Pred, C, usecores, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// EofVar_S
+List EofVar_S(arma::umat& ObsTrack, arma::cube& Pred, arma::cube& Pred_TV, arma::uvec& C, int usecores, int verbose);
+RcppExport SEXP _RLT_EofVar_S(SEXP ObsTrackSEXP, SEXP PredSEXP, SEXP Pred_TVSEXP, SEXP CSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type Pred(PredSEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type Pred_TV(Pred_TVSEXP);
+    Rcpp::traits::input_parameter< arma::uvec& >::type C(CSEXP);
+    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
+    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(EofVar_S(ObsTrack, Pred, Pred_TV, C, usecores, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -208,6 +229,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_RLT_ClaForestMultiFit", (DL_FUNC) &_RLT_ClaForestMultiFit, 10},
     {"_RLT_EofVar", (DL_FUNC) &_RLT_EofVar, 5},
+    {"_RLT_EofVar_S", (DL_FUNC) &_RLT_EofVar_S, 6},
     {"_RLT_ForestKernelUni_Self", (DL_FUNC) &_RLT_ForestKernelUni_Self, 10},
     {"_RLT_ForestKernelUni_Cross", (DL_FUNC) &_RLT_ForestKernelUni_Cross, 12},
     {"_RLT_RegForestUniFit", (DL_FUNC) &_RLT_RegForestUniFit, 10},

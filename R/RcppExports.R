@@ -9,6 +9,10 @@ EofVar <- function(ObsTrack, Pred, C, usecores, verbose) {
     .Call(`_RLT_EofVar`, ObsTrack, Pred, C, usecores, verbose)
 }
 
+EofVar_S <- function(ObsTrack, Pred, Pred_TV, C, usecores, verbose) {
+    .Call(`_RLT_EofVar_S`, ObsTrack, Pred, Pred_TV, C, usecores, verbose)
+}
+
 ForestKernelUni_Self <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, X, Ncat, usecores, verbose) {
     .Call(`_RLT_ForestKernelUni_Self`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, X, Ncat, usecores, verbose)
 }

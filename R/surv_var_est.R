@@ -59,7 +59,7 @@
 #' 
 #' Prediction and variance estimation
 
-rlt_var_est <- function(x, y, testx,
+surv_var_est <- function(x, y, censor, testx,
               			    ntrees = if (reinforcement) 100 else 500,
               			    mtry = max(1, as.integer(ncol(x)/3)),
               			    nmin = max(1, as.integer(log(nrow(x)))),
@@ -69,44 +69,88 @@ rlt_var_est <- function(x, y, testx,
               			    nsplit = 1,
               			    seed = NaN,
               			    ncores = 1,
+              			    type = "haz",
               			    verbose = 0,
+              			    importance = FALSE,
               			    ...)
 {
     if (!is.matrix(testx) & !is.data.frame(testx)) stop("testx must be a matrix or a data.frame")
     if (any(is.na(testx))) stop("NA not permitted in testx")
   
-    RLT.fit = RLT(x, y, ntrees = ntrees*10, mtry = mtry, nmin = nmin, alpha = alpha,
-                  split.gen = split.gen, replacement = TRUE, resample.prob = k/n, 
-                  ncores = ncores)
+    # Look to switching to cumulative hazard or survival
+  
+    #Need to pre-specify observation track- make sure it is split nrow(X)/2 or smaller
+    #Obstrack
+    n <- dim(x)[1]
+    tree_track1 <- vapply(1:(ntrees/2), 
+                          function(i) sample(c(rep(1,k), rep(0,n-k)), n,
+                                             replace = FALSE),
+                          FUN.VALUE = numeric(n))
+    tree_track2 <- 1-tree_track1
+    tree_obtrack <- cbind(tree_track1, tree_track2)
+    RLT.fit = RLT(x, y, censor, ntrees = ntrees, mtry = mtry, 
+                nmin = nmin, alpha = alpha, nsplit = nsplit,
+                split.gen = split.gen, #replacement = TRUE, 
+                #resample.prob = k/n, 
+                importance = importance, 
+                  ncores = ncores,
+                ObsTrack = tree_obtrack, track.obs = TRUE)
     
-    RLT.pred = predict(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
+    RLT.pred = predict.RLT(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
     
-    tree.var = apply(RLT.pred$PredictionAll, 1, var)
+    # Moved to C++
+    # tree.var = apply(RLT.pred$Allhazard[1,,], 2, var)
     
     # count how many pairs of trees match C
     
-    RLT.fit = RLT(x, y, ntrees = ntrees, mtry = mtry, nmin = nmin, alpha = alpha,
-                  split.gen = "best", replacement = FALSE, resample.prob = k/n,
-                  ncores = ncores, track.obs = TRUE)
+    # RLT.fit = RLT(x, y, censor, ntrees = ntrees, mtry = mtry, nmin = nmin, 
+    #               alpha = alpha, nsplit = nsplit,
+    #               split.gen = split.gen, replacement = FALSE, 
+    #               resample.prob = k/n,
+    #               ncores = ncores, track.obs = TRUE)
+    # 
+    # RLT.pred = predict.RLT(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
+    # Do the variance by time point and plot as a wiggly curve around hazard curve
+    # Test with Cox P=5, 5 timepoints, get pointwise CI, plot the truth versus predicted
     
-    RLT.pred = predict(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
+    #C_min = qhyper(0.01, k, n - k, k)
+    #C_max = qhyper(0.99, k, n - k, k)
     
-    #Calculate for the C's that account for 98% of the prob
-    C_min = qhyper(0.01, k, n - k, k)
-    C_max = qhyper(0.99, k, n - k, k)
-    
-    #All C's in the range
-    C = seq(C_min, C_max)
+    #C = seq(C_min, C_max)
+    C = seq(0, k-1);
     storage.mode(C) <- "integer"
     
-    two.sample.var = EofVar(RLT.fit$ObsTrack, RLT.pred$PredictionAll, C, ncores, verbose)
+    if(type=="haz"){
+      pred <- RLT.pred$Allhazard
+      #pred_tv <- RLT.pred_tv$Allhazard
+    }else if(type=="cumhaz"){
+      pred <- RLT.pred$Allhazard
+      #pred_tv <- RLT.pred_tv$Allhazard
+      for(i in 1:dim(pred)[3]){
+        pred[,,i] <- apply(pred[,,i], 2, cumsum)
+        #pred_tv[,,i] <- apply(pred_tv[,,i], 2, cumsum)
+      }
+    }else{
+      pred <- RLT.pred$Allhazard
+      #pred_tv <- RLT.pred_tv$Allhazard
+      for(i in 1:dim(pred)[3]){
+        pred[,,i] <- exp(-apply(pred[,,i], 2, cumsum))
+        #pred_tv[,,i] <- exp(-apply(pred_tv[,,i], 2, cumsum))
+      }
+    }
+
+    two.sample.var = EofVar_S(RLT.fit$ObsTrack, pred, 
+                            pred, 
+                            C, ncores, verbose)
     
     
-    return(list("pred" = RLT.pred$Prediction,
-                "tree.var" = tree.var,
+    return(list("pred" = RLT.pred,
+                "tree.var" = two.sample.var$tree.var,
+                "tree.cov" = two.sample.var$tree.cov,
                 "allc" = two.sample.var$allcounts,
                 "estimation" = two.sample.var$estimation,
-                #Vtree-estimate of tildeSigma
-                "var" = tree.var - rowSums(sweep(two.sample.var$estimation, 2, two.sample.var$allc, FUN = "*"))/sum(two.sample.var$allc)))
+                "cov.estimation" = two.sample.var$cov.estimation,
+                "var" = two.sample.var$var,
+                "cov" = two.sample.var$cov))
 
 }

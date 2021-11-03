@@ -26,6 +26,8 @@ List RegForestUniPred(arma::field<arma::uvec>& NodeType,
           					  int usecores,
           					  int verbose)
 {
+  DEBUG_Rcout << "/// THIS IS A DEBUG MODE OF RLT REGRESSION ///" << std::endl;
+  DEBUG_Rcout << "Check cores" << std::endl;
   // check number of cores
   usecores = checkCores(usecores, verbose);
 
@@ -35,6 +37,7 @@ List RegForestUniPred(arma::field<arma::uvec>& NodeType,
   
   mat PredAll;
   
+  DEBUG_Rcout << "Start prediction" << std::endl;
   Reg_Uni_Forest_Pred(PredAll,
                       (const Reg_Uni_Forest_Class&) REG_FOREST,
           					  X,
