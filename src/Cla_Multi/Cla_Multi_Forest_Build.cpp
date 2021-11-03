@@ -6,7 +6,7 @@
 // my header file
 # include "../RLT.h"
 # include "../Trees//Trees.h"
-# include "../Trees//Reg_Definition.h"
+# include "../Reg_Uni//Reg_Definition.h"
 # include "../Utility/Utility.h"
 # include "../claForest.h"
 

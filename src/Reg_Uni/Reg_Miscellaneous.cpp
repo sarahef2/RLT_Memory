@@ -7,7 +7,7 @@
 // my header file
 # include "../RLT.h"
 # include "../Utility/Utility.h"
-# include "Trees.h"
+# include "../Trees/Trees.h"
 # include "Reg_Definition.h"
 
 using namespace Rcpp;

@@ -197,4 +197,14 @@ double record_cat_split(arma::uvec& goright_temp,
                         std::vector<Surv_Cat_Class>& cat_reduced);                        
 
 
+// other 
+
+double cindex_d(arma::vec& Y,
+                arma::uvec& Censor,
+                arma::vec& pred);
+
+double cindex_i(arma::uvec& Y,
+                arma::uvec& Censor,
+                arma::vec& pred);
+
 #endif

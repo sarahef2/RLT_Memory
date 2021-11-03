@@ -91,16 +91,6 @@ bool cat_reduced_collapse(Cat_Class& a, Cat_Class& b);
 
 void goright_roller(arma::uvec& goright_cat);
 
-// other 
-
-double cindex_d(arma::vec& Y,
-              arma::uvec& Censor,
-              arma::vec& pred);
-
-double cindex_i(arma::uvec& Y,
-              arma::uvec& Censor,
-              arma::vec& pred);
-
 #endif
 
 
