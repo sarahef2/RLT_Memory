@@ -51,7 +51,7 @@ public:
 class Surv_Uni_Forest_Class{
 public:
   arma::field<arma::uvec>& NodeTypeList;
-  arma::field<arma::uvec>& SplitVarList;
+  arma::field<arma::ivec>& SplitVarList;
   arma::field<arma::vec>& SplitValueList;
   arma::field<arma::uvec>& LeftNodeList;
   arma::field<arma::uvec>& RightNodeList;
@@ -59,7 +59,7 @@ public:
   arma::field<arma::field<arma::vec>>& NodeHazList;
   
   Surv_Uni_Forest_Class(arma::field<arma::uvec>& NodeTypeList,
-                        arma::field<arma::uvec>& SplitVarList,
+                        arma::field<arma::ivec>& SplitVarList,
                         arma::field<arma::vec>& SplitValueList,
                         arma::field<arma::uvec>& LeftNodeList,
                         arma::field<arma::uvec>& RightNodeList,
@@ -80,7 +80,7 @@ public:
   arma::field<arma::vec>& NodeHaz;
   
   Surv_Uni_Tree_Class(arma::uvec& NodeType,
-                      arma::uvec& SplitVar,
+                      arma::ivec& SplitVar,
                       arma::vec& SplitValue,
                       arma::uvec& LeftNode,
                       arma::uvec& RightNode,

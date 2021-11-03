@@ -75,7 +75,7 @@ TERMINATENODE:
     // check if the current tree is long enough to store two more nodes
     // if not, extend the current tree
     
-    if ( OneTree.NodeType( OneTree.NodeType.size() - 2) > 0 )
+    if ( OneTree.SplitVar( OneTree.SplitVar.size() - 2) >= 0 )
     {
       DEBUG_Rcout << "  ------------- extend tree length: this shouldn't happen ----------- " << std::endl;
       
@@ -84,7 +84,7 @@ TERMINATENODE:
     }
 
     // find the locations of next left and right nodes     
-    OneTree.NodeType(Node) = 2; // 0: unused, 1: reserved; 2: internal node; 3: terminal node	
+    //OneTree.NodeType(Node) = 2; // 0: unused, 1: reserved; 2: internal node; 3: terminal node	
     size_t NextLeft = Node;
     size_t NextRight = Node;
     
@@ -135,8 +135,8 @@ void Reg_Uni_Terminate_Node(size_t Node,
                             bool useobsweight)
 {
   
-  OneTree.SplitVar(Node) = 0; //0 says this node is a terminal node
-  OneTree.NodeType(Node) = 3; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
+  OneTree.SplitVar(Node) = -1; //-1 says this node is a terminal node. Ow, it would be the variable num
+  //OneTree.NodeType(Node) = 3; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
   //OneTree.NodeSize(Node) = obs_id.n_elem;
   OneTree.SplitValue(Node) = obs_id.n_elem;//New way for saving nodesize- no split value needed for terminal nodes, so we can save it here
   

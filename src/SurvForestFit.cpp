@@ -51,7 +51,7 @@ List SurvForestUniFit(arma::mat& X,
   
   // initiate forest
   arma::field<arma::uvec> NodeType(ntrees);
-  arma::field<arma::uvec> SplitVar(ntrees);
+  arma::field<arma::ivec> SplitVar(ntrees);
   arma::field<arma::vec> SplitValue(ntrees);
   arma::field<arma::uvec> LeftNode(ntrees);
   arma::field<arma::uvec> RightNode(ntrees);

@@ -63,13 +63,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // ForestKernelUni_Self
-List ForestKernelUni_Self(arma::field<arma::uvec>& NodeType, arma::field<arma::uvec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X, arma::uvec& Ncat, int usecores, int verbose);
+List ForestKernelUni_Self(arma::field<arma::uvec>& NodeType, arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X, arma::uvec& Ncat, int usecores, int verbose);
 RcppExport SEXP _RLT_ForestKernelUni_Self(SEXP NodeTypeSEXP, SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type NodeType(NodeTypeSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type SplitVar(SplitVarSEXP);
+    Rcpp::traits::input_parameter< arma::field<arma::ivec>& >::type SplitVar(SplitVarSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::vec>& >::type SplitValue(SplitValueSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type LeftNode(LeftNodeSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type RightNode(RightNodeSEXP);
@@ -123,13 +123,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // RegForestUniPred
-List RegForestUniPred(arma::field<arma::uvec>& NodeType, arma::field<arma::uvec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::vec>& NodeAve, arma::mat& X, arma::uvec& Ncat, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
+List RegForestUniPred(arma::field<arma::uvec>& NodeType, arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::vec>& NodeAve, arma::mat& X, arma::uvec& Ncat, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
 RcppExport SEXP _RLT_RegForestUniPred(SEXP NodeTypeSEXP, SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeAveSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP treeindexSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type NodeType(NodeTypeSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type SplitVar(SplitVarSEXP);
+    Rcpp::traits::input_parameter< arma::field<arma::ivec>& >::type SplitVar(SplitVarSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::vec>& >::type SplitValue(SplitValueSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type LeftNode(LeftNodeSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type RightNode(RightNodeSEXP);
@@ -166,13 +166,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // SurvForestUniPred
-List SurvForestUniPred(arma::field<arma::uvec>& NodeType, arma::field<arma::uvec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::field<arma::vec>>& NodeHaz, arma::mat& X, arma::uvec& Ncat, size_t NFail, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
+List SurvForestUniPred(arma::field<arma::uvec>& NodeType, arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::field<arma::vec>>& NodeHaz, arma::mat& X, arma::uvec& Ncat, size_t NFail, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
 RcppExport SEXP _RLT_SurvForestUniPred(SEXP NodeTypeSEXP, SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeHazSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP NFailSEXP, SEXP treeindexSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type NodeType(NodeTypeSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type SplitVar(SplitVarSEXP);
+    Rcpp::traits::input_parameter< arma::field<arma::ivec>& >::type SplitVar(SplitVarSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::vec>& >::type SplitValue(SplitValueSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type LeftNode(LeftNodeSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type RightNode(RightNodeSEXP);

@@ -13,7 +13,7 @@ using namespace arma;
 
 // [[Rcpp::export()]]
 List ForestKernelUni_Self(arma::field<arma::uvec>& NodeType,
-                					 arma::field<arma::uvec>& SplitVar,
+                					 arma::field<arma::ivec>& SplitVar,
                 					 arma::field<arma::vec>& SplitValue,
                 					 arma::field<arma::uvec>& LeftNode,
                 					 arma::field<arma::uvec>& RightNode,
@@ -27,7 +27,7 @@ List ForestKernelUni_Self(arma::field<arma::uvec>& NodeType,
   Rcout << "/// RLT Kernel Function Self ///" << std::endl;
   
   size_t N = X.n_rows;
-  size_t ntrees = NodeType.n_elem; 
+  size_t ntrees = SplitVar.n_elem; 
   
   // check number of cores
   usecores = checkCores(usecores, verbose);

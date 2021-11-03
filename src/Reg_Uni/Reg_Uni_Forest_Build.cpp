@@ -107,7 +107,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       OneTree.initiate(TreeLength);
 
       // start to fit a tree
-      OneTree.NodeType(0) = 1; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
+      //OneTree.NodeType(0) = 1; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
       
       Reg_Uni_Split_A_Node(0, OneTree, REG_DATA, 
                            Param, Param_RLT,
@@ -148,7 +148,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       
       if (importance > 0 and oobagObs.n_elem > 1)
       {
-        uvec AllVar = unique( OneTree.SplitVar( find( OneTree.NodeType == 2 ) ) );
+        uvec AllVar = conv_to<uvec>::from(unique( OneTree.SplitVar( find( OneTree.SplitVar >= 0 ) ) ));
         
         size_t NTest = oobagObs.n_elem;
         

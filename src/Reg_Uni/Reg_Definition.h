@@ -40,7 +40,7 @@ public:
 class Reg_Uni_Forest_Class{
 public:
   arma::field<arma::uvec>& NodeTypeList;
-  arma::field<arma::uvec>& SplitVarList;
+  arma::field<arma::ivec>& SplitVarList;
   arma::field<arma::vec>& SplitValueList;
   arma::field<arma::uvec>& LeftNodeList;
   arma::field<arma::uvec>& RightNodeList;
@@ -48,7 +48,7 @@ public:
   arma::field<arma::vec>& NodeAveList;
   
   Reg_Uni_Forest_Class(arma::field<arma::uvec>& NodeTypeList,
-                       arma::field<arma::uvec>& SplitVarList,
+                       arma::field<arma::ivec>& SplitVarList,
                        arma::field<arma::vec>& SplitValueList,
                        arma::field<arma::uvec>& LeftNodeList,
                        arma::field<arma::uvec>& RightNodeList,
@@ -67,7 +67,7 @@ public:
   arma::vec& NodeAve;
 
   Reg_Uni_Tree_Class(arma::uvec& NodeType,
-                     arma::uvec& SplitVar,
+                     arma::ivec& SplitVar,
                      arma::vec& SplitValue,
                      arma::uvec& LeftNode,
                      arma::uvec& RightNode,
@@ -85,10 +85,10 @@ public:
   {
     if (TreeLength == 0) TreeLength = 1;
 
-    NodeType.zeros(TreeLength);
+    //NodeType.zeros(TreeLength);
 
     SplitVar.set_size(TreeLength);
-    SplitVar.fill(datum::nan);
+    SplitVar.fill(-2);//.fill(datum::nan);
 
     SplitValue.zeros(TreeLength);
     LeftNode.zeros(TreeLength);
@@ -100,7 +100,7 @@ public:
   // trim tree
   void trim(size_t TreeLength)
   {
-    NodeType.resize(TreeLength);
+    //NodeType.resize(TreeLength);
     SplitVar.resize(TreeLength);
     SplitValue.resize(TreeLength);
     LeftNode.resize(TreeLength);
@@ -113,11 +113,11 @@ public:
   void extend()
   {
     // tree is not long enough, extend
-    size_t OldLength = NodeType.n_elem;
+    size_t OldLength = SplitVar.n_elem;
     size_t NewLength = (OldLength*1.5 > OldLength + 100)? (size_t) (OldLength*1.5):(OldLength + 100);
 
-    NodeType.resize(NewLength);
-    NodeType(span(OldLength, NewLength-1)).zeros();
+    //NodeType.resize(NewLength);
+    //NodeType(span(OldLength, NewLength-1)).zeros();
 
     SplitVar.resize(NewLength);
     SplitVar(span(OldLength, NewLength-1)).fill(datum::nan);

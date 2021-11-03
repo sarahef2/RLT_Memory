@@ -167,7 +167,7 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
       
       if (importance > 0 and oobagObs.n_elem > 1)
       {
-        uvec AllVar = unique( OneTree.SplitVar( find( OneTree.NodeType == 2 ) ) );
+        uvec AllVar = conv_to<uvec>::from(unique( OneTree.SplitVar( find( OneTree.NodeType == 2 ) ) ));
         
         size_t NTest = oobagObs.n_elem;
         

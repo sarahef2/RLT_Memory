@@ -40,7 +40,7 @@ void Uni_Find_Terminal_Node_ShuffleJ(size_t Node,
                                      const size_t j);
 
 List ForestKernelUni(arma::field<arma::uvec>& NodeType,
-                     arma::field<arma::uvec>& SplitVar,
+                     arma::field<arma::ivec>& SplitVar,
                      arma::field<arma::vec>& SplitValue,
                      arma::field<arma::uvec>& LeftNode,
                      arma::field<arma::uvec>& RightNode,

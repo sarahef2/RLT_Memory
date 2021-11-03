@@ -13,7 +13,7 @@ using namespace arma;
 
 // [[Rcpp::export()]]
 List RegForestUniPred(arma::field<arma::uvec>& NodeType,
-          					  arma::field<arma::uvec>& SplitVar,
+          					  arma::field<arma::ivec>& SplitVar,
           					  arma::field<arma::vec>& SplitValue,
           					  arma::field<arma::uvec>& LeftNode,
           					  arma::field<arma::uvec>& RightNode,

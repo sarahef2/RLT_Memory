@@ -145,14 +145,14 @@ void field_vec_resize(arma::field<arma::uvec>& A, size_t size);
 class Uni_Tree_Class{ // univariate split trees
 public:
   arma::uvec& NodeType;
-  arma::uvec& SplitVar;
+  arma::ivec& SplitVar;
   arma::vec& SplitValue;
   arma::uvec& LeftNode;
   arma::uvec& RightNode;
   //arma::vec& NodeSize;
   
   Uni_Tree_Class(arma::uvec& NodeType,
-                 arma::uvec& SplitVar,
+                 arma::ivec& SplitVar,
                  arma::vec& SplitValue,
                  arma::uvec& LeftNode,
                  arma::uvec& RightNode//,
@@ -167,21 +167,21 @@ public:
   // find the next left and right nodes 
   void find_next_nodes(size_t& NextLeft, size_t& NextRight)
   {
-    while( NodeType(NextLeft) ) NextLeft++;
-    NodeType(NextLeft) = 1;  
+    while( SplitVar(NextLeft)!=-2 ) NextLeft++;
+    SplitVar(NextLeft) = -3;  
     
     NextRight = NextLeft;
-    while( NodeType(NextRight) ) NextRight++;
+    while( SplitVar(NextRight)!=-2 ) NextRight++;
     
-    // 0: unused, 1: reserved; 2: internal node; 3: terminal node
-    NodeType(NextRight) = 1;
+    // -2: unused, -3: reserved; Else: internal node; -1: terminal node
+    SplitVar(NextRight) = -3;
   }
   
   // get tree length
   size_t get_tree_length() {
     size_t i = 0;
-    while (i < NodeType.n_elem and NodeType(i) != 0) i++;
-    return( (i < NodeType.n_elem) ? i:NodeType.n_elem );
+    while (i < SplitVar.n_elem and SplitVar(i) != -2) i++;
+    return( (i < SplitVar.n_elem) ? i:SplitVar.n_elem );
   }
 };
 

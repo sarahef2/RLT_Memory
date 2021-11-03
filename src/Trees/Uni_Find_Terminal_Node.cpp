@@ -24,7 +24,8 @@ void Uni_Find_Terminal_Node(size_t Node,
   
   DEBUG_Rcout << "/// Start at node ///" << Node << " n is " << size << std::endl;
   
-  if (OneTree.NodeType[Node] == 3)
+  //if (OneTree.NodeType[Node] == 3)
+  if (OneTree.SplitVar[Node] == -1)
   {
     for ( size_t i=0; i < size; i++ )
       TermNode(proxy_id(i)) = Node;
@@ -100,7 +101,8 @@ void Uni_Find_Terminal_Node_ShuffleJ(size_t Node,
     
     DEBUG_Rcout << "/// Start at node ///" << Node << " n is " << size << std::endl;
     
-    if (OneTree.NodeType[Node] == 3)
+    //if (OneTree.NodeType[Node] == 3)
+    if (OneTree.SplitVar[Node] == -1)
     {
         for ( size_t i=0; i < size; i++ )
             TermNode(proxy_id(i)) = Node;
