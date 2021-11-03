@@ -100,7 +100,7 @@ TERMINATENODE:
     OneTree.LeftNode(Node) = NextLeft;
     OneTree.RightNode(Node) = NextRight;    
     
-    OneTree.NodeSize(Node) = left_id.n_elem + obs_id.n_elem;
+    //OneTree.NodeSize(Node) = left_id.n_elem + obs_id.n_elem;
     
     // split the left and right nodes 
 
@@ -135,8 +135,10 @@ void Reg_Uni_Terminate_Node(size_t Node,
                             bool useobsweight)
 {
   
+  OneTree.SplitVar(Node) = 0; //0 says this node is a terminal node
   OneTree.NodeType(Node) = 3; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
-  OneTree.NodeSize(Node) = obs_id.n_elem;
+  //OneTree.NodeSize(Node) = obs_id.n_elem;
+  OneTree.SplitValue(Node) = obs_id.n_elem;//New way for saving nodesize- no split value needed for terminal nodes, so we can save it here
   
   if (useobsweight)
   {

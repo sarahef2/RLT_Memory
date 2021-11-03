@@ -111,7 +111,7 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
                                   SURV_FOREST.SplitValueList(nt),
                                   SURV_FOREST.LeftNodeList(nt),
                                   SURV_FOREST.RightNodeList(nt),
-                                  SURV_FOREST.NodeSizeList(nt),
+                                  //SURV_FOREST.NodeSizeList(nt),
                                   SURV_FOREST.NodeHazList(nt));
 
       size_t TreeLength = 3 + size/nmin*3;      

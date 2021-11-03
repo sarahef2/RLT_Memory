@@ -17,13 +17,13 @@ List ForestKernelUni_Self(arma::field<arma::uvec>& NodeType,
                 					 arma::field<arma::vec>& SplitValue,
                 					 arma::field<arma::uvec>& LeftNode,
                 					 arma::field<arma::uvec>& RightNode,
-                					 arma::field<arma::vec>& NodeSize,
                 					 arma::mat& X,
                 					 arma::uvec& Ncat,
                 					 int usecores,
                 					 int verbose)
 {
-
+  //arma::field<arma::vec>& NodeSize,
+  
   Rcout << "/// RLT Kernel Function Self ///" << std::endl;
   
   size_t N = X.n_rows;
@@ -46,7 +46,8 @@ List ForestKernelUni_Self(arma::field<arma::uvec>& NodeType,
       DEBUG_Rcout << "--- on tree " << nt << std::endl;
       
       Uni_Tree_Class OneTree(NodeType(nt), SplitVar(nt), SplitValue(nt), 
-                             LeftNode(nt), RightNode(nt), NodeSize(nt));
+                             LeftNode(nt), RightNode(nt)//, NodeSize(nt)
+                               );
 
       // initiate all observations
       uvec proxy_id = linspace<uvec>(0, N-1, N);
@@ -93,14 +94,14 @@ List ForestKernelUni_Cross(arma::field<arma::uvec>& NodeType,
                           arma::field<arma::vec>& SplitValue,
                           arma::field<arma::uvec>& LeftNode,
                           arma::field<arma::uvec>& RightNode,
-                          arma::field<arma::vec>& NodeSize,
                           arma::mat& XTest,
                           arma::mat& XTrain,
                           arma::uvec& Ncat,
                           arma::umat& ObsTrack,
                           int usecores,
                           int verbose)
-{
+{                          //arma::field<arma::vec>& NodeSize,
+
   Rcout << "/// RLT Kernel Function Cross not done yet ///" << std::endl;
   
   List ReturnList;

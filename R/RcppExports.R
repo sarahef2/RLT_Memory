@@ -13,28 +13,28 @@ EofVar_S <- function(ObsTrack, Pred, Pred_TV, C, usecores, verbose) {
     .Call(`_RLT_EofVar_S`, ObsTrack, Pred, Pred_TV, C, usecores, verbose)
 }
 
-ForestKernelUni_Self <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, X, Ncat, usecores, verbose) {
-    .Call(`_RLT_ForestKernelUni_Self`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, X, Ncat, usecores, verbose)
+ForestKernelUni_Self <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, usecores, verbose) {
+    .Call(`_RLT_ForestKernelUni_Self`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, usecores, verbose)
 }
 
-ForestKernelUni_Cross <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, XTest, XTrain, Ncat, ObsTrack, usecores, verbose) {
-    .Call(`_RLT_ForestKernelUni_Cross`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, XTest, XTrain, Ncat, ObsTrack, usecores, verbose)
+ForestKernelUni_Cross <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, XTest, XTrain, Ncat, ObsTrack, usecores, verbose) {
+    .Call(`_RLT_ForestKernelUni_Cross`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, XTest, XTrain, Ncat, ObsTrack, usecores, verbose)
 }
 
 RegForestUniFit <- function(X, Y, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack) {
     .Call(`_RLT_RegForestUniFit`, X, Y, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack)
 }
 
-RegForestUniPred <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose) {
-    .Call(`_RLT_RegForestUniPred`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose)
+RegForestUniPred <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose) {
+    .Call(`_RLT_RegForestUniPred`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose)
 }
 
 SurvForestUniFit <- function(X, Y, Censor, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack) {
     .Call(`_RLT_SurvForestUniFit`, X, Y, Censor, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack)
 }
 
-SurvForestUniPred <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, NodeHaz, X, Ncat, NFail, treeindex, keep_all, usecores, verbose) {
-    .Call(`_RLT_SurvForestUniPred`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeSize, NodeHaz, X, Ncat, NFail, treeindex, keep_all, usecores, verbose)
+SurvForestUniPred <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeHaz, X, Ncat, NFail, treeindex, keep_all, usecores, verbose) {
+    .Call(`_RLT_SurvForestUniPred`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeHaz, X, Ncat, NFail, treeindex, keep_all, usecores, verbose)
 }
 
 cindex_d <- function(Y, Censor, pred) {

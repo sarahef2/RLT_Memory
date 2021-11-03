@@ -48,7 +48,7 @@ void Surv_Uni_Forest_Pred(cube& Pred,
                                   SURV_FOREST.SplitValueList(whichtree),
                                   SURV_FOREST.LeftNodeList(whichtree),
                                   SURV_FOREST.RightNodeList(whichtree),
-                                  SURV_FOREST.NodeSizeList(whichtree),
+                                  //SURV_FOREST.NodeSizeList(whichtree),
                                   SURV_FOREST.NodeHazList(whichtree));
 
       Uni_Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);

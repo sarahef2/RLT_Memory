@@ -17,13 +17,13 @@ X = cbind(X1, X2)
 y = 1 + X[, 1] + rnorm(n)
 
 ntrees = 200
-ncores = 10
+ncores = 1
 nmin = 20
 mtry = p
 sampleprob = 0.85
 rule = "best"
 nsplit = ifelse(rule == "best", 0, 3)
-importance = TRUE 
+importance = FALSE 
 
 trainX = X[1:trainn, ]
 trainY = y[1:trainn]
@@ -44,7 +44,7 @@ RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, nmin = nmin/2, m
               split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, importance = importance)
 metric[1, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
-RLTPred <- predict(RLTfit, testX, ncores = ncores)
+RLTPred <- predict.RLT(RLTfit, testX, ncores = ncores)
 metric[1, 2] = difftime(Sys.time(), start_time, units = "secs")
 metric[1, 3] = mean((RLTPred$Prediction - testY)^2)
 metric[1, 4] = object.size(RLTfit)
