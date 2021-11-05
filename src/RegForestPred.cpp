@@ -6,7 +6,7 @@
 // my header file
 # include "RLT.h"
 # include "Utility/Utility.h"
-# include "regForest.h"
+# include "Reg_Uni/regForest.h"
 
 using namespace Rcpp;
 using namespace arma;

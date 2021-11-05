@@ -4,10 +4,10 @@
 //  **********************************
 
 // my header file
-# include "RLT.h"
-# include "Trees//Trees.h"
-# include "Utility//Utility.h"
-# include "Reg_Uni//Reg_Definition.h"
+# include "../RLT.h"
+# include "../Trees//Trees.h"
+# include "../Utility//Utility.h"
+# include "Reg_Definition.h"
 
 using namespace Rcpp;
 using namespace arma;
