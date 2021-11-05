@@ -39,7 +39,7 @@ public:
 
 class Reg_Uni_Forest_Class{
 public:
-  arma::field<arma::uvec>& NodeTypeList;
+  //arma::field<arma::uvec>& NodeTypeList;
   arma::field<arma::ivec>& SplitVarList;
   arma::field<arma::vec>& SplitValueList;
   arma::field<arma::uvec>& LeftNodeList;
@@ -47,13 +47,13 @@ public:
   //arma::field<arma::vec>& NodeSizeList;  
   arma::field<arma::vec>& NodeAveList;
   
-  Reg_Uni_Forest_Class(arma::field<arma::uvec>& NodeTypeList,
+  Reg_Uni_Forest_Class(//arma::field<arma::uvec>& NodeTypeList,
                        arma::field<arma::ivec>& SplitVarList,
                        arma::field<arma::vec>& SplitValueList,
                        arma::field<arma::uvec>& LeftNodeList,
                        arma::field<arma::uvec>& RightNodeList,
                        //arma::field<arma::vec>& NodeSizeList,
-                       arma::field<arma::vec>& NodeAveList) : NodeTypeList(NodeTypeList), 
+                       arma::field<arma::vec>& NodeAveList) : //NodeTypeList(NodeTypeList), 
                        SplitVarList(SplitVarList), 
                        SplitValueList(SplitValueList),
                        LeftNodeList(LeftNodeList),
@@ -66,13 +66,13 @@ class Reg_Uni_Tree_Class : public Uni_Tree_Class{
 public:
   arma::vec& NodeAve;
 
-  Reg_Uni_Tree_Class(arma::uvec& NodeType,
+  Reg_Uni_Tree_Class(//arma::uvec& NodeType,
                      arma::ivec& SplitVar,
                      arma::vec& SplitValue,
                      arma::uvec& LeftNode,
                      arma::uvec& RightNode,
                      //arma::vec& NodeSize,
-                     arma::vec& NodeAve) : Uni_Tree_Class(NodeType,
+                     arma::vec& NodeAve) : Uni_Tree_Class(//NodeType,
                      SplitVar,
                      SplitValue,
                      LeftNode,

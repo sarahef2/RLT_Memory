@@ -94,7 +94,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       
       // initialize a tree (univariate split)
 
-      Reg_Uni_Tree_Class OneTree(REG_FOREST.NodeTypeList(nt), 
+      Reg_Uni_Tree_Class OneTree(//REG_FOREST.NodeTypeList(nt), 
                                  REG_FOREST.SplitVarList(nt),
                                  REG_FOREST.SplitValueList(nt),
                                  REG_FOREST.LeftNodeList(nt),

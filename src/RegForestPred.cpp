@@ -12,8 +12,7 @@ using namespace Rcpp;
 using namespace arma;
 
 // [[Rcpp::export()]]
-List RegForestUniPred(arma::field<arma::uvec>& NodeType,
-          					  arma::field<arma::ivec>& SplitVar,
+List RegForestUniPred(arma::field<arma::ivec>& SplitVar,
           					  arma::field<arma::vec>& SplitValue,
           					  arma::field<arma::uvec>& LeftNode,
           					  arma::field<arma::uvec>& RightNode,
@@ -25,6 +24,7 @@ List RegForestUniPred(arma::field<arma::uvec>& NodeType,
           					  int usecores,
           					  int verbose)
 {
+  //arma::field<arma::uvec>& NodeType,
   //arma::field<arma::vec>& NodeSize,
   DEBUG_Rcout << "/// THIS IS A DEBUG MODE OF RLT REGRESSION ///" << std::endl;
   DEBUG_Rcout << "Check cores" << std::endl;
@@ -33,7 +33,8 @@ List RegForestUniPred(arma::field<arma::uvec>& NodeType,
 
   // convert R object to forest
   
-  Reg_Uni_Forest_Class REG_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
+  Reg_Uni_Forest_Class REG_FOREST(//NodeType, 
+                                  SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
                                   NodeAve);
   
   mat PredAll;

@@ -4,10 +4,10 @@ library(randomForestSRC)
 library(ranger)
 
 set.seed(1)
-trainn = 500
+trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 100
+p = 10
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 for (j in 1:ncol(X2)) X2[,j] = as.factor(X2[,j])
@@ -18,8 +18,8 @@ y = 1 + X[, 1] + rnorm(n)
 
 ntrees = 200
 ncores = 1
-nmin = 20
-mtry = p
+nmin = 25
+mtry = p/2
 sampleprob = 0.85
 rule = "best"
 nsplit = ifelse(rule == "best", 0, 3)

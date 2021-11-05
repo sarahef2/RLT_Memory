@@ -39,7 +39,7 @@ void Reg_Uni_Forest_Pred(mat& Pred,
       
       size_t whichtree = treeindex(nt);
         
-      Reg_Uni_Tree_Class OneTree(REG_FOREST.NodeTypeList(whichtree), 
+      Reg_Uni_Tree_Class OneTree(//REG_FOREST.NodeTypeList(whichtree), 
                                  REG_FOREST.SplitVarList(whichtree),
                                  REG_FOREST.SplitValueList(whichtree),
                                  REG_FOREST.LeftNodeList(whichtree),

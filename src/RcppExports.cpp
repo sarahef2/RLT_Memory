@@ -11,26 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// ClaForestMultiFit
-List ClaForestMultiFit(arma::mat& X, arma::uvec& Y, arma::uvec& Ncat, List& param, List& RLTparam, arma::vec& obsweight, arma::vec& varweight, int usecores, int verbose, arma::umat& ObsTrack);
-RcppExport SEXP _RLT_ClaForestMultiFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP paramSEXP, SEXP RLTparamSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP usecoresSEXP, SEXP verboseSEXP, SEXP ObsTrackSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
-    Rcpp::traits::input_parameter< List& >::type param(paramSEXP);
-    Rcpp::traits::input_parameter< List& >::type RLTparam(RLTparamSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type obsweight(obsweightSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type varweight(varweightSEXP);
-    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
-    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
-    rcpp_result_gen = Rcpp::wrap(ClaForestMultiFit(X, Y, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack));
-    return rcpp_result_gen;
-END_RCPP
-}
 // EofVar
 List EofVar(arma::umat& ObsTrack, arma::mat& Pred, arma::uvec& C, int usecores, int verbose);
 RcppExport SEXP _RLT_EofVar(SEXP ObsTrackSEXP, SEXP PredSEXP, SEXP CSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
@@ -43,22 +23,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
     Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
     rcpp_result_gen = Rcpp::wrap(EofVar(ObsTrack, Pred, C, usecores, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
-// EofVar_S
-List EofVar_S(arma::umat& ObsTrack, arma::cube& Pred, arma::cube& Pred_TV, arma::uvec& C, int usecores, int verbose);
-RcppExport SEXP _RLT_EofVar_S(SEXP ObsTrackSEXP, SEXP PredSEXP, SEXP Pred_TVSEXP, SEXP CSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
-    Rcpp::traits::input_parameter< arma::cube& >::type Pred(PredSEXP);
-    Rcpp::traits::input_parameter< arma::cube& >::type Pred_TV(Pred_TVSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type C(CSEXP);
-    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
-    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(EofVar_S(ObsTrack, Pred, Pred_TV, C, usecores, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -123,12 +87,11 @@ BEGIN_RCPP
 END_RCPP
 }
 // RegForestUniPred
-List RegForestUniPred(arma::field<arma::uvec>& NodeType, arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::vec>& NodeAve, arma::mat& X, arma::uvec& Ncat, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
-RcppExport SEXP _RLT_RegForestUniPred(SEXP NodeTypeSEXP, SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeAveSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP treeindexSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
+List RegForestUniPred(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::vec>& NodeAve, arma::mat& X, arma::uvec& Ncat, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
+RcppExport SEXP _RLT_RegForestUniPred(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeAveSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP treeindexSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type NodeType(NodeTypeSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::ivec>& >::type SplitVar(SplitVarSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::vec>& >::type SplitValue(SplitValueSEXP);
     Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type LeftNode(LeftNodeSEXP);
@@ -140,51 +103,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type keep_all(keep_allSEXP);
     Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
     Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(RegForestUniPred(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SurvForestUniFit
-List SurvForestUniFit(arma::mat& X, arma::uvec& Y, arma::uvec& Censor, arma::uvec& Ncat, List& param, List& RLTparam, arma::vec& obsweight, arma::vec& varweight, int usecores, int verbose, arma::umat& ObsTrack);
-RcppExport SEXP _RLT_SurvForestUniFit(SEXP XSEXP, SEXP YSEXP, SEXP CensorSEXP, SEXP NcatSEXP, SEXP paramSEXP, SEXP RLTparamSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP usecoresSEXP, SEXP verboseSEXP, SEXP ObsTrackSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type Censor(CensorSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
-    Rcpp::traits::input_parameter< List& >::type param(paramSEXP);
-    Rcpp::traits::input_parameter< List& >::type RLTparam(RLTparamSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type obsweight(obsweightSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type varweight(varweightSEXP);
-    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
-    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
-    rcpp_result_gen = Rcpp::wrap(SurvForestUniFit(X, Y, Censor, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SurvForestUniPred
-List SurvForestUniPred(arma::field<arma::uvec>& NodeType, arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::field<arma::vec>>& NodeHaz, arma::mat& X, arma::uvec& Ncat, size_t NFail, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
-RcppExport SEXP _RLT_SurvForestUniPred(SEXP NodeTypeSEXP, SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeHazSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP NFailSEXP, SEXP treeindexSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type NodeType(NodeTypeSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::ivec>& >::type SplitVar(SplitVarSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::vec>& >::type SplitValue(SplitValueSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type LeftNode(LeftNodeSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::uvec>& >::type RightNode(RightNodeSEXP);
-    Rcpp::traits::input_parameter< arma::field<arma::field<arma::vec>>& >::type NodeHaz(NodeHazSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
-    Rcpp::traits::input_parameter< size_t >::type NFail(NFailSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type treeindex(treeindexSEXP);
-    Rcpp::traits::input_parameter< bool >::type keep_all(keep_allSEXP);
-    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
-    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(SurvForestUniPred(NodeType, SplitVar, SplitValue, LeftNode, RightNode, NodeHaz, X, Ncat, NFail, treeindex, keep_all, usecores, verbose));
+    rcpp_result_gen = Rcpp::wrap(RegForestUniPred(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -223,15 +142,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RLT_ClaForestMultiFit", (DL_FUNC) &_RLT_ClaForestMultiFit, 10},
     {"_RLT_EofVar", (DL_FUNC) &_RLT_EofVar, 5},
-    {"_RLT_EofVar_S", (DL_FUNC) &_RLT_EofVar_S, 6},
     {"_RLT_ForestKernelUni_Self", (DL_FUNC) &_RLT_ForestKernelUni_Self, 9},
     {"_RLT_ForestKernelUni_Cross", (DL_FUNC) &_RLT_ForestKernelUni_Cross, 11},
     {"_RLT_RegForestUniFit", (DL_FUNC) &_RLT_RegForestUniFit, 10},
-    {"_RLT_RegForestUniPred", (DL_FUNC) &_RLT_RegForestUniPred, 12},
-    {"_RLT_SurvForestUniFit", (DL_FUNC) &_RLT_SurvForestUniFit, 11},
-    {"_RLT_SurvForestUniPred", (DL_FUNC) &_RLT_SurvForestUniPred, 13},
+    {"_RLT_RegForestUniPred", (DL_FUNC) &_RLT_RegForestUniPred, 11},
     {"_RLT_cindex_d", (DL_FUNC) &_RLT_cindex_d, 3},
     {"_RLT_ARMA_EMPTY_UMAT", (DL_FUNC) &_RLT_ARMA_EMPTY_UMAT, 0},
     {"_RLT_ARMA_EMPTY_VEC", (DL_FUNC) &_RLT_ARMA_EMPTY_VEC, 0},

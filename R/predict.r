@@ -48,7 +48,7 @@ predict.RLT<- function(object,
 
     testx <- data.matrix(testx)
 
-    pred <- RegForestUniPred(object$FittedForest$NodeType,
+    pred <- RegForestUniPred(#object$FittedForest$NodeType,
                              object$FittedForest$SplitVar,
                              object$FittedForest$SplitValue,
                              object$FittedForest$LeftNode,
@@ -85,7 +85,7 @@ predict.RLT<- function(object,
     
     testx <- data.matrix(testx)
     
-    pred <- SurvForestUniPred(object$FittedForest$NodeType,
+    pred <- SurvForestUniPred(#object$FittedForest$NodeType,
                               object$FittedForest$SplitVar,
                               object$FittedForest$SplitValue,
                               object$FittedForest$LeftNode,

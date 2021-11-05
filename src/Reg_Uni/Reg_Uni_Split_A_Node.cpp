@@ -25,6 +25,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
   size_t nmin = Param.nmin;
   bool useobsweight = Param.useobsweight;
 
+  // Be consistent with lit, change to N<nmin. Change everything that goes with 
   if (N < 2*nmin) // in rf, it is N <= nmin
   {
 TERMINATENODE:

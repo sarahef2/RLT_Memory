@@ -144,20 +144,20 @@ void field_vec_resize(arma::field<arma::uvec>& A, size_t size);
 
 class Uni_Tree_Class{ // univariate split trees
 public:
-  arma::uvec& NodeType;
+  //arma::uvec& NodeType;
   arma::ivec& SplitVar;
   arma::vec& SplitValue;
   arma::uvec& LeftNode;
   arma::uvec& RightNode;
   //arma::vec& NodeSize;
   
-  Uni_Tree_Class(arma::uvec& NodeType,
+  Uni_Tree_Class(//arma::uvec& NodeType,
                  arma::ivec& SplitVar,
                  arma::vec& SplitValue,
                  arma::uvec& LeftNode,
                  arma::uvec& RightNode//,
                  //arma::vec& NodeSize
-                   ) : NodeType(NodeType),
+                   ) : //NodeType(NodeType),
                                         SplitVar(SplitVar),
                                         SplitValue(SplitValue),
                                         LeftNode(LeftNode),

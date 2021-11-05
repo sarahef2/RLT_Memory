@@ -28,7 +28,7 @@ List RegForestUniFit(arma::mat& X,
   // check number of cores
   usecores = checkCores(usecores, verbose);
 
-  // readin parameters 
+  // reading parameters 
   PARAM_GLOBAL Param(param);
   if (verbose) Param.print();
   PARAM_RLT Param_RLT(RLTparam);
@@ -46,7 +46,7 @@ List RegForestUniFit(arma::mat& X,
   int importance = Param.importance;
 
   // initiate forest
-  arma::field<arma::uvec> NodeType(ntrees);
+  //arma::field<arma::uvec> NodeType(ntrees);
   arma::field<arma::ivec> SplitVar(ntrees);
   arma::field<arma::vec> SplitValue(ntrees);
   arma::field<arma::uvec> LeftNode(ntrees);
@@ -54,7 +54,8 @@ List RegForestUniFit(arma::mat& X,
   //arma::field<arma::vec> NodeSize(ntrees);
   arma::field<arma::vec> NodeAve(ntrees);
   
-  Reg_Uni_Forest_Class REG_FOREST(NodeType, SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
+  Reg_Uni_Forest_Class REG_FOREST(//NodeType, 
+                                  SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
                                   NodeAve);
   
   // other objects
@@ -92,7 +93,7 @@ List RegForestUniFit(arma::mat& X,
   
   List Forest_R;
   
-  Forest_R["NodeType"] = NodeType;
+  //Forest_R["NodeType"] = NodeType;
   Forest_R["SplitVar"] = SplitVar;
   Forest_R["SplitValue"] = SplitValue;
   Forest_R["LeftNode"] = LeftNode;

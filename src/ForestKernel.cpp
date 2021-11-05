@@ -45,7 +45,8 @@ List ForestKernelUni_Self(arma::field<arma::uvec>& NodeType,
     {
       DEBUG_Rcout << "--- on tree " << nt << std::endl;
       
-      Uni_Tree_Class OneTree(NodeType(nt), SplitVar(nt), SplitValue(nt), 
+      Uni_Tree_Class OneTree(//NodeType(nt), 
+                             SplitVar(nt), SplitValue(nt), 
                              LeftNode(nt), RightNode(nt)//, NodeSize(nt)
                                );
 
