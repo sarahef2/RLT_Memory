@@ -4,7 +4,7 @@
 
 // my header file
 # include "../RLT.h"
-# include "../Utility/Utility.h"
+# include "Utility.h"
 # include "Trees.h"
 
 using namespace Rcpp;

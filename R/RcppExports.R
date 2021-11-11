@@ -5,14 +5,6 @@ EofVar <- function(ObsTrack, Pred, C, usecores, verbose) {
     .Call(`_RLT_EofVar`, ObsTrack, Pred, C, usecores, verbose)
 }
 
-ForestKernelUni_Self <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, usecores, verbose) {
-    .Call(`_RLT_ForestKernelUni_Self`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, usecores, verbose)
-}
-
-ForestKernelUni_Cross <- function(NodeType, SplitVar, SplitValue, LeftNode, RightNode, XTest, XTrain, Ncat, ObsTrack, usecores, verbose) {
-    .Call(`_RLT_ForestKernelUni_Cross`, NodeType, SplitVar, SplitValue, LeftNode, RightNode, XTest, XTrain, Ncat, ObsTrack, usecores, verbose)
-}
-
 RegForestUniFit <- function(X, Y, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack) {
     .Call(`_RLT_RegForestUniFit`, X, Y, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack)
 }

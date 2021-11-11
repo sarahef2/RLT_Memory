@@ -12,7 +12,7 @@
 using namespace Rcpp;
 using namespace arma;
 
-# include "Definition.h"
+# include "Trees_Definition.h"
 
 // ********************//
 // functions for trees //
