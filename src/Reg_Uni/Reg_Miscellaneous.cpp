@@ -114,7 +114,7 @@ double record_cat_split(std::vector<Reg_Cat_Class>& cat_reduced,
     goright[cat_reduced[i].cat] = 1;
   
   for (size_t i = true_cat + 1; i < ncat + 1; i++)
-    goright[cat_reduced[i].cat] = 0; //intRand(0, 1); // for empty category, assign randomly
+    goright[cat_reduced[i].cat] = 0; // for empty category, assign randomly
   
   return pack(ncat + 1, goright);
 }
