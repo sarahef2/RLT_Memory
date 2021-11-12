@@ -47,10 +47,10 @@ public:
     split_rule    = param["split.rule"];
     nsplit        = param["nsplit"];
     replacement   = param["replacement"];
-    resample_prob = param["resample.prob"];  
+    resample_prob = param["resample.prob"];
     useobsweight  = param["use.obs.w"];
-    usevarweight  = param["use.var.w"];    
-    varweighttype  = param["var.w.type"];    
+    usevarweight  = param["use.var.w"];
+    varweighttype  = param["var.w.type"];
     importance    = param["importance"];
     reinforcement = param["reinforcement"];
     obs_track     = param["track.obs"];
@@ -106,7 +106,7 @@ public:
     double embed_mtry_prop;
     size_t embed_nmin;
     size_t embed_split_gen;
-    size_t embed_nsplit;    
+    size_t embed_nsplit;
     
   PARAM_RLT(List& Param_RLT){
       embed_ntrees        = Param_RLT["embed.ntrees"];
@@ -136,7 +136,7 @@ public:
 
 void field_vec_resize(arma::field<arma::vec>& A, size_t size);
 void field_vec_resize(arma::field<arma::uvec>& A, size_t size);
-
+void field_vec_resize(arma::field<arma::ivec>& A, size_t size);
 
 // *********************** //
 //  Tree and forest class  //
@@ -144,27 +144,19 @@ void field_vec_resize(arma::field<arma::uvec>& A, size_t size);
 
 class Uni_Tree_Class{ // univariate split trees
 public:
-  //arma::uvec& NodeType;
   arma::ivec& SplitVar;
   arma::vec& SplitValue;
   arma::uvec& LeftNode;
   arma::uvec& RightNode;
-  //arma::vec& NodeSize;
   
-  Uni_Tree_Class(//arma::uvec& NodeType,
-                 arma::ivec& SplitVar,
+  Uni_Tree_Class(arma::ivec& SplitVar,
                  arma::vec& SplitValue,
                  arma::uvec& LeftNode,
-                 arma::uvec& RightNode//,
-                 //arma::vec& NodeSize
-                   ) : //NodeType(NodeType),
-                                        SplitVar(SplitVar),
-                                        SplitValue(SplitValue),
-                                        LeftNode(LeftNode),
-                                        RightNode(RightNode) {}//,
-                                        //NodeSize(NodeSize) {}
+                 arma::uvec& RightNode) : SplitVar(SplitVar),
+                                          SplitValue(SplitValue),
+                                          LeftNode(LeftNode),
+                                          RightNode(RightNode) {}
   
-  // find the next left and right nodes 
   void find_next_nodes(size_t& NextLeft, size_t& NextRight)
   {
     while( SplitVar(NextLeft)!=-2 ) NextLeft++;
