@@ -12,6 +12,7 @@
 using namespace Rcpp;
 using namespace arma;
 
+//Split a node
 void Reg_Uni_Split_A_Node(size_t Node,
                           Reg_Uni_Tree_Class& OneTree,
                           const RLT_REG_DATA& REG_DATA,
@@ -25,48 +26,45 @@ void Reg_Uni_Split_A_Node(size_t Node,
   size_t nmin = Param.nmin;
   bool useobsweight = Param.useobsweight;
 
+
   // Be consistent with lit, change to N<nmin. Change everything that goes with 
   if (N < 2*nmin) // in rf, it is N <= nmin
   {
-TERMINATENODE:
-
-    DEBUG_Rcout << "  -- Terminate node " << Node << std::endl;
-    Reg_Uni_Terminate_Node(Node, OneTree, obs_id, REG_DATA.Y, REG_DATA.obsweight, Param, useobsweight);
+    TERMINATENODE:
+      Reg_Uni_Terminate_Node(Node, OneTree, obs_id, REG_DATA.Y, REG_DATA.obsweight, Param, useobsweight);
     
   }else{
     
-    DEBUG_Rcout << "  -- Do split" << std::endl;
-    
+    //Set up another split
     Uni_Split_Class OneSplit;
     
+    //If reinforcement- NOT IMPLEMENTED
     if (Param.reinforcement)
     {
       Reg_Uni_Find_A_Split_Embed(OneSplit, REG_DATA, Param, Param_RLT, obs_id, var_id);
     }else{
+      //Figure out where to split the node
       Reg_Uni_Find_A_Split(OneSplit, REG_DATA, Param, Param_RLT, obs_id, var_id);
     }
     
-    DEBUG_Rcout << "  -- Found split on variable " << OneSplit.var << " cut " << OneSplit.value << " and score " << OneSplit.score << std::endl;
-    
+    //Find the average for that node
     OneTree.NodeAve(Node) = arma::mean(REG_DATA.Y(obs_id));
+    
     // if did not find a good split, terminate
     if (OneSplit.score <= 0)
       goto TERMINATENODE;
       
     // construct indices for left and right nodes
-    DEBUG_Rcout << "  -- splitting value is " << OneSplit.value << std::endl;
-    
+
     uvec left_id(obs_id.n_elem);
     
     if ( REG_DATA.Ncat(OneSplit.var) == 1 )
     {
       split_id(REG_DATA.X.unsafe_col(OneSplit.var), OneSplit.value, left_id, obs_id);  
       
-      DEBUG_Rcout << "  -- select cont variable " << OneSplit.var << " split at " << OneSplit.value << std::endl;
     }else{
       split_id_cat(REG_DATA.X.unsafe_col(OneSplit.var), OneSplit.value, left_id, obs_id, REG_DATA.Ncat(OneSplit.var));
       
-      DEBUG_Rcout << "  -- select cat variable " << OneSplit.var << " split at " << OneSplit.value << std::endl;
     }
     
     // if this happens something about the splitting rule is wrong
@@ -78,14 +76,12 @@ TERMINATENODE:
     
     if ( OneTree.SplitVar( OneTree.SplitVar.size() - 2) >= 0 )
     {
-      DEBUG_Rcout << "  ------------- extend tree length: this shouldn't happen ----------- " << std::endl;
-      
+
       // extend tree structure
       OneTree.extend();
     }
 
-    // find the locations of next left and right nodes     
-    //OneTree.NodeType(Node) = 2; // 0: unused, 1: reserved; 2: internal node; 3: terminal node	
+    // get ready find the locations of next left and right nodes     
     size_t NextLeft = Node;
     size_t NextRight = Node;
     
@@ -95,15 +91,11 @@ TERMINATENODE:
     OneTree.SplitVar(Node) = OneSplit.var;
     OneTree.SplitValue(Node) = OneSplit.value;
 
+    //Find locations of the next nodes
     OneTree.find_next_nodes(NextLeft, NextRight);
     
-    DEBUG_Rcout << "  -- Current Node " << Node << " has split var "<<OneTree.SplitVar(Node) << std::endl;
-    DEBUG_Rcout << "  -- Next Left at " << NextLeft << " has split var "<<OneTree.SplitVar(NextLeft)  << std::endl;
-    DEBUG_Rcout << "  -- Next Right at " << NextRight << " has split var "<<OneTree.SplitVar(NextRight)  << std::endl;
     OneTree.LeftNode(Node) = NextLeft;
     OneTree.RightNode(Node) = NextRight;    
-    
-    //OneTree.NodeSize(Node) = left_id.n_elem + obs_id.n_elem;
     
     // split the left and right nodes 
 
@@ -139,16 +131,13 @@ void Reg_Uni_Terminate_Node(size_t Node,
 {
   
   OneTree.SplitVar(Node) = -1; //-1 says this node is a terminal node. Ow, it would be the variable num
-  //OneTree.NodeType(Node) = 3; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
-  //OneTree.NodeSize(Node) = obs_id.n_elem;
   OneTree.SplitValue(Node) = obs_id.n_elem;//New way for saving nodesize- no split value needed for terminal nodes, so we can save it here
   
+  //Find the average of the observations in the terminal node
   if (useobsweight)
   {
-    // DEBUG_Rcout << "terminate weighted" << std::endl;
     OneTree.NodeAve(Node) = arma::sum(Y(obs_id) % obs_weight(obs_id)) / arma::sum(obs_weight(obs_id));
   }else{
-    // DEBUG_Rcout << "terminate nonweighted" << std::endl;
     OneTree.NodeAve(Node) = arma::mean(Y(obs_id));
   }
 

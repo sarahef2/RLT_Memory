@@ -29,7 +29,8 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
                           int usecores,
                           int verbose)
 {
-  // parameters need to be used
+  
+  // parameters to use
   size_t ntrees = Param.ntrees;
   bool replacement = Param.replacement;
   double resample_prob = Param.resample_prob;
@@ -41,7 +42,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
   // track obs matrix 
   bool obs_track_pre = false; 
   
-  if (ObsTrack.n_elem != 0) //pre-defined
+  if (ObsTrack.n_elem != 0) //if pre-defined
     obs_track_pre = true; 
   else
     ObsTrack.zeros(N, ntrees);
@@ -49,12 +50,16 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
   // predictions
   bool pred_cal = true; // this could be changed later to an argument
   
+  // If calculating predictions while building the forest
+  //Default for the moment
   if (pred_cal)
     Prediction.zeros(N);
   
+  //Checking if oob pred is possible
   bool oob_pred_cal = (replacement or resample_prob < 1);
   uvec oob_count;
   
+  //Setting up oob prediction objects
   if (oob_pred_cal)
   {
     OOBPrediction.zeros(N);
@@ -87,28 +92,27 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
 
       uvec inbagObs, oobagObs;
       
+      //If obstrack isn't given, sets obstrack
       if (!obs_track_pre)
         set_obstrack(ObsTrack, nt, size, replacement);
       
+      // Find the samples
       get_samples(inbagObs, oobagObs, obs_id, ObsTrack.unsafe_col(nt));
       
       // initialize a tree (univariate split)
 
-      Reg_Uni_Tree_Class OneTree(//REG_FOREST.NodeTypeList(nt), 
-                                 REG_FOREST.SplitVarList(nt),
+      Reg_Uni_Tree_Class OneTree(REG_FOREST.SplitVarList(nt),
                                  REG_FOREST.SplitValueList(nt),
                                  REG_FOREST.LeftNodeList(nt),
                                  REG_FOREST.RightNodeList(nt),
-                                 //REG_FOREST.NodeSizeList(nt),
                                  REG_FOREST.NodeAveList(nt));
       
       size_t TreeLength = 1 + size/nmin*3;
       
       OneTree.initiate(TreeLength);
 
-      // start to fit a tree
-      //OneTree.NodeType(0) = 1; // 0: unused, 1: reserved; 2: internal node; 3: terminal node
-      
+      // Split the tree- works recursively until finished
+
       Reg_Uni_Split_A_Node(0, OneTree, REG_DATA, 
                            Param, Param_RLT,
                            inbagObs, var_id);

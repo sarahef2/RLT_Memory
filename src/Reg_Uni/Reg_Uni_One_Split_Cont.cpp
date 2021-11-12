@@ -12,6 +12,7 @@
 using namespace Rcpp;
 using namespace arma;
 
+//Find a split on a particular variable
 void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
                         uvec& obs_id,
                         const vec& x,
@@ -40,6 +41,114 @@ void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
       temp_cut_arma = x(obs_id( (size_t) intRand(0, N-1) ));
       temp_cut = temp_cut_arma(0);
 
+      // calculate score
+      if (useobsweight)
+        temp_score = reg_cont_score_at_cut_w(obs_id, x, Y, temp_cut, obs_weight);
+      else
+        temp_score = reg_cont_score_at_cut(obs_id, x, Y, temp_cut);
+      
+      if (temp_score > TempSplit.score)
+      {
+        TempSplit.value = temp_cut;
+        TempSplit.score = temp_score;
+      }
+    }
+    
+    return;
+  }
+  
+  uvec indices = obs_id(sort_index(x(obs_id))); // this is the sorted obs_id  
+  
+  // check identical 
+  if ( x(indices(0)) == x(indices(N-1)) ) return;  
+  
+  // set low and high index
+  size_t lowindex = 0; // less equal goes to left
+  size_t highindex = N - 2;
+  
+  // alpha is only effective when x can be sorted
+  // this will force nmin for each child node
+  if (alpha > 0)
+  {
+    if (N*alpha > nmin) nmin = (size_t) N*alpha;
+    
+    // if there are ties, do further check
+    if ( (x(indices(lowindex)) == x(indices(lowindex + 1))) | (x(indices(highindex)) == x(indices(highindex + 1))) )
+      move_cont_index(lowindex, highindex, x, indices, nmin);
+    
+  }else{
+    // move index if ties
+    while( x(indices(lowindex)) == x(indices(lowindex + 1)) ) lowindex++;
+    while( x(indices(highindex)) == x(indices(highindex + 1)) ) highindex--;    
+    
+    //If there is nowhere to split
+    if ((lowindex > highindex)|(lowindex==highindex)) return;
+  }
+  
+  
+  if (split_gen == 2) // rank split
+  {
+    for (int k = 0; k < nsplit; k++)
+    {
+      // generate a cut off
+      temp_ind = intRand(lowindex, highindex);
+      
+      if (useobsweight)
+        temp_score = reg_cont_score_at_index_w(indices, Y, temp_ind, obs_weight);
+      else
+        temp_score = reg_cont_score_at_index(indices, Y, temp_ind);
+      
+      if (temp_score > TempSplit.score)
+      {
+        TempSplit.value = (x(indices(temp_ind)) + x(indices(temp_ind+1)))/2 ;
+        TempSplit.score = temp_score;
+      }
+    }
+    
+    return;
+  }
+  
+  if (split_gen == 3) // best split  
+  {
+    // get score
+    if (useobsweight)
+      reg_cont_score_best_w(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score, obs_weight);
+    else
+      reg_cont_score_best(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score);
+    
+    return;
+  }
+  
+}
+
+void Reg_Uni_Split_Cont2(Uni_Split_Class& TempSplit,
+                        uvec& obs_id,
+                        const vec& x,
+                        const vec& Y,
+                        const vec& obs_weight,
+                        double penalty,
+                        int split_gen,
+                        int split_rule,
+                        int nsplit,
+                        size_t nmin,
+                        double alpha,
+                        bool useobsweight)
+{
+  size_t N = obs_id.n_elem;
+  
+  arma::vec temp_cut_arma;
+  double temp_cut;
+  size_t temp_ind;
+  double temp_score;
+  
+  if (split_gen == 1) // random split
+  {
+    for (int k = 0; k < nsplit; k++)
+    {
+      // generate a random cut off
+      temp_cut_arma = x(obs_id( (size_t) intRand(0, N-1) ));
+      temp_cut = temp_cut_arma(0);
+      
       if (useobsweight)
         temp_score = reg_cont_score_at_cut_w(obs_id, x, Y, temp_cut, obs_weight);
       else
@@ -107,18 +216,19 @@ void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
   
   if (split_gen == 3) // best split  
   {
+    vec x_sorted = x(indices);
     // get score
     if (useobsweight)
       reg_cont_score_best_w(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score, obs_weight);
     else
-      reg_cont_score_best(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score);
+      reg_cont_score_best2(indices, x_sorted, Y, lowindex, highindex, TempSplit.value, TempSplit.score);
     
     return;
   }
   
 }
 
-
+//Calculate a score at a random cut
 double reg_cont_score_at_cut(uvec& obs_id,
                         const vec& x,
                         const vec& Y,
@@ -132,6 +242,7 @@ double reg_cont_score_at_cut(uvec& obs_id,
   
   for (size_t i = 0; i < N; i++)
   {
+    //If x is less than the random cut, go left
     if ( x(obs_id(i)) <= a_random_cut )
     {
       LeftCount++;
@@ -141,6 +252,7 @@ double reg_cont_score_at_cut(uvec& obs_id,
     }
   }
   
+  // if there are some observations in each node
   if (LeftCount > 0 && LeftCount < N)
     return LeftSum*LeftSum/LeftCount + RightSum*RightSum/(N - LeftCount);
   
@@ -183,7 +295,7 @@ double reg_cont_score_at_cut_w(uvec& obs_id,
 
 
 
-
+//For rank split
 double reg_cont_score_at_index(uvec& indices,
                                const vec& Y,
                                size_t a_random_ind)
@@ -193,9 +305,11 @@ double reg_cont_score_at_index(uvec& indices,
   double LeftSum = 0;
   double RightSum = 0;
   
+  //Count the number of observations with a smaller or equal index
   for (size_t i = 0; i <= a_random_ind; i++)
     LeftSum += Y(indices(i));
   
+  //Count the other observations
   for (size_t i = a_random_ind+1; i < N; i++)  
     RightSum += Y(indices(i));
 
@@ -231,7 +345,7 @@ double reg_cont_score_at_index_w(uvec& indices,
 }
 
 
-
+//For best split
 void reg_cont_score_best(uvec& indices,
                     const vec& x,
                     const vec& Y,
@@ -240,7 +354,60 @@ void reg_cont_score_best(uvec& indices,
                     double& temp_cut, 
                     double& temp_score)
 {
-  DEBUG_Rcout << "      --- Best score with no weights --- " << std::endl;
+
+  double score = 0;
+  
+  size_t N = indices.size();
+  
+  double LeftSum = 0;
+  double RightSum = 0;
+
+  //Find left or right of the lowindex to start
+  for (size_t i = 0; i <= lowindex; i++)
+    LeftSum += Y(indices(i));
+  
+  for (size_t i = lowindex+1; i < N; i++)
+    RightSum += Y(indices(i));
+
+  //Trying the other splits
+  for (size_t i = lowindex; i <= highindex; i++)
+  {
+    //If there is a tie
+    while (x(indices(i)) == x(indices(i+1))){
+      i++;
+      
+      //Adjust sums
+      LeftSum += Y(indices(i));
+      RightSum -= Y(indices(i));
+    }
+    
+    //Calculate score
+    score = LeftSum*LeftSum/(i + 1) + RightSum*RightSum/(N - i - 1);
+    
+    //If the score has improved, find cut and set new score
+    if (score > temp_score)
+    {
+      temp_cut = (x(indices(i)) + x(indices(i + 1)))/2 ;
+      temp_score = score;
+    }
+    
+    //Adjust sums
+    if (i + 1 <= highindex)
+    {
+      LeftSum += Y(indices(i+1));
+      RightSum -= Y(indices(i+1));
+    }
+  }
+}
+
+void reg_cont_score_best2(uvec& indices,
+                         const vec& x_sorted,
+                         const vec& Y,
+                         size_t lowindex, 
+                         size_t highindex, 
+                         double& temp_cut, 
+                         double& temp_score)
+{
   
   double score = 0;
   
@@ -248,18 +415,17 @@ void reg_cont_score_best(uvec& indices,
   
   double LeftSum = 0;
   double RightSum = 0;
-  // size_t LeftCount = lowindex + 1;
   
   for (size_t i = 0; i <= lowindex; i++)
     LeftSum += Y(indices(i));
   
   for (size_t i = lowindex+1; i < N; i++)
     RightSum += Y(indices(i));
-
+  
   for (size_t i = lowindex; i <= highindex; i++)
   {
     
-    while (x(indices(i)) == x(indices(i+1))){
+    while (x_sorted(i) == x_sorted(i+1)){
       i++;
       
       LeftSum += Y(indices(i));
@@ -270,7 +436,7 @@ void reg_cont_score_best(uvec& indices,
     
     if (score > temp_score)
     {
-      temp_cut = (x(indices(i)) + x(indices(i + 1)))/2 ;
+      temp_cut = (x_sorted(i) + x_sorted(i+1))/2 ;
       temp_score = score;
     }
     
@@ -291,7 +457,6 @@ void reg_cont_score_best_w(uvec& indices,
                       double& temp_score,
                       const vec& obs_weight)
 {
-  DEBUG_Rcout << "      --- Best score with weights --- " << std::endl;
   double score = 0;
   
   size_t N = indices.size();

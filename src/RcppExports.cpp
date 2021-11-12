@@ -26,6 +26,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ARMA_EMPTY_UMAT
+arma::umat ARMA_EMPTY_UMAT();
+RcppExport SEXP _RLT_ARMA_EMPTY_UMAT() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_UMAT());
+    return rcpp_result_gen;
+END_RCPP
+}
+// ARMA_EMPTY_VEC
+arma::vec ARMA_EMPTY_VEC();
+RcppExport SEXP _RLT_ARMA_EMPTY_VEC() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_VEC());
+    return rcpp_result_gen;
+END_RCPP
+}
 // RegForestUniFit
 List RegForestUniFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, List& param, List& RLTparam, arma::vec& obsweight, arma::vec& varweight, int usecores, int verbose, arma::umat& ObsTrack);
 RcppExport SEXP _RLT_RegForestUniFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP paramSEXP, SEXP RLTparamSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP usecoresSEXP, SEXP verboseSEXP, SEXP ObsTrackSEXP) {
@@ -67,47 +87,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cindex_d
-double cindex_d(arma::vec& Y, arma::uvec& Censor, arma::vec& pred);
-RcppExport SEXP _RLT_cindex_d(SEXP YSEXP, SEXP CensorSEXP, SEXP predSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec& >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type Censor(CensorSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type pred(predSEXP);
-    rcpp_result_gen = Rcpp::wrap(cindex_d(Y, Censor, pred));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ARMA_EMPTY_UMAT
-arma::umat ARMA_EMPTY_UMAT();
-RcppExport SEXP _RLT_ARMA_EMPTY_UMAT() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_UMAT());
-    return rcpp_result_gen;
-END_RCPP
-}
-// ARMA_EMPTY_VEC
-arma::vec ARMA_EMPTY_VEC();
-RcppExport SEXP _RLT_ARMA_EMPTY_VEC() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_VEC());
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RLT_EofVar", (DL_FUNC) &_RLT_EofVar, 5},
-    {"_RLT_RegForestUniFit", (DL_FUNC) &_RLT_RegForestUniFit, 10},
-    {"_RLT_RegForestUniPred", (DL_FUNC) &_RLT_RegForestUniPred, 11},
-    {"_RLT_cindex_d", (DL_FUNC) &_RLT_cindex_d, 3},
     {"_RLT_ARMA_EMPTY_UMAT", (DL_FUNC) &_RLT_ARMA_EMPTY_UMAT, 0},
     {"_RLT_ARMA_EMPTY_VEC", (DL_FUNC) &_RLT_ARMA_EMPTY_VEC, 0},
+    {"_RLT_RegForestUniFit", (DL_FUNC) &_RLT_RegForestUniFit, 10},
+    {"_RLT_RegForestUniPred", (DL_FUNC) &_RLT_RegForestUniPred, 11},
     {NULL, NULL, 0}
 };
 

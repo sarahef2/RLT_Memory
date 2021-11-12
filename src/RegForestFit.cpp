@@ -11,6 +11,9 @@
 using namespace Rcpp;
 using namespace arma;
 
+// Fit function- must be in the main source folder, 
+//  otherwise Rcpp won't find it
+
 // [[Rcpp::export()]]
 List RegForestUniFit(arma::mat& X,
           					 arma::vec& Y,
@@ -23,8 +26,6 @@ List RegForestUniFit(arma::mat& X,
           					 int verbose,
           					 arma::umat& ObsTrack)
 {
-  DEBUG_Rcout << "/// THIS IS A DEBUG MODE OF RLT REGRESSION ///" << std::endl;
-
   // check number of cores
   usecores = checkCores(usecores, verbose);
 
@@ -45,28 +46,25 @@ List RegForestUniFit(arma::mat& X,
 
   int importance = Param.importance;
 
-  // initiate forest
-  //arma::field<arma::uvec> NodeType(ntrees);
+  // initiate forest argument objects
   arma::field<arma::ivec> SplitVar(ntrees);
   arma::field<arma::vec> SplitValue(ntrees);
   arma::field<arma::uvec> LeftNode(ntrees);
   arma::field<arma::uvec> RightNode(ntrees);
-  //arma::field<arma::vec> NodeSize(ntrees);
   arma::field<arma::vec> NodeAve(ntrees);
   
-  Reg_Uni_Forest_Class REG_FOREST(//NodeType, 
-                                  SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
+  //Initiate forest object
+  Reg_Uni_Forest_Class REG_FOREST(SplitVar, SplitValue, 
+                                  LeftNode, RightNode, 
                                   NodeAve);
   
-  // other objects
-
   // VarImp
   vec VarImp;
   
   if (importance)
     VarImp.zeros(P);
   
-  // prediction
+  // Initiate prediction objects
   vec Prediction;
   vec OOBPrediction;
   
@@ -74,7 +72,7 @@ List RegForestUniFit(arma::mat& X,
   uvec obs_id = linspace<uvec>(0, N-1, N);
   uvec var_id = linspace<uvec>(0, P-1, P);
   
-  // start to fit the model
+  // Run model fitting
   Reg_Uni_Forest_Build((const RLT_REG_DATA&) REG_DATA,
                        REG_FOREST,
                        (const PARAM_GLOBAL&) Param,
@@ -89,18 +87,19 @@ List RegForestUniFit(arma::mat& X,
                        usecores,
                        verbose);
 
+  //initialize return objects
   List ReturnList;
   
   List Forest_R;
-  
-  //Forest_R["NodeType"] = NodeType;
+
+  //Save forest objects as part of return list  
   Forest_R["SplitVar"] = SplitVar;
   Forest_R["SplitValue"] = SplitValue;
   Forest_R["LeftNode"] = LeftNode;
   Forest_R["RightNode"] = RightNode;
-  //Forest_R["NodeSize"] = NodeSize;    
   Forest_R["NodeAve"] = NodeAve;
   
+  //Add to return list
   ReturnList["FittedForest"] = Forest_R;
   
   if (obs_track) ReturnList["ObsTrack"] = ObsTrack;

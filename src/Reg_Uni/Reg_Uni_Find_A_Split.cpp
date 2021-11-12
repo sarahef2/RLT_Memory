@@ -12,6 +12,7 @@
 using namespace Rcpp;
 using namespace arma;
 
+//Figuring out where to split a node, called from Split_A_Node
 void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
@@ -34,15 +35,16 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
   size_t P = var_id.n_elem;
   
   mtry = ( (mtry <= P) ? mtry:P ); // take minimum
-  
+
+  // Choose the variables to try  
   uvec var_try = arma::randperm(P, mtry);
   
-  DEBUG_Rcout << "    --- Reg_Find_A_Split with mtry = " << mtry << std::endl;
-
+  //For each variable in var_try
   for (size_t j = 0; j < mtry; j++)
   {
     size_t temp_var = var_id(var_try(j));
     
+    //Initialize objects
     Uni_Split_Class TempSplit;
     TempSplit.var = temp_var;
     TempSplit.value = 0;
@@ -80,11 +82,12 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                          alpha,
                          useobsweight);
       
-      DEBUG_Rcout << "    --- try var " << temp_var << " at cut " << TempSplit.value << " (continuous) with score " << TempSplit.score << std::endl;
     }
     
+    //If this variable is better than the last one tried
     if (TempSplit.score > OneSplit.score)
     {
+      //Change to this variable
       OneSplit.var = TempSplit.var;
       OneSplit.value = TempSplit.value;
       OneSplit.score = TempSplit.score;

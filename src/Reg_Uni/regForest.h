@@ -86,6 +86,19 @@ void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
                         double alpha,
                         bool useobsweight);
 
+void Reg_Uni_Split_Cont2(Uni_Split_Class& TempSplit,
+                        uvec& obs_id,
+                        const vec& x,
+                        const vec& Y,
+                        const vec& obs_weight,
+                        double penalty,
+                        int split_gen,
+                        int split_rule,
+                        int nsplit,
+                        size_t nmin,
+                        double alpha,
+                        bool useobsweight);
+
 void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
                        uvec& obs_id,
                        const vec& x,
@@ -129,6 +142,14 @@ void reg_cont_score_best(uvec& indices,
                         size_t highindex, 
                         double& temp_cut, 
                         double& temp_score);
+
+void reg_cont_score_best2(uvec& indices,
+                         const vec& x_sorted,
+                         const vec& Y,
+                         size_t lowindex, 
+                         size_t highindex, 
+                         double& temp_cut, 
+                         double& temp_score);
 
 void reg_cont_score_best_w(uvec& indices,
                           const vec& x,

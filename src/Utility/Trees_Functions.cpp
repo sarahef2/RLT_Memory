@@ -144,7 +144,7 @@ void get_samples(arma::uvec& inbagObs,
 void move_cont_index(size_t& lowindex, size_t& highindex, const vec& x, const uvec& indices, size_t nmin)
 {
   // in this case, we will not be able to control for nmin
-  // but extreamly small nmin should not have a high splitting score
+  // but extremely small nmin should not have a high splitting score
   
   size_t N = indices.size();
   
@@ -215,15 +215,11 @@ void split_id_cat(const vec& x, double value, uvec& left_id, uvec& obs_id, size_
   uvec goright(ncat + 1, fill::zeros); // the first (0-th) element (category) of goright will always be set to 0 --- go left, but this category does not exist.
   unpack(value, ncat + 1, goright);
 
-  DEBUG_Rcout << "    --- at split_id_cat, value is" <<  value << " ncat is " << ncat << ", goright is " << goright << " (continuous)" << std::endl;
-  
   size_t RightN = obs_id.n_elem - 1;
   size_t LeftN = 0;
   size_t i = 0;
   
   while( i <= RightN ){
-    
-    // DEBUG_Rcout << "    --- subject " << obs_id(i) << ", cat is " << x(obs_id(i)) << std::endl;
     
     if ( goright[x(obs_id(i))] == 0 )
     {
@@ -247,7 +243,6 @@ void split_id_cat(const vec& x, double value, uvec& left_id, uvec& obs_id, size_
 
 void field_vec_resize(arma::field<arma::vec>& A, size_t size)
 {
-  DEBUG_Rcout << " resize tree from size " << A.n_elem << " to size " << size << std::endl;
   arma::field<arma::vec> B(size);
   
   size_t common_size = (A.n_elem > size) ? size : A.n_elem;
@@ -262,12 +257,10 @@ void field_vec_resize(arma::field<arma::vec>& A, size_t size)
   {
     A[i] = vec(B[i].begin(), B[i].size(), false, true);
   }
-  DEBUG_Rcout << " done resize " << std::endl;
 }
 
 void field_vec_resize(arma::field<arma::uvec>& A, size_t size)
 {
-  DEBUG_Rcout << " resize tree from size " << A.n_elem << " to size " << size << std::endl;
   arma::field<arma::uvec> B(size);
   
   size_t common_size = (A.n_elem > size) ? size : A.n_elem;
@@ -282,7 +275,6 @@ void field_vec_resize(arma::field<arma::uvec>& A, size_t size)
   {
     A[i] = uvec(B[i].begin(), B[i].size(), false, true);
   }
-  DEBUG_Rcout << " done resize " << std::endl;
 }
 
 // for categorical variables

@@ -22,8 +22,6 @@ void move_cat_index(size_t& lowindex, size_t& highindex, std::vector<Reg_Cat_Cla
   if (true_cat == 2) //nothing we can do
     return; 
   
-  DEBUG_Rcout << "        --- start moving index with lowindex " << lowindex << " highindex " << highindex << std::endl;
-  
   size_t lowcount = cat_reduced[0].count;
   size_t highcount = cat_reduced[true_cat-1].count;
   

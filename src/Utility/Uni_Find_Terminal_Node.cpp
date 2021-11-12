@@ -11,6 +11,7 @@
 using namespace Rcpp;
 using namespace arma;
 
+// Find the terminal node for X in one tree
 void Uni_Find_Terminal_Node(size_t Node, 
               							const Uni_Tree_Class& OneTree,
               							const mat& X,
@@ -22,11 +23,11 @@ void Uni_Find_Terminal_Node(size_t Node,
  
  size_t size = proxy_id.n_elem;
   
-  DEBUG_Rcout << "/// Start at node ///" << Node << " n is " << size << std::endl;
-  
-  //if (OneTree.NodeType[Node] == 3)
+  //If the current node is a terminal node
   if (OneTree.SplitVar[Node] == -1)
   {
+    // For all the observations in the node,
+    // Set its terminal node
     for ( size_t i=0; i < size; i++ )
       TermNode(proxy_id(i)) = Node;
   }else{
@@ -53,15 +54,19 @@ void Uni_Find_Terminal_Node(size_t Node,
       
     }else{
       
+      //For the obs in the current internal node
       for (size_t i = 0; i < size ; i++)
       {
+        //Determine the x values for this variable
         xtemp = X( real_id( proxy_id(i) ), SplitVar);
         
+        //If they are greater than the value, go right
         if (xtemp > SplitValue)
           id_goright(i) = 1;
       }
     }
     
+    //All others go left
     uvec left_proxy = proxy_id(find(id_goright == 0));
     proxy_id = proxy_id(find(id_goright == 1));
     
@@ -85,7 +90,7 @@ void Uni_Find_Terminal_Node(size_t Node,
 }
 
 
-
+//Function for variable importance
 void Uni_Find_Terminal_Node_ShuffleJ(size_t Node, 
                                     const Uni_Tree_Class& OneTree,
                                     const mat& X,
@@ -99,9 +104,7 @@ void Uni_Find_Terminal_Node_ShuffleJ(size_t Node,
     
     size_t size = proxy_id.n_elem;
     
-    DEBUG_Rcout << "/// Start at node ///" << Node << " n is " << size << std::endl;
-    
-    //if (OneTree.NodeType[Node] == 3)
+    //If terminal node
     if (OneTree.SplitVar[Node] == -1)
     {
         for ( size_t i=0; i < size; i++ )
@@ -120,15 +123,12 @@ void Uni_Find_Terminal_Node_ShuffleJ(size_t Node,
           uvec goright(Ncat(SplitVar) + 1);
           unpack(SplitValue, Ncat(SplitVar) + 1, goright); // from Andy's rf package
           
-          //Rcout << "-- at Node " << Node << " go right is \n " << goright << std::endl;
-          
           for (size_t i = 0; i < size ; i++)
           {
             if (SplitVar == j)
             {
               xtemp = tildex( proxy_id(i) );
-              //Rcout << "-- original data is  " << X( real_id( proxy_id(i) ), SplitVar) << " permuted data is " << xtemp << std::endl;
-              
+
             }else{
               xtemp = X( real_id( proxy_id(i) ), SplitVar);
             }
@@ -145,6 +145,7 @@ void Uni_Find_Terminal_Node_ShuffleJ(size_t Node,
           {
             if (SplitVar == j)
             {
+              // If it is the shuffle variable, randomly get x
               xtemp = tildex( proxy_id(i) );
             }else{
               xtemp = X( real_id( proxy_id(i) ), SplitVar);

@@ -11,6 +11,9 @@
 using namespace Rcpp;
 using namespace arma;
 
+// Predict function- must be in the main source folder, 
+//  otherwise Rcpp won't find it
+
 // [[Rcpp::export()]]
 List RegForestUniPred(arma::field<arma::ivec>& SplitVar,
           					  arma::field<arma::vec>& SplitValue,
@@ -24,22 +27,19 @@ List RegForestUniPred(arma::field<arma::ivec>& SplitVar,
           					  int usecores,
           					  int verbose)
 {
-  //arma::field<arma::uvec>& NodeType,
-  //arma::field<arma::vec>& NodeSize,
-  DEBUG_Rcout << "/// THIS IS A DEBUG MODE OF RLT REGRESSION ///" << std::endl;
-  DEBUG_Rcout << "Check cores" << std::endl;
   // check number of cores
   usecores = checkCores(usecores, verbose);
 
   // convert R object to forest
   
-  Reg_Uni_Forest_Class REG_FOREST(//NodeType, 
-                                  SplitVar, SplitValue, LeftNode, RightNode, //NodeSize, 
+  Reg_Uni_Forest_Class REG_FOREST(SplitVar, SplitValue, 
+                                  LeftNode, RightNode, 
                                   NodeAve);
-  
+
+  // Initialize prediction objects  
   mat PredAll;
   
-  DEBUG_Rcout << "Start prediction" << std::endl;
+  // Run prediction
   Reg_Uni_Forest_Pred(PredAll,
                       (const Reg_Uni_Forest_Class&) REG_FOREST,
           					  X,
@@ -48,10 +48,12 @@ List RegForestUniPred(arma::field<arma::ivec>& SplitVar,
           					  usecores,
           					  verbose);
   
+  // Initialize return list
   List ReturnList;
 
   ReturnList["Prediction"] = mean(PredAll, 1);
-  
+
+  // If keeping predictions for every tree  
   if (keep_all)
     ReturnList["PredictionAll"] = PredAll;
   
