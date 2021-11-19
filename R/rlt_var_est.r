@@ -65,7 +65,7 @@ rlt_var_est <- function(x, y, testx,
               			    nmin = max(1, as.integer(log(nrow(x)))),
               			    alpha = 0,
               			    k = nrow(x) / 2, 
-              			    split.gen = "random",
+              			    split.gen = "best",
               			    nsplit = 1,
               			    seed = NaN,
               			    ncores = 1,
@@ -75,38 +75,48 @@ rlt_var_est <- function(x, y, testx,
     if (!is.matrix(testx) & !is.data.frame(testx)) stop("testx must be a matrix or a data.frame")
     if (any(is.na(testx))) stop("NA not permitted in testx")
   
-    RLT.fit = RLT(x, y, ntrees = ntrees*10, mtry = mtry, nmin = nmin, alpha = alpha,
-                  split.gen = split.gen, replacement = TRUE, resample.prob = k/n, 
-                  ncores = ncores)
+    #Need to pre-specify observation track- make sure it is split nrow(X)/2 or smaller
+    #Obstrack
+    n <- dim(x)[1]
+    tree_track1 <- vapply(1:(ntrees/2), 
+                        function(i) sample(c(rep(1,k), rep(0,n-k)), n,
+                                           replace = FALSE),
+                        FUN.VALUE = numeric(n))
+    tree_track2 <- 1-tree_track1
+    tree_obtrack <- cbind(tree_track1, tree_track2)
+  
+    RLT.fit = RLT(x, y, ntrees = ntrees, mtry = mtry, nmin = nmin, alpha = alpha,
+                  split.gen = split.gen, #replacement = TRUE, #resample.prob = k/n, 
+                  ncores = ncores,
+                  ObsTrack = tree_obtrack, track.obs = TRUE)
     
-    RLT.pred = predict(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
+    RLT.pred = predict.RLT(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
     
-    tree.var = apply(RLT.pred$PredictionAll, 1, var)
+    #tree.var = apply(RLT.pred$PredictionAll, 1, var)
     
     # count how many pairs of trees match C
     
-    RLT.fit = RLT(x, y, ntrees = ntrees, mtry = mtry, nmin = nmin, alpha = alpha,
-                  split.gen = "best", replacement = FALSE, resample.prob = k/n,
-                  ncores = ncores, track.obs = TRUE)
+    #RLT.fit = RLT(x, y, ntrees = ntrees, mtry = mtry, nmin = nmin, alpha = alpha,
+    #              split.gen = "best", replacement = FALSE, resample.prob = k/n,
+    #              ncores = ncores, track.obs = TRUE)
     
-    RLT.pred = predict(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
+    #RLT.pred = predict(RLT.fit, testx, ncores = ncores, keep.all = TRUE)
     
     #Calculate for the C's that account for 98% of the prob
-    C_min = qhyper(0.01, k, n - k, k)
-    C_max = qhyper(0.99, k, n - k, k)
+    #C_min = qhyper(0.01, k, n - k, k)
+    #C_max = qhyper(0.99, k, n - k, k)
     
     #All C's in the range
-    C = seq(C_min, C_max)
-    storage.mode(C) <- "integer"
+    #C = seq(C_min, C_max)
+    #storage.mode(C) <- "integer"
     
-    two.sample.var = EofVar(RLT.fit$ObsTrack, RLT.pred$PredictionAll, C, ncores, verbose)
+    two.sample.var = EofVar(RLT.pred$PredictionAll, ncores, verbose)
     
     
     return(list("pred" = RLT.pred$Prediction,
-                "tree.var" = tree.var,
-                "allc" = two.sample.var$allcounts,
-                "estimation" = two.sample.var$estimation,
+                "tree.var" = two.sample.var$tree_Est,
+                #"estimation" = two.sample.var$estimation,
                 #Vtree-estimate of tildeSigma
-                "var" = tree.var - rowSums(sweep(two.sample.var$estimation, 2, two.sample.var$allc, FUN = "*"))/sum(two.sample.var$allc)))
+                "var" = two.sample.var$sigma))
 
 }
