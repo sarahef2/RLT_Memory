@@ -3,36 +3,31 @@
 #' @description Internal function for fitting regression forest
 #' @keywords internal
 
-RegForest <- function(x, y,
-                      ncat,
+RegForest <- function(x, y, ncat,
+                      obs.w, var.w,
+                      resample.preset,
                       param,
-                      RLT.control,
-                      obs.w,
-                      var.w,
-                      ncores,
-                      verbose,
-                      ObsTrack,
                       ...)
 {
   # prepare y
   storage.mode(y) <- "double"
 
-  # check splitting rule 
+  # check regression splitting rules
   all.split.rule = c("var")
-    
+
   param$"split.rule" <- match.arg(param$"split.rule", all.split.rule)
   param$"split.rule" <- match(param$"split.rule", all.split.rule)
   
+  cat("Start fitting \n")
+  
   # fit model
-  fit = RegForestUniFit(x, y, ncat,
-                        param, RLT.control,
+  fit = RegUniForestFit(x, y, ncat,
                         obs.w, var.w,
-                        ncores, verbose,
-                        ObsTrack)
+                        resample.preset,
+                        param)
 
   fit[["parameters"]] = param
-  fit[["RLT.control"]] = RLT.control
-  fit[["ncat"]] = ncat  
+  fit[["ncat"]] = ncat
   fit[["obs.w"]] = obs.w
   fit[["var.w"]] = var.w
   fit[["y"]] = y

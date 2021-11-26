@@ -15,7 +15,6 @@ using namespace arma;
 void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
-                                const PARAM_RLT& RLTParam,
                                 uvec& obs_id,
                                 uvec& var_id)
 {
@@ -24,9 +23,5 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
   
   PARAM_GLOBAL Embed_Param = Param;
 
-  Embed_Param.print();
-  
-  
-  
 }
 

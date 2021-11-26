@@ -39,26 +39,21 @@ public:
 
 class Reg_Uni_Forest_Class{
 public:
-  //arma::field<arma::uvec>& NodeTypeList;
   arma::field<arma::ivec>& SplitVarList;
   arma::field<arma::vec>& SplitValueList;
   arma::field<arma::uvec>& LeftNodeList;
   arma::field<arma::uvec>& RightNodeList;
-  //arma::field<arma::vec>& NodeSizeList;  
   arma::field<arma::vec>& NodeAveList;
   
-  Reg_Uni_Forest_Class(//arma::field<arma::uvec>& NodeTypeList,
-                       arma::field<arma::ivec>& SplitVarList,
+  Reg_Uni_Forest_Class(arma::field<arma::ivec>& SplitVarList,
                        arma::field<arma::vec>& SplitValueList,
                        arma::field<arma::uvec>& LeftNodeList,
                        arma::field<arma::uvec>& RightNodeList,
-                       //arma::field<arma::vec>& NodeSizeList,
-                       arma::field<arma::vec>& NodeAveList) : //NodeTypeList(NodeTypeList), 
+                       arma::field<arma::vec>& NodeAveList) : 
                        SplitVarList(SplitVarList), 
                        SplitValueList(SplitValueList),
                        LeftNodeList(LeftNodeList),
                        RightNodeList(RightNodeList),
-                       //NodeSizeList(NodeSizeList),
                        NodeAveList(NodeAveList) {}
 };
 
@@ -66,18 +61,15 @@ class Reg_Uni_Tree_Class : public Uni_Tree_Class{
 public:
   arma::vec& NodeAve;
 
-  Reg_Uni_Tree_Class(//arma::uvec& NodeType,
-                     arma::ivec& SplitVar,
+  Reg_Uni_Tree_Class(arma::ivec& SplitVar,
                      arma::vec& SplitValue,
                      arma::uvec& LeftNode,
                      arma::uvec& RightNode,
-                     //arma::vec& NodeSize,
-                     arma::vec& NodeAve) : Uni_Tree_Class(//NodeType,
+                     arma::vec& NodeAve) : Uni_Tree_Class(
                      SplitVar,
                      SplitValue,
                      LeftNode,
                      RightNode),
-                     //NodeSize),
                      NodeAve(NodeAve) {}
 
   // initiate tree
@@ -85,27 +77,22 @@ public:
   {
     if (TreeLength == 0) TreeLength = 1;
 
-    //NodeType.zeros(TreeLength);
-
     SplitVar.set_size(TreeLength);
-    SplitVar.fill(-2);//.fill(datum::nan);
+    SplitVar.fill(-2);
 
     SplitValue.zeros(TreeLength);
     LeftNode.zeros(TreeLength);
     RightNode.zeros(TreeLength);
-    //NodeSize.zeros(TreeLength);
     NodeAve.zeros(TreeLength);
   }
 
   // trim tree
   void trim(size_t TreeLength)
   {
-    //NodeType.resize(TreeLength);
     SplitVar.resize(TreeLength);
     SplitValue.resize(TreeLength);
     LeftNode.resize(TreeLength);
     RightNode.resize(TreeLength);
-    //NodeSize.resize(TreeLength);
     NodeAve.resize(TreeLength);
   }
 
@@ -115,9 +102,6 @@ public:
     // tree is not long enough, extend
     size_t OldLength = SplitVar.n_elem;
     size_t NewLength = (OldLength*1.5 > OldLength + 100)? (size_t) (OldLength*1.5):(OldLength + 100);
-
-    //NodeType.resize(NewLength);
-    //NodeType(span(OldLength, NewLength-1)).zeros();
 
     SplitVar.resize(NewLength);
     SplitVar(span(OldLength, NewLength-1)).fill(datum::nan);
@@ -131,14 +115,10 @@ public:
     RightNode.resize(NewLength);
     RightNode(span(OldLength, NewLength-1)).zeros();
 
-    //NodeSize.resize(NewLength);
-    //NodeSize(span(OldLength, NewLength-1)).zeros();
-
     NodeAve.resize(NewLength);
     NodeAve(span(OldLength, NewLength-1)).zeros();
   }
 };
-
 
 class Reg_Cat_Class: public Cat_Class{
 public:

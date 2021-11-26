@@ -16,7 +16,6 @@ using namespace arma;
 void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
-                          const PARAM_RLT& RLTParam,
                           uvec& obs_id,
                           uvec& var_id)
 {
@@ -26,9 +25,9 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
   double alpha = Param.alpha;
   bool useobsweight = Param.useobsweight;
   bool usevarweight = Param.usevarweight;
-  int nsplit = Param.nsplit;
-  int split_gen = Param.split_gen;
-  int split_rule = Param.split_rule;
+  size_t nsplit = Param.nsplit;
+  size_t split_gen = Param.split_gen;
+  size_t split_rule = Param.split_rule;
   bool reinforcement = Param.reinforcement;
   
   size_t N = obs_id.n_elem;

@@ -13,11 +13,11 @@ ARMA_EMPTY_VEC <- function() {
     .Call(`_RLT_ARMA_EMPTY_VEC`)
 }
 
-RegForestUniFit <- function(X, Y, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack) {
-    .Call(`_RLT_RegForestUniFit`, X, Y, Ncat, param, RLTparam, obsweight, varweight, usecores, verbose, ObsTrack)
+RegUniForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
+    .Call(`_RLT_RegUniForestFit`, X, Y, Ncat, obsweight, varweight, ObsTrack, param)
 }
 
-RegForestUniPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose) {
-    .Call(`_RLT_RegForestUniPred`, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose)
+RegUniForestPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose) {
+    .Call(`_RLT_RegUniForestPred`, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose)
 }
 

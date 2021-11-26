@@ -1,6 +1,6 @@
 //  **********************************
 //  Reinforcement Learning Trees (RLT)
-//  Utility Functions: check
+//  Utility Functions
 //  **********************************
 
 // my header file
@@ -8,18 +8,16 @@
 
 // check cores
 
-int checkCores(int usecores, int verbose)
+size_t checkCores(size_t usecores, size_t verbose)
 {
-  int use_cores = ( (usecores > 1) ? usecores:1 );
+  size_t use_cores = ( (usecores == 0) ? omp_get_max_threads():usecores);
 
-  if (use_cores > 0) OMPMSG(1);
+  if (use_cores > 1) OMPMSG(1);
 
-  int haveCores = omp_get_max_threads();
-
-  if(use_cores > haveCores)
+  if(use_cores > omp_get_max_threads())
   {
-    if (verbose) Rprintf("Do not have %i cores, use maximum %i cores. \n", use_cores, haveCores);
-    use_cores = haveCores;
+    if (verbose) Rprintf("Do not have %i cores, use maximum %i cores. \n", use_cores, omp_get_max_threads());
+    use_cores = omp_get_max_threads();
   }
   
   return(use_cores);

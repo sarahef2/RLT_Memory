@@ -22,7 +22,7 @@ void Reg_Uni_Forest_Pred(mat& Pred,
 {
   
   size_t N = X.n_rows;
-  size_t ntrees = REG_FOREST.SplitValueList.size();//NodeTypeList.size();
+  size_t ntrees = REG_FOREST.SplitValueList.size();
   
   Pred.zeros(N, treeindex.n_elem);
 
@@ -39,12 +39,10 @@ void Reg_Uni_Forest_Pred(mat& Pred,
       
       size_t whichtree = treeindex(nt);
         
-      Reg_Uni_Tree_Class OneTree(//REG_FOREST.NodeTypeList(whichtree), 
-                                 REG_FOREST.SplitVarList(whichtree),
+      Reg_Uni_Tree_Class OneTree(REG_FOREST.SplitVarList(whichtree),
                                  REG_FOREST.SplitValueList(whichtree),
                                  REG_FOREST.LeftNodeList(whichtree),
                                  REG_FOREST.RightNodeList(whichtree),
-                                 //REG_FOREST.NodeSizeList(whichtree),
                                  REG_FOREST.NodeAveList(whichtree));
       
       Uni_Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);

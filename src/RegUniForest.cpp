@@ -12,28 +12,19 @@ using namespace Rcpp;
 using namespace arma;
 
 // Fit function- must be in the main source folder, 
-//  otherwise Rcpp won't find it
+// otherwise Rcpp won't find it
 
 // [[Rcpp::export()]]
-List RegForestUniFit(arma::mat& X,
+List RegUniForestFit(arma::mat& X,
           					 arma::vec& Y,
           					 arma::uvec& Ncat,
-          					 List& param,
-          					 List& RLTparam,
           					 arma::vec& obsweight,
           					 arma::vec& varweight,
-          					 int usecores,
-          					 int verbose,
-          					 arma::umat& ObsTrack)
+          					 arma::umat& ObsTrack,
+          					 List& param)
 {
-  // check number of cores
-  usecores = checkCores(usecores, verbose);
-
   // reading parameters 
   PARAM_GLOBAL Param(param);
-  if (verbose) Param.print();
-  PARAM_RLT Param_RLT(RLTparam);
-  if (verbose and Param.reinforcement) Param_RLT.print();
 
   // create data objects  
   RLT_REG_DATA REG_DATA(X, Y, Ncat, obsweight, varweight);
@@ -41,7 +32,6 @@ List RegForestUniFit(arma::mat& X,
   size_t N = REG_DATA.X.n_rows;
   size_t P = REG_DATA.X.n_cols;
   size_t ntrees = Param.ntrees;
-  size_t seed = Param.seed;
   int obs_track = Param.obs_track;
 
   int importance = Param.importance;
@@ -54,38 +44,35 @@ List RegForestUniFit(arma::mat& X,
   arma::field<arma::vec> NodeAve(ntrees);
   
   //Initiate forest object
-  Reg_Uni_Forest_Class REG_FOREST(SplitVar, SplitValue, 
-                                  LeftNode, RightNode, 
+  Reg_Uni_Forest_Class REG_FOREST(SplitVar, 
+                                  SplitValue, 
+                                  LeftNode, 
+                                  RightNode, 
                                   NodeAve);
-  
-  // VarImp
-  vec VarImp;
-  
-  if (importance)
-    VarImp.zeros(P);
-  
-  // Initiate prediction objects
-  vec Prediction;
-  vec OOBPrediction;
   
   // initiate obs id and var id
   uvec obs_id = linspace<uvec>(0, N-1, N);
   uvec var_id = linspace<uvec>(0, P-1, P);
   
+  // Initiate prediction objects
+  vec Prediction;
+  vec OOBPrediction;
+  
+  // VarImp
+  vec VarImp;
+  if (importance)
+    VarImp.zeros(P);
+  
   // Run model fitting
   Reg_Uni_Forest_Build((const RLT_REG_DATA&) REG_DATA,
                        REG_FOREST,
                        (const PARAM_GLOBAL&) Param,
-                       (const PARAM_RLT&) Param_RLT,
                        obs_id,
                        var_id,
                        ObsTrack,
                        Prediction,
                        OOBPrediction,
-                       VarImp,
-                       seed,
-                       usecores,
-                       verbose);
+                       VarImp);
 
   //initialize return objects
   List ReturnList;
@@ -108,5 +95,53 @@ List RegForestUniFit(arma::mat& X,
   ReturnList["Prediction"] = Prediction;
   ReturnList["OOBPrediction"] = OOBPrediction;
 
+  return ReturnList;
+}
+
+// [[Rcpp::export()]]
+List RegUniForestPred(arma::field<arma::ivec>& SplitVar,
+                      arma::field<arma::vec>& SplitValue,
+                      arma::field<arma::uvec>& LeftNode,
+                      arma::field<arma::uvec>& RightNode,
+                      arma::field<arma::vec>& NodeAve,
+                      arma::mat& X,
+                      arma::uvec& Ncat,
+                      arma::uvec& treeindex,
+                      bool keep_all,
+                      int usecores,
+                      int verbose)
+{
+  // check number of cores
+  usecores = checkCores(usecores, verbose);
+  
+  // convert R object to forest
+  
+  Reg_Uni_Forest_Class REG_FOREST(SplitVar, 
+                                  SplitValue, 
+                                  LeftNode, 
+                                  RightNode, 
+                                  NodeAve);
+  
+  // Initialize prediction objects  
+  mat PredAll;
+  
+  // Run prediction
+  Reg_Uni_Forest_Pred(PredAll,
+                      (const Reg_Uni_Forest_Class&) REG_FOREST,
+                      X,
+                      Ncat,
+                      treeindex,
+                      usecores,
+                      verbose);
+  
+  // Initialize return list
+  List ReturnList;
+  
+  ReturnList["Prediction"] = mean(PredAll, 1);
+  
+  // If keeping predictions for every tree  
+  if (keep_all)
+    ReturnList["PredictionAll"] = PredAll;
+  
   return ReturnList;
 }

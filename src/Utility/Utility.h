@@ -37,7 +37,7 @@ void printLog(const char*, const char*, const int, const double);
 // Check functions //
 // ****************//
 
-int checkCores(int, int);
+size_t checkCores(size_t, size_t);
 
 // *************//
 // Calculations //
