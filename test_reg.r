@@ -9,23 +9,23 @@ set.seed(1)
 trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 10
+p = 100
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
-for (j in 1:ncol(X2)) X2[,j] = as.factor(X2[,j])
 
-X = cbind(X1, X2)
+X = data.frame(X1, X2)
+for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
 #y = 1 + X[, 1] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 y = 1 + X[, 1] + rnorm(n)
 
 ntrees = 200
-ncores = 1
+ncores = 6
 nmin = 25
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
 nsplit = ifelse(rule == "best", 0, 3)
-importance = FALSE 
+importance = TRUE 
 
 trainX = X[1:trainn, ]
 trainY = y[1:trainn]
@@ -74,7 +74,8 @@ metric[3, 4] = object.size(rf.fit)
 start_time <- Sys.time()
 rangerfit <- ranger(trainY ~ ., data = data.frame(trainX), num.trees = ntrees, 
                     min.node.size = nmin, mtry = mtry, num.threads = ncores, 
-                    sample.fraction = sampleprob, importance = "permutation")
+                    sample.fraction = sampleprob, importance = "permutation",
+                    respect.unordered.factors = "partition")
 metric[4, 1] = difftime(Sys.time(), start_time, units = "secs")
 rangerpred = predict(rangerfit, data.frame(testX))
 metric[4, 2] = difftime(Sys.time(), start_time, units = "secs")
