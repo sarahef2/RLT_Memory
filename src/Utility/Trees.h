@@ -87,8 +87,6 @@ void split_id_cat(const vec& x, double value, uvec& left_id, uvec& obs_id, size_
 bool cat_reduced_compare(Cat_Class& a, Cat_Class& b);
 bool cat_reduced_collapse(Cat_Class& a, Cat_Class& b); 
 
-// bool cat_reduced_compare_score(Cat_Class& a, Cat_Class& b);
-
 void goright_roller(arma::uvec& goright_cat);
 
 #endif

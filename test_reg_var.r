@@ -23,16 +23,14 @@ myfit = rlt_var_est(X, Y, testx, ntrees = 1000, mtry = 3, nmin = 20, k = 600,
 
 myfit$var
 
-plot(myfit$estimation[1,])
+#plot(myfit$estimation[1,])
 
-rowSums(sweep(myfit$estimation, 2, myfit$allc, FUN = "*"))/sum(myfit$allc)
+#rowSums(sweep(myfit$estimation, 2, myfit$allc, FUN = "*"))/sum(myfit$allc)
 
-myfit$var
-
-myfit$allc
+#myfit$allc
 
 
-myfit$sd
+#myfit$sd
 
 
 

@@ -12,17 +12,15 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // EofVar
-List EofVar(arma::umat& ObsTrack, arma::mat& Pred, arma::uvec& C, int usecores, int verbose);
-RcppExport SEXP _RLT_EofVar(SEXP ObsTrackSEXP, SEXP PredSEXP, SEXP CSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
+List EofVar(arma::mat& Pred, int usecores, int verbose);
+RcppExport SEXP _RLT_EofVar(SEXP PredSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type Pred(PredSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type C(CSEXP);
     Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
     Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(EofVar(ObsTrack, Pred, C, usecores, verbose));
+    rcpp_result_gen = Rcpp::wrap(EofVar(Pred, usecores, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -86,7 +84,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RLT_EofVar", (DL_FUNC) &_RLT_EofVar, 5},
+    {"_RLT_EofVar", (DL_FUNC) &_RLT_EofVar, 3},
     {"_RLT_ARMA_EMPTY_UMAT", (DL_FUNC) &_RLT_ARMA_EMPTY_UMAT, 0},
     {"_RLT_ARMA_EMPTY_VEC", (DL_FUNC) &_RLT_ARMA_EMPTY_VEC, 0},
     {"_RLT_RegUniForestFit", (DL_FUNC) &_RLT_RegUniForestFit, 7},
