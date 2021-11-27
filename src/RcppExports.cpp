@@ -11,39 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// EofVar
-List EofVar(arma::mat& Pred, int usecores, int verbose);
-RcppExport SEXP _RLT_EofVar(SEXP PredSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type Pred(PredSEXP);
-    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
-    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(EofVar(Pred, usecores, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ARMA_EMPTY_UMAT
-arma::umat ARMA_EMPTY_UMAT();
-RcppExport SEXP _RLT_ARMA_EMPTY_UMAT() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_UMAT());
-    return rcpp_result_gen;
-END_RCPP
-}
-// ARMA_EMPTY_VEC
-arma::vec ARMA_EMPTY_VEC();
-RcppExport SEXP _RLT_ARMA_EMPTY_VEC() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_VEC());
-    return rcpp_result_gen;
-END_RCPP
-}
 // RegUniForestFit
 List RegUniForestFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, arma::vec& obsweight, arma::vec& varweight, arma::umat& ObsTrack, List& param);
 RcppExport SEXP _RLT_RegUniForestFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP ObsTrackSEXP, SEXP paramSEXP) {
@@ -82,13 +49,46 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// EofVar
+List EofVar(arma::mat& Pred, int usecores, int verbose);
+RcppExport SEXP _RLT_EofVar(SEXP PredSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type Pred(PredSEXP);
+    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
+    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(EofVar(Pred, usecores, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ARMA_EMPTY_UMAT
+arma::umat ARMA_EMPTY_UMAT();
+RcppExport SEXP _RLT_ARMA_EMPTY_UMAT() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_UMAT());
+    return rcpp_result_gen;
+END_RCPP
+}
+// ARMA_EMPTY_VEC
+arma::vec ARMA_EMPTY_VEC();
+RcppExport SEXP _RLT_ARMA_EMPTY_VEC() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(ARMA_EMPTY_VEC());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RLT_RegUniForestFit", (DL_FUNC) &_RLT_RegUniForestFit, 7},
+    {"_RLT_RegUniForestPred", (DL_FUNC) &_RLT_RegUniForestPred, 11},
     {"_RLT_EofVar", (DL_FUNC) &_RLT_EofVar, 3},
     {"_RLT_ARMA_EMPTY_UMAT", (DL_FUNC) &_RLT_ARMA_EMPTY_UMAT, 0},
     {"_RLT_ARMA_EMPTY_VEC", (DL_FUNC) &_RLT_ARMA_EMPTY_VEC, 0},
-    {"_RLT_RegUniForestFit", (DL_FUNC) &_RLT_RegUniForestFit, 7},
-    {"_RLT_RegUniForestPred", (DL_FUNC) &_RLT_RegUniForestPred, 11},
     {NULL, NULL, 0}
 };
 

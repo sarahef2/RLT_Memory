@@ -76,7 +76,7 @@ public:
     embed_nmin          = param["embed.nmin"];
     embed_split_gen     = param["embed.split.gen"];
     embed_nsplit        = param["embed.nsplit"];
-  }
+  };
   
   void copyfrom(const PARAM_GLOBAL& Input){
       N             = Input.N;
@@ -108,11 +108,11 @@ public:
       embed_nmin          = Input.embed_nmin;
       embed_split_gen     = Input.embed_split_gen;
       embed_nsplit        = Input.embed_nsplit;
-  }
+  };
 
   void print() {
       Rcout << "--- Random Forest Parameters ---" << std::endl;
-  }
+  };
     
 /*  
       Rcout << "            N = " << N << std::endl;

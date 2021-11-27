@@ -12,7 +12,7 @@ using namespace arma;
 
 // tree arrange functions
 
-// categoritcal variable pack
+// categorical variable pack
 
 double pack(const size_t nBits, const uvec& bits) // from Andy's rf package
 {
@@ -84,23 +84,19 @@ void oob_samples(arma::uvec& inbagObs,
 void set_obstrack(arma::umat& ObsTrack,
                   const size_t nt,
                   const size_t size,
-                  const bool replacement)
+                  const bool replacement,
+                  Rand& rngl)
 {
 	size_t N = ObsTrack.n_rows;
 	
 	if (replacement)
 	{
-		arma::uvec loc = randi<uvec>(size, distr_param(0, N-1));
-		
-		for (size_t i = 0; i < size; i++) // its prob unsafe to regenerate obstrack, so I just write on it
-			ObsTrack( loc(i), nt ) ++;
+	  ObsTrack.col(nt) = rngl.rand_int<arma::uvec> (size, 0, N-1);
 		
 	}else{
 		
-		arma::uvec ind(N, fill::zeros);
-		ind.head(size) += 1;
-		
-		ObsTrack.col(nt) = shuffle(ind);
+		ObsTrack.col(nt) = rngl.sample<arma::uvec> (size, 0, N-1);
+	  
 	}
 }
 

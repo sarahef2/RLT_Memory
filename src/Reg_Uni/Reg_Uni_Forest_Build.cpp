@@ -11,7 +11,8 @@
 
 #include <xoshiro.h>
 #include <dqrng_distribution.h>
-
+#include <limits>
+  
 using namespace Rcpp;
 using namespace arma;
 
@@ -34,8 +35,13 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
   size_t nmin = Param.nmin;
   bool importance = Param.importance;  
   size_t usecores = checkCores(Param.ncores, Param.verbose);
+  size_t seed = Param.seed;
 
-  // track obs matrix 
+  // set seed
+  Rand rng(seed);
+  arma::uvec seed_vec = rng.rand_int<arma::uvec> (n, 0, INT_MAX);
+  
+  // track obs matrix
   bool obs_track_pre = false; 
   
   if (ObsTrack.n_elem != 0) //if pre-defined
@@ -59,12 +65,15 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
     #pragma omp for schedule(dynamic)
     for (size_t nt = 0; nt < ntrees; nt++) // fit all trees
     {
+      // set xoshiro random seed
+      Rand rngl(seed_vec(nt));
+      
       // get inbag and oobag samples
       uvec inbagObs, oobagObs;
       
       //If ObsTrack isn't given, set ObsTrack
       if (!obs_track_pre)
-        set_obstrack(ObsTrack, nt, size, replacement);
+        set_obstrack(ObsTrack, nt, size, replacement, rngl);
       
       // Find the samples
       get_samples(inbagObs, oobagObs, obs_id, ObsTrack.unsafe_col(nt));

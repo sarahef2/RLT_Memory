@@ -13,6 +13,7 @@ using namespace Rcpp;
 using namespace arma;
 
 # include "Trees_Definition.h"
+# include "Utility.h"
 
 // ********************//
 // functions for trees //
@@ -71,7 +72,8 @@ void oob_samples(arma::uvec& inbagObs,
 void set_obstrack(arma::umat& ObsTrack,
                   const size_t nt,
                   const size_t size,
-                  const bool replacement);
+                  const bool replacement,
+                  Rand& rngl);
 
 void get_samples(arma::uvec& inbagObs,
                  arma::uvec& oobagObs,
