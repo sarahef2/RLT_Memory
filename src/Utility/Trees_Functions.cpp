@@ -91,11 +91,11 @@ void set_obstrack(arma::umat& ObsTrack,
 	
 	if (replacement)
 	{
-	  ObsTrack.col(nt) = rngl.rand_int<arma::uvec> (size, 0, N-1);
+	  ObsTrack.col(nt) = rngl.rand_uvec(size, 0, N-1);
 		
 	}else{
 		
-		ObsTrack.col(nt) = rngl.sample<arma::uvec> (size, 0, N-1);
+		ObsTrack.col(nt) = rngl.sample(size, 0, N-1);
 	  
 	}
 }
@@ -134,7 +134,7 @@ void get_samples(arma::uvec& inbagObs,
 
 
 
-// moveindex (continuous varaible) so that both low and high are not at a tie location 
+// moveindex (continuous variable) so that both low and high are not at a tie location 
 // and has sufficient number of observations
 
 void move_cont_index(size_t& lowindex, size_t& highindex, const vec& x, const uvec& indices, size_t nmin)
@@ -142,7 +142,7 @@ void move_cont_index(size_t& lowindex, size_t& highindex, const vec& x, const uv
   // in this case, we will not be able to control for nmin
   // but extremely small nmin should not have a high splitting score
   
-  size_t N = indices.size();
+  // size_t N = indices.size();
   
   lowindex = 0;
   highindex = indices.size()-2;

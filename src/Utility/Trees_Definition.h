@@ -46,7 +46,7 @@ public:
   size_t embed_split_gen;
   size_t embed_nsplit;
 
-  void PARAM_GLOBAL(List& param){
+  PARAM_GLOBAL(List& param){
     N             = param["n"];
     P             = param["p"];
     ntrees        = param["ntrees"];

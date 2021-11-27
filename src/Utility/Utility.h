@@ -70,16 +70,15 @@ public:
   }
   
   // Discrete Uniform
-  template<class Vec>
-  inline Vec rand_int(size_t Num, int min, int max ){
+  arma::uvec rand_uvec(size_t Num, size_t min, size_t max){
     
     boost::random::uniform_int_distribution<int> rand(min, max);
     
-    Vec x(Num);
+    arma::uvec x(Num);
     
     for(size_t i = 0; i < Num; i++){
       
-      x(i) = rand(lrng);
+      x(i) = rand(this -> lrng);
       
     }
     
@@ -88,17 +87,15 @@ public:
   };
   
   // Uniform Distribution
-  template<class Vec>
-  inline Vec rand_double(size_t Num, double min, double max ){
-    
-    
+  arma::vec rand_vec(size_t Num, double min, double max){
+
     boost::random::uniform_real_distribution<double> rand(min, max);
     
-    Vec x(Num);
+    arma::vec x(Num);
     
     for(size_t i = 0; i < Num; i++){
       
-      x(i) = rand(lrng);
+      x(i) = rand(this -> lrng);
       
     }
     
@@ -107,20 +104,19 @@ public:
   };
   
   // Sampling index without replacement
-  template<class Vec>
-  arma::vec sample(size_t Num, size_t min, size_t max){
-    
+  arma::uvec sample(size_t Num, size_t min, size_t max){
+
     size_t n = max - min + 1;
     
     if (Num > n)
       Num = n;
 
-    arma::vec z = arma::linspace(min, max, n);
-    arma::vec sample_set(Num);
+    arma::uvec z = arma::linspace<uvec>(min, max, n);
+    arma::uvec sample_set(Num);
     
     if( n < 2 * Num ){
       
-      arma::vec ind = this -> rand_int<arma::vec> (n, 0, n-1);
+      arma::uvec ind = this -> rand_uvec(n, 0, n-1);
       
       for(size_t i = 0; i < n ; i++){
         

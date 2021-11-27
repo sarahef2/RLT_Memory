@@ -39,7 +39,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
 
   // set seed
   Rand rng(seed);
-  arma::uvec seed_vec = rng.rand_int<arma::uvec> (n, 0, INT_MAX);
+  arma::uvec seed_vec = rng.rand_uvec(ntrees, 0, INT_MAX);
   
   // track obs matrix
   bool obs_track_pre = false; 

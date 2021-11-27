@@ -9,7 +9,7 @@ set.seed(1)
 trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 100
+p = 10
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
@@ -43,7 +43,8 @@ colnames(metric) = c("fit.time", "pred.time", "pred.error", "obj.size")
 
 start_time <- Sys.time()
 RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, nmin = nmin/2, mtry = mtry,
-              split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, importance = importance)
+              split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, 
+              importance = importance, resample.track = TRUE)
 metric[1, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
 RLTPred <- predict.RLT(RLTfit, testX, ncores = ncores)
