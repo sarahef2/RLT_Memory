@@ -4,9 +4,6 @@
 //  **********************************
 
 // my header file
-# include "../RLT.h"
-# include "../Utility//Trees.h"
-# include "../Utility/Utility.h"
 # include "regForest.h"
 
 using namespace Rcpp;
@@ -22,7 +19,7 @@ void Reg_Uni_Forest_Pred(mat& Pred,
 {
   
   size_t N = X.n_rows;
-  size_t ntrees = REG_FOREST.SplitValueList.size();
+  // size_t ntrees = REG_FOREST.SplitValueList.size();
   
   Pred.zeros(N, treeindex.n_elem);
 

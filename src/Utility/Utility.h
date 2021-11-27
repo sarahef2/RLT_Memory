@@ -5,8 +5,11 @@
 
 // my header file
 # include "../RLT.h"
+# include <RcppArmadillo.h>
+# include <Rcpp.h>
 # include <xoshiro.h>
 # include <dqrng_distribution.h>
+# include <limits>
 
 using namespace Rcpp;
 using namespace arma;

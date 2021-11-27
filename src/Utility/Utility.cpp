@@ -14,7 +14,7 @@ size_t checkCores(size_t usecores, size_t verbose)
 
   if (use_cores > 1) OMPMSG(1);
 
-  if(use_cores > omp_get_max_threads())
+  if(use_cores > (size_t) omp_get_max_threads())
   {
     if (verbose) Rprintf("Do not have %i cores, use maximum %i cores. \n", use_cores, omp_get_max_threads());
     use_cores = omp_get_max_threads();

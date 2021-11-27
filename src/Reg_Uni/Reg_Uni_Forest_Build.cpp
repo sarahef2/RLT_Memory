@@ -4,14 +4,7 @@
 //  **********************************
 
 // my header file
-# include "../RLT.h"
-# include "../Utility//Trees.h"
-# include "../Utility/Utility.h"
 # include "regForest.h"
-
-#include <xoshiro.h>
-#include <dqrng_distribution.h>
-#include <limits>
   
 using namespace Rcpp;
 using namespace arma;
@@ -75,8 +68,15 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       if (!obs_track_pre)
         set_obstrack(ObsTrack, nt, size, replacement, rngl);
       
+      Rcout << "fit tree " << nt << std::endl;
+      Rcout << ObsTrack.col(nt) << std::endl;
+      continue; 
+      
+      
       // Find the samples
       get_samples(inbagObs, oobagObs, obs_id, ObsTrack.unsafe_col(nt));
+      
+     
       
       // initialize a tree (univariate split)
       Reg_Uni_Tree_Class OneTree(REG_FOREST.SplitVarList(nt),

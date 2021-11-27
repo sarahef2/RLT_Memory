@@ -219,3 +219,21 @@ getOneTree(RLTfit, 1)
 
 
 
+
+
+
+
+
+
+
+
+RLTfit <- RLT(trainX, trainY, ntrees = 1000, ncores = 1, nmin = nmin/2, mtry = mtry,
+              split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, 
+              importance = importance, resample.track = TRUE)
+
+
+
+
+
+
+

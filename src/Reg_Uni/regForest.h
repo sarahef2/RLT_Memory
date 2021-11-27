@@ -1,19 +1,19 @@
 //  **********************************
 //  Reinforcement Learning Trees (RLT)
-//  Regression
+//  Regression Functions
 //  **********************************
 
 // my header file
 # include "../RLT.h"
-# include "../Utility//Trees.h"
-# include "../Utility//Utility.h"
+# include "../Utility/Tree_Functions.h"
+# include "../Utility/Utility.h"
 # include "Reg_Definition.h"
 
 using namespace Rcpp;
 using namespace arma;
 
-#ifndef RegForest_Fun
-#define RegForest_Fun
+#ifndef RLT_RegForest
+#define RLT_RegForest
 
 // univariate tree split functions 
 
