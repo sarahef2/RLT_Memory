@@ -38,7 +38,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
   bool obs_track_pre = false; 
   
   if (ObsTrack.n_elem != 0) //if pre-defined
-    obs_track_pre = true; 
+    obs_track_pre = true;
   else
     ObsTrack.zeros(N, ntrees);
   
@@ -67,17 +67,12 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       //If ObsTrack isn't given, set ObsTrack
       if (!obs_track_pre)
         set_obstrack(ObsTrack, nt, size, replacement, rngl);
+
+      // Rcout << ObsTrack.col(nt) << std::endl; 
       
-      Rcout << "fit tree " << nt << std::endl;
-      Rcout << ObsTrack.col(nt) << std::endl;
-      continue; 
-      
-      
-      // Find the samples
+      // Find the samples from pre-defined ObsTrack
       get_samples(inbagObs, oobagObs, obs_id, ObsTrack.unsafe_col(nt));
-      
-     
-      
+
       // initialize a tree (univariate split)
       Reg_Uni_Tree_Class OneTree(REG_FOREST.SplitVarList(nt),
                                  REG_FOREST.SplitValueList(nt),

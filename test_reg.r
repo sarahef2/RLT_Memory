@@ -9,7 +9,7 @@ set.seed(1)
 trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 10
+p = 100
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
@@ -18,9 +18,9 @@ for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
 #y = 1 + X[, 1] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 y = 1 + X[, 1] + rnorm(n)
 
-ntrees = 200
-ncores = 6
-nmin = 25
+ntrees = 100
+ncores = 10
+nmin = 20
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
@@ -44,7 +44,7 @@ colnames(metric) = c("fit.time", "pred.time", "pred.error", "obj.size")
 start_time <- Sys.time()
 RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, nmin = nmin/2, mtry = mtry,
               split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, 
-              importance = importance, resample.track = TRUE)
+              importance = importance)
 metric[1, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
 RLTPred <- predict.RLT(RLTfit, testX, ncores = ncores)
@@ -87,7 +87,7 @@ metric[4, 4] = object.size(rangerfit)
 metric
 
 par(mfrow=c(2,2))
-par(mar = c(0.5, 0.5, 2, 2))
+par(mar = c(0.5, 2, 2, 2))
 
 barplot(as.vector(RLTfit$VarImp), main = "RLT")
 barplot(as.vector(rsffit$importance), main = "rsf")
@@ -216,24 +216,4 @@ plot(trainX[, 1], trainX[, 2] + rnorm(trainn, sd = 0.1), pch = 19,
 
 # peek a tree
 getOneTree(RLTfit, 1)
-
-
-
-
-
-
-
-
-
-
-
-RLTfit <- RLT(trainX, trainY, ntrees = 1000, ncores = 1, nmin = nmin/2, mtry = mtry,
-              split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, 
-              importance = importance, resample.track = TRUE)
-
-
-
-
-
-
 

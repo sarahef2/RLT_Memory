@@ -18,7 +18,8 @@ RegForest <- function(x, y, ncat,
   param$"split.rule" <- match.arg(param$"split.rule", all.split.rule)
   param$"split.rule" <- match(param$"split.rule", all.split.rule)
   
-  cat("Start fitting \n")
+  if (param$verbose > 0)
+    cat("Start fitting Regression Forest... \n")
   
   # fit model
   fit = RegUniForestFit(x, y, ncat,

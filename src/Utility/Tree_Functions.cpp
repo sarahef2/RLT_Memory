@@ -39,46 +39,8 @@ bool unpack_goright(double pack, const size_t cat)
   return(((size_t) pack & 1) ? 1 : 0);
 }
 
-
-// for tree building 
-
-// get inbag and oobag samples
-
-void oob_samples(arma::uvec& inbagObs,
-                 arma::uvec& oobagObs,
-                 const arma::uvec& subj_id,
-                 const size_t size,
-                 const bool replacement)
-{
-
-  inbagObs.set_size(size);
-  size_t N = subj_id.size();
-  
-  arma::uvec oob_indicate(N); // this one will contain negative values
-  oob_indicate.fill(1); // this one will contain negative values
-  
-  arma::uvec loc;
-  
-  if (replacement)
-  {
-    // sample the locations of id with random uniform location
-    loc = randi<uvec>(size, distr_param(0, N-1));
-  }else{
-    // permutation
-    loc = arma::randperm(N, size);
-  }
-  
-  // inbag take those locations
-  // oobag remove
-  for (size_t i = 0; i < size; i++)
-  {
-    inbagObs[i] = subj_id[loc[i]];
-    oob_indicate[loc[i]] = 0;
-  }
-  
-  oobagObs = subj_id.elem( find(oob_indicate > 0.5) );
-}
-
+// for resampling
+// set ObsTrack
 
 void set_obstrack(arma::umat& ObsTrack,
                   const size_t nt,
@@ -87,18 +49,20 @@ void set_obstrack(arma::umat& ObsTrack,
                   Rand& rngl)
 {
 	size_t N = ObsTrack.n_rows;
-	
+  arma::uvec insample;
+  
 	if (replacement)
 	{
-	  ObsTrack.col(nt) = rngl.rand_uvec(size, 0, N-1);
-		
-	}else{
-		
-		ObsTrack.col(nt) = rngl.sample(size, 0, N-1);
-	  
-	}
-}
+	  insample = rngl.rand_uvec(size, 0, N-1);
 
+	}else{
+		insample = rngl.sample(size, 0, N-1);
+	}
+	
+  for (size_t i = 0; i < size; i++)
+    ObsTrack(insample(i), nt) ++;
+	
+}
 
 // get inbag and oobag samples from ObsTrackPre
 

@@ -63,11 +63,6 @@ void unpack(const double pack, const size_t nBits, uvec& bits);
 bool unpack_goright(double pack, const size_t cat);
 
 // sample both inbag and oobag samples
-void oob_samples(arma::uvec& inbagObs,
-                 arma::uvec& oobagObs,
-                 const arma::uvec& subj_id,
-                 const size_t size,
-                 const bool replacement);
 
 void set_obstrack(arma::umat& ObsTrack,
                   const size_t nt,
