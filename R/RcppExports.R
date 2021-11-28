@@ -21,6 +21,10 @@ UniKernel_Train <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, N
     .Call(`_RLT_UniKernel_Train`, SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose)
 }
 
+RegMultiForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
+    .Call(`_RLT_RegMultiForestFit`, X, Y, Ncat, obsweight, varweight, ObsTrack, param)
+}
+
 RegUniForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
     .Call(`_RLT_RegUniForestFit`, X, Y, Ncat, obsweight, varweight, ObsTrack, param)
 }

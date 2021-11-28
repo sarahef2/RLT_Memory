@@ -28,6 +28,7 @@ public:
   bool obs_track;
   bool useobsweight;
   bool usevarweight;
+  size_t linear_comb;
   bool importance;
   bool reinforcement;
   size_t ncores;
@@ -59,6 +60,7 @@ public:
     obs_track     = param["resample.track"];
     useobsweight  = param["use.obs.w"];
     usevarweight  = param["use.var.w"];
+    linear_comb   = param["linear.comb"];
     importance    = param["importance"];
     reinforcement = param["reinforcement"];
     ncores        = param["ncores"];
@@ -91,6 +93,7 @@ public:
       obs_track     = Input.obs_track;
       useobsweight  = Input.useobsweight;
       usevarweight  = Input.usevarweight;
+      linear_comb   = Input.linear_comb;
       importance    = Input.importance;
       reinforcement = Input.reinforcement;
       ncores        = Input.ncores;
@@ -179,6 +182,42 @@ public:
     size_t i = 0;
     while (i < SplitVar.n_elem and SplitVar(i) != -2) i++;
     return( (i < SplitVar.n_elem) ? i:SplitVar.n_elem );
+  }
+};
+
+class Multi_Tree_Class{ // multivariate split trees
+public:
+  arma::imat& SplitVar;
+  arma::mat& SplitValue;
+  arma::uvec& LeftNode;
+  arma::uvec& RightNode;
+  
+  Multi_Tree_Class(arma::imat& SplitVar,
+                   arma::mat& SplitValue,
+                   arma::uvec& LeftNode,
+                   arma::uvec& RightNode) : SplitVar(SplitVar),
+                   SplitValue(SplitValue),
+                   LeftNode(LeftNode),
+                   RightNode(RightNode) {}
+  
+  void find_next_nodes(size_t& NextLeft, size_t& NextRight)
+  {
+    // -2: unused, -3: reserved; Else: internal node; -1: terminal node    
+    
+    while( SplitVar(NextLeft, 0) != -2 ) NextLeft++;
+    SplitVar(NextLeft) = -3;  
+    
+    NextRight = NextLeft;
+    
+    while( SplitVar(NextRight, 0) != -2 ) NextRight++;
+    SplitVar(NextRight, 0) = -3;
+  }
+  
+  // get tree length
+  size_t get_tree_length() {
+    size_t i = 0;
+    while (i < SplitVar.n_rows and SplitVar(i, 0) != -2) i++;
+    return( (i < SplitVar.n_rows) ? i:SplitVar.n_rows );
   }
 };
 

@@ -87,7 +87,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
     OneTree.find_next_nodes(NextLeft, NextRight);
     
     OneTree.LeftNode(Node) = NextLeft;
-    OneTree.RightNode(Node) = NextRight;    
+    OneTree.RightNode(Node) = NextRight;
     
     // split the left and right nodes 
 

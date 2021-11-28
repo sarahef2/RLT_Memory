@@ -85,6 +85,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RegMultiForestFit
+List RegMultiForestFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, arma::vec& obsweight, arma::vec& varweight, arma::umat& ObsTrack, List& param);
+RcppExport SEXP _RLT_RegMultiForestFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP ObsTrackSEXP, SEXP paramSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type obsweight(obsweightSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type varweight(varweightSEXP);
+    Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
+    Rcpp::traits::input_parameter< List& >::type param(paramSEXP);
+    rcpp_result_gen = Rcpp::wrap(RegMultiForestFit(X, Y, Ncat, obsweight, varweight, ObsTrack, param));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RegUniForestFit
 List RegUniForestFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, arma::vec& obsweight, arma::vec& varweight, arma::umat& ObsTrack, List& param);
 RcppExport SEXP _RLT_RegUniForestFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP ObsTrackSEXP, SEXP paramSEXP) {
@@ -130,6 +147,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RLT_UniKernel_Self", (DL_FUNC) &_RLT_UniKernel_Self, 7},
     {"_RLT_UniKernel_Cross", (DL_FUNC) &_RLT_UniKernel_Cross, 8},
     {"_RLT_UniKernel_Train", (DL_FUNC) &_RLT_UniKernel_Train, 9},
+    {"_RLT_RegMultiForestFit", (DL_FUNC) &_RLT_RegMultiForestFit, 7},
     {"_RLT_RegUniForestFit", (DL_FUNC) &_RLT_RegUniForestFit, 7},
     {"_RLT_RegUniForestPred", (DL_FUNC) &_RLT_RegUniForestPred, 11},
     {NULL, NULL, 0}

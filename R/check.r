@@ -75,6 +75,7 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
                             resample.replace, resample.prob,
                             resample.track,
                             use.obs.w, use.var.w,
+                            linear.comb,
                             importance,
                             var.ready, 
                             ncores, verbose,
@@ -114,6 +115,11 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
   
   use.var.w = (use.var.w != 0)
   storage.mode(use.var.w) <- "integer"
+
+  # linear combination 
+  
+  linear.comb = min(5, max(1, linear.comb))
+  storage.mode(linear.comb) <- "integer"
 
   # importance 
   
@@ -157,6 +163,7 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
                 "resample.track" = resample.track,
                 "use.obs.w" = use.obs.w,
                 "use.var.w" = use.var.w,
+                "linear.comb" = linear.comb,
                 "importance" = importance,
                 "var.ready" = var.ready,
                 "ncores" = ncores,

@@ -21,18 +21,36 @@ RegForest <- function(x, y, ncat,
   if (param$verbose > 0)
     cat("Start fitting Regression Forest... \n")
   
-  # fit model
-  fit = RegUniForestFit(x, y, ncat,
-                        obs.w, var.w,
-                        resample.preset,
-                        param)
-
-  fit[["parameters"]] = param
-  fit[["ncat"]] = ncat
-  fit[["obs.w"]] = obs.w
-  fit[["var.w"]] = var.w
-  fit[["y"]] = y
+  if (param$linear.comb == 1)
+  {
+    # fit model
+    fit = RegUniForestFit(x, y, ncat,
+                          obs.w, var.w,
+                          resample.preset,
+                          param)
   
-  class(fit) <- c("RLT", "fit", "reg")
+    fit[["parameters"]] = param
+    fit[["ncat"]] = ncat
+    fit[["obs.w"]] = obs.w
+    fit[["var.w"]] = var.w
+    fit[["y"]] = y
+    
+    class(fit) <- c("RLT", "fit", "reg", "uni")
+  }else{
+    # fit model
+    fit = RegMultiForestFit(x, y, ncat,
+                            obs.w, var.w,
+                            resample.preset,
+                            param)
+    
+    fit[["parameters"]] = param
+    fit[["ncat"]] = ncat
+    fit[["obs.w"]] = obs.w
+    fit[["var.w"]] = var.w
+    fit[["y"]] = y
+    
+    class(fit) <- c("RLT", "fit", "reg", "multi")
+  }
+
   return(fit)
 }

@@ -74,6 +74,15 @@
 #'                        perform weighted sampling of \code{mtry} variables. For 
 #'                        other usage, see the details of \code{split.rule} in 
 #'                        \code{\link{check_param_RLT}}.
+#' 
+#' @param linear.comb     When \code{linear.comb} is larger than 1, a linear combination 
+#'                        split is used. When \code{reinforcement} is \code{TRUE}, the 
+#'                        variables with the highest potential at an internal node is used.
+#'                        When \code{reinforcement} is \code{FALSE}, a marginal screening is 
+#'                        used. In both cases, SIR and SAVE are used to determine the coefficients
+#'                        of the combination. When a categorical variable has the highest 
+#'                        potential, then a single variable is used. Currently restricted to
+#'                        less than 5 number of variables in the linear combination. 
 #'                        
 #' @param importance      Whether to calculate variable importance measures.
 #' 
@@ -126,6 +135,7 @@ RLT <- function(x, y, censor = NULL, model = NULL,
         				resample.track = FALSE,
         				obs.w = NULL,
         				var.w = NULL,
+        				linear.comb = 1,
          				importance = FALSE,
         				var.ready = FALSE,
         				reinforcement = FALSE,
@@ -255,6 +265,7 @@ RLT <- function(x, y, censor = NULL, model = NULL,
                            resample.replace, resample.prob, 
                            resample.track,
                            use.obs.w, use.var.w,
+                           linear.comb,
                            importance,
                            var.ready,                           
                            ncores, verbose,
