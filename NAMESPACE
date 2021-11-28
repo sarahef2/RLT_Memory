@@ -1,4 +1,5 @@
 useDynLib(RLT, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
 S3method(predict, RLT)
+S3method(print, RLT)
 importFrom(Rcpp, evalCpp)

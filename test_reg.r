@@ -7,11 +7,10 @@ library(ranger)
 
 set.seed(1)
 
-
 trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 30
+p = 100
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
@@ -20,7 +19,7 @@ for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
 #y = 1 + X[, 1] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 y = 1 + X[, 1] + rnorm(n)
 
-ntrees = 500
+ntrees = 1000
 ncores = 10
 nmin = 20
 mtry = p/2

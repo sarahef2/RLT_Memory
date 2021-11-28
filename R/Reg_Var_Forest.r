@@ -56,7 +56,7 @@ Reg_Var_Forest <- function(x, y, testx,
                   			   param.control = list(),
                   			   ncores = 1,
                   			   verbose = 0,
-                  			   seed = NaN,
+                  			   seed = NULL,
                   			   ...)
 {
   # check inputs
@@ -103,8 +103,11 @@ Reg_Var_Forest <- function(x, y, testx,
     
     RLT.pred = predict(RLTfit, testX, var.est = TRUE, ncores = ncores)
     
-    resultMat = data.frame("Prediction" = RLT.pred$Prediction,
-                           "var" = RLTPred$Variance)
+    resultMat = list("Prediction" = RLT.pred$Prediction,
+                     "var" = RLTPred$Variance, 
+                     "Fit" = RLT.fit)
+    
+    class(resultMat) <- c("RLT", "Var", "reg")
     
     return(resultMat)
     
@@ -142,8 +145,13 @@ Reg_Var_Forest <- function(x, y, testx,
     Var = (1 + 1/ntrees) * apply(BS.pred$PredictionAll, 1, var) - 
           (1 - 1/ntrees) * apply(RLT.pred$PredictionAll, 1, var)
 
-    resultMat = data.frame("Prediction" = RLT.pred$Prediction,
-                           "var" = Var)
+    resultMat = list("Prediction" = RLT.pred$Prediction,
+                     "var" = Var, 
+                     "Fit" = RLT.fit)
+    
+    class(resultMat) <- c("RLT", "Var", "reg")
+    
+    return(resultMat)
   }
   
 }
