@@ -2,7 +2,7 @@
 #' 
 #' @description     Get random forest induced kernel weight matrix of testing samples 
 #'                  or between any two sets of data. This is an experimental feature.
-#'                  Some components are not avaliable yet. 
+#'                  Use at your own risk.
 #'                  
 #' @param object    A fitted RLT object.
 #' 
@@ -19,8 +19,6 @@
 #'                  due to re-samplings of the training process. Hence, \code{ObsTrack} must
 #'                  be available from the fitted object (using \code{resample.track = TRUE}). 
 #' 
-#' @param ncores    Number of cores. Default is 1.
-#' 
 #' @param verbose   Whether fitting should be printed.
 #' 
 #' @param ... ...   Additional arguments.
@@ -30,7 +28,6 @@ forest.kernel <- function(object,
                           X1 = NULL,
                           X2 = NULL,
                           vs.train = FALSE,
-                          ncores = 1,
                           verbose = FALSE,
                           ...)
 {
@@ -67,7 +64,6 @@ forest.kernel <- function(object,
                           object$FittedForest$RightNode,
                           X1,
                           object$ncat,
-                          ncores,
                           verbose)
     }else{
 
@@ -90,10 +86,12 @@ forest.kernel <- function(object,
         X2 = X2[, varmatch]
       }
       
+      X2 <- data.matrix(X2)
+      
       if (!vs.train)
       {
         # cross-kernel of X1 and X2
-        
+
         K <- UniKernel_Cross(object$FittedForest$SplitVar,
                              object$FittedForest$SplitValue,
                              object$FittedForest$LeftNode,
@@ -101,7 +99,6 @@ forest.kernel <- function(object,
                              X1,
                              X2,
                              object$ncat,
-                             ncores,
                              verbose)
 
       }else{
@@ -122,9 +119,8 @@ forest.kernel <- function(object,
                              object$FittedForest$RightNode,
                              X1,
                              X2,
-                             ObsTrack,
                              object$ncat,
-                             ncores,
+                             ObsTrack,
                              verbose)
         
       }

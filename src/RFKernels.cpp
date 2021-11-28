@@ -17,65 +17,44 @@ List UniKernel_Self(arma::field<arma::ivec>& SplitVar,
                     arma::field<arma::uvec>& RightNode,
                     arma::mat& X,
                     arma::uvec& Ncat,
-                    size_t ncores,
                     size_t verbose)
 {
   size_t N = X.n_rows;
   size_t ntrees = SplitVar.n_elem; 
   
-  // check number of cores
-  size_t usecores = checkCores(ncores, verbose);
-  
   // initiate output kernel
-  // each element for one testing subject 
-  
-  arma::ucube Kernel(N, N, usecores, fill::zeros);
+  umat K(N, N, fill::zeros);
   uvec real_id = linspace<uvec>(0, N-1, N);  
   
-#pragma omp parallel num_threads(usecores)
-{
-  #pragma omp for schedule(static)
-    for (size_t nt = 0; nt < ntrees; nt++)
+  for (size_t nt = 0; nt < ntrees; nt++)
+  {
+    Uni_Tree_Class OneTree(SplitVar(nt),
+                           SplitValue(nt),
+                           LeftNode(nt),
+                           RightNode(nt));
+    
+    // initiate all observations
+    uvec proxy_id = linspace<uvec>(0, N-1, N);
+    uvec TermNode(N, fill::zeros);
+    
+    // get terminal node id
+    Uni_Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);
+    
+    //record
+    uvec UniqueNode = unique(TermNode);
+    
+    for (auto j : UniqueNode)
     {
-      DEBUG_Rcout << "--- on tree " << nt << std::endl;
+      uvec ID = real_id(find(TermNode == j));
       
-      Uni_Tree_Class OneTree(SplitVar(nt),
-                             SplitValue(nt),
-                             LeftNode(nt),
-                             RightNode(nt));
-      
-      // initiate all observations
-      uvec proxy_id = linspace<uvec>(0, N-1, N);
-      uvec TermNode(N, fill::zeros);
-      
-      // get terminal node id
-      Uni_Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);
-      
-      // record
-      size_t tid = omp_get_thread_num();      
-      
-      uvec UniqueNode = unique(TermNode);
-      
-      for (auto j : UniqueNode)
-      {
-        uvec ID = real_id(find(TermNode == j));
-        
-        Kernel.slice(tid).submat(ID, ID) += 1;
-      }
+      K.submat(ID, ID) += 1;
     }
-}
-
-    umat K(N, N, fill::zeros);
-    
-    for (size_t j = 0; j < usecores; j++)
-    {
-      K += Kernel.slice(j);
-    }
-    
-    List ReturnList;
-    ReturnList["Kernel"] = K;
-    
-    return(ReturnList);
+  }
+  
+  List ReturnList;
+  ReturnList["Kernel"] = K;
+  
+  return(ReturnList);
 }
 
 // [[Rcpp::export()]]
@@ -86,13 +65,52 @@ List UniKernel_Cross(arma::field<arma::ivec>& SplitVar,
                      arma::mat& X1,
                      arma::mat& X2,
                      arma::uvec& Ncat,
-                     size_t ncores,
                      size_t verbose)
 {
-  Rcout << "/// RLT Kernel Function Cross is not avaliable yet ///" << std::endl;
+  size_t N1 = X1.n_rows;
+  size_t N2 = X2.n_rows;
   
+  size_t ntrees = SplitVar.n_elem; 
+  
+  // initiate output kernel
+  // each element for one testing subject 
+  umat K(N1, N2, fill::zeros);
+  
+  uvec real_id1 = linspace<uvec>(0, N1-1, N1);
+  uvec real_id2 = linspace<uvec>(0, N2-1, N2);
+  
+  for (size_t nt = 0; nt < ntrees; nt++)
+  {
+    Uni_Tree_Class OneTree(SplitVar(nt),
+                           SplitValue(nt),
+                           LeftNode(nt),
+                           RightNode(nt));
+    
+    // initiate all observations
+    uvec proxy_id1 = linspace<uvec>(0, N1-1, N1);
+    uvec proxy_id2 = linspace<uvec>(0, N2-1, N2);
+    
+    uvec TermNode1(N1, fill::zeros);
+    uvec TermNode2(N2, fill::zeros);
+    
+    // get terminal node ids
+    Uni_Find_Terminal_Node(0, OneTree, X1, Ncat, proxy_id1, real_id1, TermNode1);
+    Uni_Find_Terminal_Node(0, OneTree, X2, Ncat, proxy_id2, real_id2, TermNode2);
+    
+    // record
+    uvec UniqueNode = intersect(unique(TermNode1), unique(TermNode2));
+
+    for (auto j : UniqueNode)
+    {
+      uvec ID1 = real_id1(find(TermNode1 == j));
+      uvec ID2 = real_id2(find(TermNode2 == j));
+      
+      K.submat(ID1, ID2) += 1;
+    }
+  }
+
   List ReturnList;
-  ReturnList["Kernel"] = 0;
+  ReturnList["Kernel"] = K;
   
   return(ReturnList);
   
@@ -104,16 +122,56 @@ List UniKernel_Train(arma::field<arma::ivec>& SplitVar,
                      arma::field<arma::uvec>& LeftNode,
                      arma::field<arma::uvec>& RightNode,
                      arma::mat& X1,
-                     arma::mat& XTrain,
+                     arma::mat& X2,
                      arma::uvec& Ncat,
                      arma::umat& ObsTrack,
-                     size_t ncores,
                      size_t verbose)
 {
-  Rcout << "/// RLT Kernel Function vs.train is not avaliable yet ///" << std::endl;
+  size_t N1 = X1.n_rows;
+  size_t N2 = X2.n_rows;
+  
+  size_t ntrees = SplitVar.n_elem; 
+  
+  // initiate output kernel
+  // each element for one testing subject 
+  umat K(N1, N2, fill::zeros);
+  
+  uvec real_id1 = linspace<uvec>(0, N1-1, N1);
+  uvec real_id2 = linspace<uvec>(0, N2-1, N2);
+  
+  for (size_t nt = 0; nt < ntrees; nt++)
+  {
+    Uni_Tree_Class OneTree(SplitVar(nt),
+                           SplitValue(nt),
+                           LeftNode(nt),
+                           RightNode(nt));
+    
+    // initiate all observations
+    uvec proxy_id1 = linspace<uvec>(0, N1-1, N1);
+    uvec proxy_id2 = linspace<uvec>(0, N2-1, N2);
+    
+    uvec TermNode1(N1, fill::zeros);
+    uvec TermNode2(N2, fill::zeros);
+    
+    // get terminal node ids
+    Uni_Find_Terminal_Node(0, OneTree, X1, Ncat, proxy_id1, real_id1, TermNode1);
+    Uni_Find_Terminal_Node(0, OneTree, X2, Ncat, proxy_id2, real_id2, TermNode2);
+    
+    // record
+    uvec UniqueNode = intersect(unique(TermNode1), unique(TermNode2));
+    uvec intreent = ObsTrack.col(nt);
+    
+    for (auto j : UniqueNode)
+    {
+      uvec ID1 = real_id1(find(TermNode1 == j));
+      uvec ID2 = real_id2(find(TermNode2 == j && intreent > 0));
+      
+      K.submat(ID1, ID2) += 1;
+    }
+  }
   
   List ReturnList;
-  ReturnList["Kernel"] = 0;
+  ReturnList["Kernel"] = K;
   
   return(ReturnList);
   
