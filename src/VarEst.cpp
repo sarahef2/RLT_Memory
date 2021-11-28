@@ -16,6 +16,8 @@ List EofVar(arma::mat& Pred,
             int usecores,
             int verbose)
 {
+  
+  //Correction to TreeVar: see Tianning's paper
 
   usecores = checkCores(usecores, verbose);
   
