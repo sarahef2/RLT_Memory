@@ -89,7 +89,7 @@ List RegUniForestFit(arma::mat& X,
   //Add to return list
   ReturnList["FittedForest"] = Forest_R;
   
-  if (obs_track) ReturnList["ObsTrack"] = ObsTrack;
+  if (obs_track) ReturnList["resample.track"] = ObsTrack;
   if (importance) ReturnList["VarImp"] = VarImp;
   
   ReturnList["Prediction"] = Prediction;
@@ -106,10 +106,10 @@ List RegUniForestPred(arma::field<arma::ivec>& SplitVar,
                       arma::field<arma::vec>& NodeAve,
                       arma::mat& X,
                       arma::uvec& Ncat,
-                      arma::uvec& treeindex,
+                      bool VarEst,
                       bool keep_all,
-                      int usecores,
-                      int verbose)
+                      size_t usecores,
+                      size_t verbose)
 {
   // check number of cores
   usecores = checkCores(usecores, verbose);
@@ -124,13 +124,12 @@ List RegUniForestPred(arma::field<arma::ivec>& SplitVar,
   
   // Initialize prediction objects  
   mat PredAll;
-  
+
   // Run prediction
   Reg_Uni_Forest_Pred(PredAll,
                       (const Reg_Uni_Forest_Class&) REG_FOREST,
                       X,
                       Ncat,
-                      treeindex,
                       usecores,
                       verbose);
   
@@ -138,6 +137,24 @@ List RegUniForestPred(arma::field<arma::ivec>& SplitVar,
   List ReturnList;
   
   ReturnList["Prediction"] = mean(PredAll, 1);
+  
+  if (VarEst)
+  {
+    size_t nhalf = (size_t) REG_FOREST.SplitVarList.size()/2;
+    
+    uvec firsthalf = linspace<uvec>(0, nhalf-1, nhalf);
+    uvec secondhalf = linspace<uvec>(nhalf, 2*nhalf-1, nhalf);
+    
+    vec SVar = var(PredAll, 0, 1); // norm_type = 1 means using n-1 as constant
+    
+    mat TreeDiff = PredAll.cols(firsthalf) - PredAll.cols(secondhalf);
+    vec TreeVar = mean(square(TreeDiff), 1) / 2;
+    
+    vec Var = TreeVar*(1 + 1/2/nhalf) - SVar*(1 - 1/2/nhalf);
+
+    ReturnList["Variance"] = Var;
+  }
+    
   
   // If keeping predictions for every tree  
   if (keep_all)

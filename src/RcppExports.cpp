@@ -49,8 +49,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // RegUniForestPred
-List RegUniForestPred(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::vec>& NodeAve, arma::mat& X, arma::uvec& Ncat, arma::uvec& treeindex, bool keep_all, int usecores, int verbose);
-RcppExport SEXP _RLT_RegUniForestPred(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeAveSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP treeindexSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
+List RegUniForestPred(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::vec>& NodeAve, arma::mat& X, arma::uvec& Ncat, bool VarEst, bool keep_all, size_t usecores, size_t verbose);
+RcppExport SEXP _RLT_RegUniForestPred(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeAveSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP VarEstSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -61,11 +61,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::field<arma::vec>& >::type NodeAve(NodeAveSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type treeindex(treeindexSEXP);
+    Rcpp::traits::input_parameter< bool >::type VarEst(VarEstSEXP);
     Rcpp::traits::input_parameter< bool >::type keep_all(keep_allSEXP);
-    Rcpp::traits::input_parameter< int >::type usecores(usecoresSEXP);
-    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(RegUniForestPred(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose));
+    Rcpp::traits::input_parameter< size_t >::type usecores(usecoresSEXP);
+    Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(RegUniForestPred(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -13,8 +13,8 @@ RegUniForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
     .Call(`_RLT_RegUniForestFit`, X, Y, Ncat, obsweight, varweight, ObsTrack, param)
 }
 
-RegUniForestPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose) {
-    .Call(`_RLT_RegUniForestPred`, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, treeindex, keep_all, usecores, verbose)
+RegUniForestPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose) {
+    .Call(`_RLT_RegUniForestPred`, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose)
 }
 
 EofVar <- function(Pred, usecores, verbose) {

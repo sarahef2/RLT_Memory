@@ -77,6 +77,11 @@
 #'                        
 #' @param importance      Whether to calculate variable importance measures.
 #' 
+#' @param var.ready       Construct \code{resample.preset} automatically to allow variance 
+#'                        estimations. If this is used, then \code{resample.replace} will 
+#'                        be set to `FALSE` and \code{resample.prob} should be no 
+#'                        larger than \eqn{n / 2}. 
+#'                        
 #' @param param.control   A list of additional parameters. This can be used to 
 #'                        specify embedded model settings for reinforcement 
 #'                        splitting rules. See \code{set_embed_param}.
@@ -121,6 +126,7 @@ RLT <- function(x, y, censor = NULL, model = NULL,
         				obs.w = NULL,
         				var.w = NULL,
          				importance = FALSE,
+        				var.ready = FALSE,
         				reinforcement = FALSE,
         				param.control = list(),
         				ncores = 0,
@@ -169,6 +175,38 @@ RLT <- function(x, y, censor = NULL, model = NULL,
     resample.preset = ARMA_EMPTY_UMAT();
   }  
   
+  # set resample.preset if variance estimation is needed
+  
+  if (var.ready)
+  {
+    if (resample.replace)
+      stop("Variance estimation for bootstrap samples is not avaliable")
+    
+    if (resample.prob > 0.5)
+      stop("Variance estimation for resample.prob > 0.5 is not avaliable")
+    
+    if (ntrees %% 2 != 0)
+      stop("Please use an even number of trees")
+
+    resample.preset = matrix(0, n, ntrees)
+    k = as.integer(resample.prob*n)
+      
+    for (i in 1:as.integer(ntrees/2) )
+    {
+      ab = sample(1:n, 2*k)
+      a = ab[1:k]
+      b = ab[-(1:k)]
+      
+      resample.preset[a, i] = 1
+      resample.preset[b, i+ (ntrees/2)] = 1
+    }
+    
+    storage.mode(resample.preset) <- "integer"
+    
+    resample.track = TRUE
+  }
+  
+  
   # check observation weights  
   if (is.null(obs.w))
   {
@@ -214,6 +252,7 @@ RLT <- function(x, y, censor = NULL, model = NULL,
                            resample.track,
                            use.obs.w, use.var.w,
                            importance,
+                           var.ready,                           
                            ncores, verbose,
                            reinforcement,
                            param.control)

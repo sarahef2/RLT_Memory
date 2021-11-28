@@ -76,6 +76,7 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
                             resample.track,
                             use.obs.w, use.var.w,
                             importance,
+                            var.ready, 
                             ncores, verbose,
                             reinforcement,
                             param.control)
@@ -119,9 +120,14 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
   importance = (importance != 0)
   storage.mode(importance) <- "integer"
 
+  # variance estimation 
+  
+  var.ready = (var.ready != 0)
+  storage.mode(var.ready) <- "integer"
+  
   # system parameters
   ncores = max(ncores, 0)
-  storage.mode(ncores) <- "integer"    
+  storage.mode(ncores) <- "integer"
   
   verbose = max(verbose, 0)
   storage.mode(verbose) <- "integer"
@@ -152,6 +158,7 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
                 "use.obs.w" = use.obs.w,
                 "use.var.w" = use.var.w,
                 "importance" = importance,
+                "var.ready" = var.ready,
                 "ncores" = ncores,
                 "verbose" = verbose,                
                 "reinforcement" = reinforcement)
