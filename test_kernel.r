@@ -26,33 +26,18 @@ testX = testX[xorder, ]
 testY = testY[xorder]
 
 
-RLTfit <- RLT(trainX, trainY, ntrees = 1000, ncores = 10, nmin = 10, mtry = p/3,
+RLTfit <- RLT(trainX, trainY, ntrees = 1000, ncores = 10, nmin = 25, mtry = p/3,
               split.gen = "random", nsplit = 3, resample.prob = 0.8, 
-              importance = TRUE)
+              importance = TRUE, resample.track = TRUE)
 
 # Obtain the tree structure of one tree
 
-# getOneTree(RLTfit, 1)
+get.one.tree(RLTfit, 1000)
 
 
 # Forest Kernel
-
+# since testing data is ordered by x1, closer subjects should 
+# have larger kernel weights
 A = forest.kernel(RLTfit, testX)
 heatmap(A$Kernel, Rowv = NA, Colv = NA, symm = TRUE)
-
-
-RLTfit <- RLT(trainX, trainY, kernel.ready = TRUE)
-RLTkernel = getKernelWeight(RLTfit, X[trainn + 1:2, ])
-# heatmap(RLTkernel$Kernel[[1]], Rowv = NA, Colv = NA)
-
-plot(trainX[, 1], trainX[, 2] + rnorm(trainn, sd = 0.1), pch = 19,
-     cex = rowMeans(RLTkernel$Kernel[[1]])*15, xlab = "x1", ylab = "x2")
-
-# peek a tree
-getOneTree(RLTfit, 1)
-
-
-
-
-
 

@@ -9,6 +9,18 @@ ARMA_EMPTY_VEC <- function() {
     .Call(`_RLT_ARMA_EMPTY_VEC`)
 }
 
+UniKernel_Self <- function(SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, ncores, verbose) {
+    .Call(`_RLT_UniKernel_Self`, SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, ncores, verbose)
+}
+
+UniKernel_Cross <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ncores, verbose) {
+    .Call(`_RLT_UniKernel_Cross`, SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ncores, verbose)
+}
+
+UniKernel_Train <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, XTrain, Ncat, ObsTrack, ncores, verbose) {
+    .Call(`_RLT_UniKernel_Train`, SplitVar, SplitValue, LeftNode, RightNode, X1, XTrain, Ncat, ObsTrack, ncores, verbose)
+}
+
 RegUniForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
     .Call(`_RLT_RegUniForestFit`, X, Y, Ncat, obsweight, varweight, ObsTrack, param)
 }

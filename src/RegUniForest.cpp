@@ -89,7 +89,7 @@ List RegUniForestFit(arma::mat& X,
   //Add to return list
   ReturnList["FittedForest"] = Forest_R;
   
-  if (obs_track) ReturnList["resample.track"] = ObsTrack;
+  if (obs_track) ReturnList["ObsTrack"] = ObsTrack;
   if (importance) ReturnList["VarImp"] = VarImp;
   
   ReturnList["Prediction"] = Prediction;

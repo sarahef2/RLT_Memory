@@ -105,9 +105,9 @@
 #' \item{VarImp}{Variable importance measures, if \code{importance = TRUE}}
 #' \item{Prediction}{In-bag prediction values}
 #' \item{OOBPrediction}{Out-of-bag prediction values}
-#' \item{resample.track}{An n x ntrees matrix that indicates which observations 
-#'                       are used in each tree. Supplied if \code{resample.preset}
-#'                       is used or \code{resample.track = TRUE}.}
+#' \item{ObsTrack}{An \eqn{n \times} \code{ntrees} matrix that indicates which observations 
+#'                 are used in each tree. Provided if \code{resample.preset}
+#'                 is used or \code{resample.track = TRUE}.}
 #' 
 #' @references Zhu, R., Zeng, D., & Kosorok, M. R. (2015) "Reinforcement Learning Trees." Journal of the American Statistical Association. 110(512), 1770-1784.
 #' 
