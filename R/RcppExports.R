@@ -17,7 +17,3 @@ RegUniForestPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeAve,
     .Call(`_RLT_RegUniForestPred`, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose)
 }
 
-EofVar <- function(Pred, usecores, verbose) {
-    .Call(`_RLT_EofVar`, Pred, usecores, verbose)
-}
-

@@ -39,9 +39,9 @@
 #' @param mtry            Number of randomly selected variables used at each 
 #'                        internal node.
 #'                        
-#' @param nmin            Terminal node size. Splitting will stop when the 
-#'                        internal node size is less than twice of \code{nmin}. This
-#'                        is almost equivalent to setting \code{nodesize} \eqn{= 2 \times}
+#' @param nmin            Terminal node size. Splitting will stop when the internal 
+#'                        node size is less than twice of \code{nmin}. This is 
+#'                        almost equivalent to setting \code{nodesize} \eqn{= 2 \times}
 #'                        \code{nmin} in the `randomForest` package.
 #'                        
 #' @param split.gen       How the cutting points are generated: `"random"`, 
@@ -80,7 +80,8 @@
 #' @param var.ready       Construct \code{resample.preset} automatically to allow variance 
 #'                        estimations. If this is used, then \code{resample.replace} will 
 #'                        be set to `FALSE` and \code{resample.prob} should be no 
-#'                        larger than \eqn{n / 2}. 
+#'                        larger than \eqn{n / 2}. It is recommended to use a very large
+#'                        \code{ntrees}, e.g, 10000 or larger. 
 #'                        
 #' @param param.control   A list of additional parameters. This can be used to 
 #'                        specify embedded model settings for reinforcement 
@@ -147,6 +148,9 @@ RLT <- function(x, y, censor = NULL, model = NULL,
 
   ntrees = max(ntrees, 1)
   storage.mode(ntrees) <- "integer"
+  
+  resample.prob = max(0, min(resample.prob, 1))
+  storage.mode(resample.prob) <- "double"
   
   # check resample.preset
   if ( !is.null(resample.preset) )

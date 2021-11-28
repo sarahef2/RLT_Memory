@@ -140,17 +140,17 @@ List RegUniForestPred(arma::field<arma::ivec>& SplitVar,
   
   if (VarEst)
   {
-    size_t nhalf = (size_t) REG_FOREST.SplitVarList.size()/2;
+    size_t B = (size_t) REG_FOREST.SplitVarList.size()/2;
     
-    uvec firsthalf = linspace<uvec>(0, nhalf-1, nhalf);
-    uvec secondhalf = linspace<uvec>(nhalf, 2*nhalf-1, nhalf);
+    uvec firsthalf = linspace<uvec>(0, B-1, B);
+    uvec secondhalf = linspace<uvec>(B, 2*B-1, B);
     
     vec SVar = var(PredAll, 0, 1); // norm_type = 1 means using n-1 as constant
     
     mat TreeDiff = PredAll.cols(firsthalf) - PredAll.cols(secondhalf);
     vec TreeVar = mean(square(TreeDiff), 1) / 2;
     
-    vec Var = TreeVar*(1 + 1/2/nhalf) - SVar*(1 - 1/2/nhalf);
+    vec Var = TreeVar*(1 + 1/2/B) - SVar*(1 - 1/2/B);
 
     ReturnList["Variance"] = Var;
   }
@@ -162,55 +162,3 @@ List RegUniForestPred(arma::field<arma::ivec>& SplitVar,
   
   return ReturnList;
 }
-
-
-// [[Rcpp::export()]]
-List EofVar(arma::mat& Pred,
-            int usecores,
-            int verbose)
-{
-  
-  usecores = checkCores(usecores, verbose);
-  
-  size_t N = Pred.n_rows;
-  //size_t ntrees = Pred.n_cols;
-  size_t tree_pairs = Pred.n_cols/2;
-  
-  //For each observation, record the tree and sigmac sum  
-  arma::vec Tree_Est(N, fill::zeros);
-  arma::vec sigma_Est(N, fill::zeros);
-  
-  //Not sure if paralell would be useful here...
-  //#pragma omp parallel num_threads(usecores)
-  //{
-  //#pragma omp for schedule(dynamic)
-  for (size_t l = 0; l < tree_pairs; l++) // run through all indep. tree pairs
-  {
-    Tree_Est += 0.5*square(Pred.col(l) - Pred.col(l+tree_pairs));
-  }
-  
-  Tree_Est/=tree_pairs;
-  
-  //count the number of pairs
-  size_t count = 0;
-  
-  for(size_t i = 0; i < tree_pairs; i++){
-    for(size_t j = i+1; j < tree_pairs; j++){
-      
-      count++;
-      sigma_Est += 0.5 * square(Pred.col(i) - Pred.col(j));
-    }
-  }
-  
-  sigma_Est/=count;
-  
-  List ReturnList;
-  
-  ReturnList["tree_Est"] = Tree_Est;
-  ReturnList["sigma_Est"] = sigma_Est;
-  ReturnList["sigma"] = Tree_Est - sigma_Est;
-  
-  return(ReturnList);
-}
-
-

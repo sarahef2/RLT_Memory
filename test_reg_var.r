@@ -1,46 +1,74 @@
+# Variance estimation of regression forest
+
 library(RLT)
-library(randomForest)
-library(randomForestSRC)
-library(ranger)
 
 set.seed(1)
-n = 1000
 
-p = 6
-X = matrix(runif(n*p), n, p)
-Y = X[, 1] + X[, 2] + X[, 3] + X[, 4] - 2 + rnorm(n)
+trainn = 1000
+testn = 1000
+n = trainn + testn
+p = 20
+X1 = matrix(rnorm(n*p/2), n, p/2)
+X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
-testx = rbind(rep(0.5, p),
-              c(0.4, 0.6, 0.4, 0.6, 0.4, 0.6),
-              c(0.25, 0.75, 0.25, 0.75, 0.25, 0.75),
-              rep(0.25, p),
-              rep(0.75, p),
-              rep(1, p))
+X = data.frame(X1, X2)
+for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
+y = 1 + X[, 1] + rnorm(n)
+
+trainX = X[1:trainn, ]
+trainY = y[1:trainn]
+
+testX = X[1:testn + trainn, ]
+testY = y[1:testn + trainn]
+
+xorder = order(testX[, 1])
+testX = testX[xorder, ]
+testY = testY[xorder]
+
+## Variance Estimation Example
+
+RLTfit <- RLT(trainX, trainY, ntrees = 20000, ncores = 10, nmin = 8, 
+              mtry = p, split.gen = "random", nsplit = 3, resample.prob = 0.5, 
+              resample.replace = FALSE, var.ready = TRUE)
+
+RLTPred <- predict(RLTfit, testX, var.est = TRUE, ncores = 10, keep.all = TRUE)
+
+mean(RLTPred$Variance < 0)
+
+cover = (1 + testX$X1 > RLTPred$Prediction - 1.96*sqrt(RLTPred$Variance)) & 
+  (1 + testX$X1 < RLTPred$Prediction + 1.96*sqrt(RLTPred$Variance))
+
+mean(cover, na.rm = TRUE)
+
+par(mfrow=c(1,1))
+par(mar = rep(2, 4))
+plot(RLTPred$Prediction, 1 + testX$X1,  pch = 19, cex = ifelse(is.na(cover), 1, 0.3), 
+     col = ifelse(is.na(cover), "red", ifelse(cover, "green", "black")))
+abline(0, 1, col = "red", lwd = 2)
+
+## Variance Estimation Example (for k > n/2)
 
 
-myfit = rlt_var_est(X, Y, testx, ntrees = 1000, mtry = 3, nmin = 20, k = 600,
-                    split.gen = "best", nsplit = 1, ncores = 12)
+Var.Est = Reg_Var_Forest(trainX, trainY, testX, ncores = 10, nmin = 8,
+                         mtry = p, split.gen = "random", nsplit = 3, 
+                         ntrees = 50000, resample.prob = 0.75)
 
-myfit$var
+mean(Var.Est$var < 0)
+alphalvl = 0.05
 
-#plot(myfit$estimation[1,])
+cover = (1 + testX$X1 > Var.Est$Prediction - qnorm(1-alphalvl/2)*sqrt(Var.Est$var)) & 
+  (1 + testX$X1 < Var.Est$Prediction + qnorm(1-alphalvl/2)*sqrt(Var.Est$var))
 
-#rowSums(sweep(myfit$estimation, 2, myfit$allc, FUN = "*"))/sum(myfit$allc)
+mean(cover, na.rm = TRUE)
 
-#myfit$allc
+par(mfrow=c(1,1))
+par(mar = rep(2, 4))
+plot(Var.Est$Prediction, 1 + testX$X1,  pch = 19, cex = ifelse(is.na(cover), 1, 0.3), 
+     col = ifelse(is.na(cover), "red", ifelse(cover, "green", "black")))
+abline(0, 1, col = "red", lwd = 2)
 
 
-#myfit$sd
 
 
-
-n = 1000
-k = 500
-x = seq(1:k)
-
-dhyper(x, k, n - k, k)
-
-qhyper(0.05, k, n - k, k)
-qhyper(0.95, k, n - k, k)
 
 

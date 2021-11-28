@@ -9,6 +9,15 @@
 #' @param keep.all whether to keep the prediction from all trees
 #' @param ncores   number of cores
 #' @param ... ...
+#' 
+#' @return 
+#' 
+#' A \code{RLT} prediction object, constructed as a list consisting
+#' 
+#' \item{Prediction}{Prediction}
+#' \item{Variance}{if \code{var.est = TRUE} and the fitted object is 
+#'                 \code{var.ready = TRUE}}
+#'
 #' @export
 
 predict.RLT<- function(object,
