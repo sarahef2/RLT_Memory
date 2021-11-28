@@ -1,7 +1,7 @@
 Package: RLT
 Type: Package
 Title: Reinforcement Learning Trees
-Version: 4.0.1
+Version: 4.0.2
 Authors@R: c(
     person("Ruoqing", "Zhu",
            email = "teazrq@gmail.com", 
@@ -9,13 +9,17 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-0753-5716")),
     person("Sarah", "Formentini",
            email = "sarahef2@illinois.edu", 
-           role = c("aut", "cph"))
+           role = c("aut")),
+    person("Haowen", "Zhou",
+           email = "pja9pw@virginia.edu", 
+           role = c("ctb"))
     )
 Description: Random forest with a variety of additional features for regression, 
     classification and survival analysis. The features include: parallel computing 
-    with OpenMP, embedded model for selecting the splitting variable (based on Zhu, 
-    Zeng & Kosorok, 2015), linear combination splits, subject weight, variable weight, 
-    tracking subjects used in each tree, construct confidence intervels, etc.
+    with OpenMP, reproduciblity with random seeds, variance estimation, embedded model 
+    for selecting the splitting variable (based on Zhu, Zeng & Kosorok, 2015), linear 
+    combination splits, subject and variable weights, tracking subjects used in each 
+    tree, etc.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: TRUE

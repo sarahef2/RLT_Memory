@@ -120,7 +120,6 @@ public:
   }
 };
 
-
 class Reg_Cat_Class: public Cat_Class{
 public:
   double y = 0;

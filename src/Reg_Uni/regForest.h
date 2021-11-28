@@ -1,52 +1,44 @@
 //  **********************************
 //  Reinforcement Learning Trees (RLT)
-//  Regression
+//  Regression Functions
 //  **********************************
 
 // my header file
 # include "../RLT.h"
-# include "../Utility//Trees.h"
-# include "../Utility//Utility.h"
+# include "../Utility/Tree_Functions.h"
+# include "../Utility/Utility.h"
 # include "Reg_Definition.h"
 
 using namespace Rcpp;
 using namespace arma;
 
-#ifndef RegForest_Fun
-#define RegForest_Fun
+#ifndef RLT_RegForest
+#define RLT_RegForest
 
 // univariate tree split functions 
 
-List RegForestUniFit(mat& X,
+List RegUniForestFit(mat& X,
           	         vec& Y,
-          		     uvec& Ncat,
-          		     List& param,
-          		     List& RLTparam,
-          		     vec& obsweight,
-          		     vec& varweight,
-          		     int usecores,
-          		     int verbose,
-                     umat& ObsTrackPre);
+          		       uvec& Ncat,
+          		       vec& obsweight,
+          		       vec& varweight,
+          		       umat& ObsTrackPre,
+          		       List& param);
 
 void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
                           Reg_Uni_Forest_Class& REG_FOREST,
                           const PARAM_GLOBAL& Param,
-                          const PARAM_RLT& Param_RLT,
                           uvec& obs_id,
                           uvec& var_id,
                           umat& ObsTrack,
                           vec& Prediction,
                           vec& OOBPrediction,
-                          vec& VarImp,
-                          size_t seed,
-                          int usecores,
-                          int verbose);
+                          vec& VarImp);
 
 void Reg_Uni_Split_A_Node(size_t Node,
                           Reg_Uni_Tree_Class& OneTree,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
-                          const PARAM_RLT& Param_RLT,
                           uvec& obs_id,
                           uvec& var_id);
 
@@ -55,21 +47,18 @@ void Reg_Uni_Terminate_Node(size_t Node,
                             uvec& obs_id,
                             const vec& Y,
                             const vec& obs_weight,
-                            const PARAM_GLOBAL& Param,
                             bool useobsweight);
 
 
 void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
-                          const PARAM_RLT& RLTParam,
                           uvec& obs_id,
                           uvec& var_id);
 
 void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
-                                const PARAM_RLT& RLTParam,
                                 uvec& obs_id,
                                 uvec& var_id);
 
@@ -190,8 +179,7 @@ void Reg_Uni_Forest_Pred(mat& Pred,
                          const Reg_Uni_Forest_Class& REG_FOREST,
                          const mat& X,
                          const uvec& Ncat,
-                         const uvec& treeindex,
-                         int usecores,
-                         int verbose);
+                         size_t usecores,
+                         size_t verbose);
 
 #endif

@@ -4,9 +4,6 @@
 //  **********************************
 
 // my header file
-# include "../RLT.h"
-# include "../Utility//Trees.h"
-# include "../Utility/Utility.h"
 # include "regForest.h"
 
 using namespace Rcpp;

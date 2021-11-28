@@ -1,14 +1,10 @@
 //  **********************************
 //  Reinforcement Learning Trees (RLT)
+//  Miscellaneous Reg Functions
 //  **********************************
 
-// Misc REG functions
-
 // my header file
-# include "../RLT.h"
-# include "../Utility/Utility.h"
-# include "../Utility/Trees.h"
-# include "Reg_Definition.h"
+# include "regForest.h"
 
 using namespace Rcpp;
 using namespace arma;
