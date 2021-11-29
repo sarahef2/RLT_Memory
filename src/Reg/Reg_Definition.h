@@ -104,7 +104,7 @@ public:
     size_t NewLength = (OldLength*1.5 > OldLength + 100)? (size_t) (OldLength*1.5):(OldLength + 100);
 
     SplitVar.resize(NewLength);
-    SplitVar(span(OldLength, NewLength-1)).fill(datum::nan);
+    SplitVar(span(OldLength, NewLength-1)).fill(-2);
 
     SplitValue.resize(NewLength);
     SplitValue(span(OldLength, NewLength-1)).zeros();
@@ -119,6 +119,114 @@ public:
     NodeAve(span(OldLength, NewLength-1)).zeros();
   }
 };
+
+
+class Reg_Multi_Forest_Class{
+public:
+  arma::field<arma::imat>& SplitVarList;
+  arma::field<arma::mat>& SplitLoadList;
+  arma::field<arma::vec>& SplitValueList;
+  arma::field<arma::uvec>& LeftNodeList;
+  arma::field<arma::uvec>& RightNodeList;
+  arma::field<arma::vec>& NodeAveList;
+  
+  Reg_Multi_Forest_Class(arma::field<arma::imat>& SplitVarList,
+                         arma::field<arma::mat>& SplitLoadList,
+                         arma::field<arma::vec>& SplitValueList,
+                         arma::field<arma::uvec>& LeftNodeList,
+                         arma::field<arma::uvec>& RightNodeList,
+                         arma::field<arma::vec>& NodeAveList): 
+    SplitVarList(SplitVarList), 
+    SplitLoadList(SplitLoadList), 
+    SplitValueList(SplitValueList),
+    LeftNodeList(LeftNodeList),
+    RightNodeList(RightNodeList),
+    NodeAveList(NodeAveList) {}
+};
+
+
+class Reg_Multi_Tree_Class : public Multi_Tree_Class{
+public:
+  arma::vec& NodeAve;
+  
+  Reg_Multi_Tree_Class(arma::imat& SplitVar,
+                       arma::mat& SplitLoad,
+                       arma::vec& SplitValue,
+                       arma::uvec& LeftNode,
+                       arma::uvec& RightNode,
+                       arma::vec& NodeAve) : 
+                         Multi_Tree_Class(SplitVar,
+                                          SplitLoad,
+                                          SplitValue,
+                                          LeftNode,
+                                          RightNode),
+                         NodeAve(NodeAve) {}
+  
+  // initiate tree
+  void initiate(size_t TreeLength, size_t linear_comb)
+  {
+    if (TreeLength == 0) TreeLength = 1;
+    if (linear_comb <= 1) stop("Linear Combination is not needed, something wrong...");
+      
+    SplitVar.zeros(TreeLength, linear_comb);
+    SplitVar.col(0).fill(-2);
+    
+    SplitLoad.zeros(TreeLength, linear_comb);
+    
+    SplitValue.zeros(TreeLength);
+    LeftNode.zeros(TreeLength);
+    RightNode.zeros(TreeLength);
+    NodeAve.zeros(TreeLength);
+  }
+  
+  // trim tree
+  void trim(size_t TreeLength)
+  {
+    SplitVar.resize(TreeLength, SplitVar.n_cols);
+    SplitLoad.resize(TreeLength, SplitVar.n_cols);
+    SplitValue.resize(TreeLength);
+    LeftNode.resize(TreeLength);
+    RightNode.resize(TreeLength);
+    NodeAve.resize(TreeLength);
+  }
+  
+  // extend tree
+  void extend()
+  {
+    // tree is not long enough, extend
+    size_t OldLength = SplitVar.n_rows;
+    size_t NewLength = (OldLength*1.5 > OldLength + 100)? (size_t) (OldLength*1.5):(OldLength + 100);
+    
+    SplitVar.resize(NewLength, SplitVar.n_cols);
+    SplitVar.rows(OldLength, NewLength-1).zeros();
+    SplitVar.submat(OldLength, 0, NewLength-1, 0).fill(-2);
+    
+    SplitLoad.resize(NewLength, SplitLoad.n_cols);
+    SplitLoad.rows(OldLength, NewLength-1).zeros();
+    
+    SplitValue.resize(NewLength);
+    SplitValue.subvec(OldLength, NewLength-1).zeros();
+    
+    LeftNode.resize(NewLength);
+    LeftNode.subvec(OldLength, NewLength-1).zeros();
+    
+    RightNode.resize(NewLength);
+    RightNode.subvec(OldLength, NewLength-1).zeros();
+    
+    NodeAve.resize(NewLength);
+    NodeAve.subvec(OldLength, NewLength-1).zeros();
+  }
+};
+
+
+
+
+
+
+
+
+
+
 
 class Reg_Cat_Class: public Cat_Class{
 public:

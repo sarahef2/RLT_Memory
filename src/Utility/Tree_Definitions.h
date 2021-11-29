@@ -188,14 +188,18 @@ public:
 class Multi_Tree_Class{ // multivariate split trees
 public:
   arma::imat& SplitVar;
-  arma::mat& SplitValue;
+  arma::mat& SplitLoad;
+  arma::vec& SplitValue;
   arma::uvec& LeftNode;
   arma::uvec& RightNode;
   
   Multi_Tree_Class(arma::imat& SplitVar,
-                   arma::mat& SplitValue,
+                   arma::mat& SplitLoad,
+                   arma::vec& SplitValue,
                    arma::uvec& LeftNode,
-                   arma::uvec& RightNode) : SplitVar(SplitVar),
+                   arma::uvec& RightNode) : 
+                   SplitVar(SplitVar),
+                   SplitLoad(SplitLoad),
                    SplitValue(SplitValue),
                    LeftNode(LeftNode),
                    RightNode(RightNode) {}
@@ -205,7 +209,7 @@ public:
     // -2: unused, -3: reserved; Else: internal node; -1: terminal node    
     
     while( SplitVar(NextLeft, 0) != -2 ) NextLeft++;
-    SplitVar(NextLeft) = -3;  
+    SplitVar(NextLeft) = -3;
     
     NextRight = NextLeft;
     
@@ -236,6 +240,19 @@ public:
     Rcout << "Splitting varible is " << var << " value is " << value << " score is " << score << std::endl;
   }
 };
+
+class Multi_Split_Class{ // multi-variate splits
+public:
+  arma::uvec& var;
+  arma::vec& load;
+  double value = 0;
+  double score = -1;
+  
+  void print(void) {
+    Rcout << "Splitting varible is " << var << " load is" << load << "value is " << value << " score is " << score << std::endl;
+  }
+};
+
 
 // ************************ //
 // for categorical variable //

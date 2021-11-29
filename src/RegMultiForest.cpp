@@ -39,17 +39,19 @@ List RegMultiForestFit(arma::mat& X,
 
   // initiate forest argument objects
   arma::field<arma::imat> SplitVar(ntrees);
-  arma::field<arma::mat> SplitValue(ntrees);
+  arma::field<arma::mat> SplitLoad(ntrees);
+  arma::field<arma::vec> SplitValue(ntrees);
   arma::field<arma::uvec> LeftNode(ntrees);
   arma::field<arma::uvec> RightNode(ntrees);
   arma::field<arma::vec> NodeAve(ntrees);
 
-  //Initiate forest object
-  //Reg_Multi_Forest_Class REG_FOREST(SplitVar, 
-  //                                  SplitValue, 
-  //                                  LeftNode, 
-  //                                  RightNode, 
-  //                                  NodeAve);
+  // Initiate forest object
+  Reg_Multi_Forest_Class REG_FOREST(SplitVar,
+                                    SplitLoad,
+                                    SplitValue,
+                                    LeftNode,
+                                    RightNode,
+                                    NodeAve);
   
-  Rcout << "fitting multi forest... not finished yet" << std::endl;
+  stop("fitting multi forest... not finished yet");
 }

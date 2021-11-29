@@ -55,7 +55,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
 
   #pragma omp parallel num_threads(usecores)
   {
-    #pragma omp for schedule(dynamic)
+    #pragma omp for schedule(static)
     for (size_t nt = 0; nt < ntrees; nt++) // fit all trees
     {
       // set xoshiro random seed
