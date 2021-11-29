@@ -5,8 +5,8 @@
 .RData
 .Ruserdata
 src/*.o
-src/Reg_Uni/*.o
-src/Surv_Uni/*.o
+src/Reg/*.o
+src/Surv/*.o
 src/Trees/*.o
 src/Utility/*.o
 src/Cla_Multi/*.o
