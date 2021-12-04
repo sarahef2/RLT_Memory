@@ -1,4 +1,4 @@
-## Speed and Accuracy Test
+## Seed Test
 
 library(RLT)
 library(randomForest)
