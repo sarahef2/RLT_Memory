@@ -55,7 +55,7 @@ void move_cat_index(size_t& lowindex, size_t& highindex, std::vector<Reg_Cat_Cla
   
   if ( lowcount < nmin and highcount < nmin ) // if both need to be fixed, start with one randomly
   {
-    if ( intRand(0, 1) )
+    if ( TRUE ) //************ Later ********************//
     { // fix lowindex first
       while( lowcount < nmin and lowindex <= highindex ){
         lowindex++;

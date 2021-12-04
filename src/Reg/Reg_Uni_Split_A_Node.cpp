@@ -15,7 +15,8 @@ void Reg_Uni_Split_A_Node(size_t Node,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           uvec& obs_id,
-                          uvec& var_id)
+                          uvec& var_id,
+                          Rand& rngl)
 {
   size_t N = obs_id.n_elem;
   size_t nmin = Param.nmin;
@@ -26,6 +27,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
   {
     TERMINATENODE:
       Reg_Uni_Terminate_Node(Node, OneTree, obs_id, REG_DATA.Y, REG_DATA.obsweight, useobsweight);
+    
   }else{
     
     //Set up another split
@@ -34,10 +36,10 @@ void Reg_Uni_Split_A_Node(size_t Node,
     //If reinforcement- NOT IMPLEMENTED
     if (Param.reinforcement)
     {
-      Reg_Uni_Find_A_Split_Embed(OneSplit, REG_DATA, Param, obs_id, var_id);
+      Reg_Uni_Find_A_Split_Embed(OneSplit, REG_DATA, Param, obs_id, var_id, rngl);
     }else{
       //Figure out where to split the node
-      Reg_Uni_Find_A_Split(OneSplit, REG_DATA, Param, obs_id, var_id);
+      Reg_Uni_Find_A_Split(OneSplit, REG_DATA, Param, obs_id, var_id,rngl);
     }
     
     //Find the average for that node
@@ -96,7 +98,8 @@ void Reg_Uni_Split_A_Node(size_t Node,
                          REG_DATA,
                          Param,
                          left_id, 
-                         var_id);
+                         var_id,
+                         rngl);
 
     
     Reg_Uni_Split_A_Node(NextRight,                          
@@ -104,7 +107,8 @@ void Reg_Uni_Split_A_Node(size_t Node,
                          REG_DATA,
                          Param,
                          obs_id, 
-                         var_id);
+                         var_id,
+                         rngl);
 
   }
 }

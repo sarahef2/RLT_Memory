@@ -54,7 +54,7 @@ template <class T> const T& min (const T& a, const T& b);
 // Random Number Generator //
 // ************************//
 
-int intRand(const int & min, const int & max);
+// int intRand(const int & min, const int & max);
 
 // Structure for Random Number generating
 class Rand{
@@ -71,6 +71,26 @@ public:
     lrng = rng;
     
   }
+  
+  template<typename V>
+  V random_suffle(V z){
+    
+   uvec temp = this -> sample(z.n_elem, 0, z.n_elem -1);
+  
+   V z_shuffle = z(temp); 
+    
+    return z_shuffle;
+    
+   }
+  
+  // Random
+  size_t rand_sizet(size_t min, size_t max){
+    
+    boost::random::uniform_int_distribution<int> rand(min, max);
+    
+    return  rand(this -> lrng);
+    
+  };
   
   // Discrete Uniform
   arma::uvec rand_uvec(size_t Num, size_t min, size_t max){
