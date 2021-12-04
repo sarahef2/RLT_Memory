@@ -53,5 +53,22 @@ List RegMultiForestFit(arma::mat& X,
                                     RightNode,
                                     NodeAve);
   
+  Rcout << "print tree 0 ..." << std::endl;
+  Rcout << REG_FOREST.SplitVarList(0) << std::endl;
+  Rcout << REG_FOREST.SplitLoadList(0) << std::endl;
+
+  Reg_Multi_Tree_Class OneTree(REG_FOREST.SplitVarList(0),
+                               REG_FOREST.SplitLoadList(0),
+                               REG_FOREST.SplitValueList(0),
+                               REG_FOREST.LeftNodeList(0),
+                               REG_FOREST.RightNodeList(0),
+                               REG_FOREST.NodeAveList(0));
+  
+  OneTree.initiate(5, 3);
+  
+  Rcout << "after initate ..." << std::endl;
+  Rcout << REG_FOREST.SplitVarList(0) << std::endl;
+  Rcout << REG_FOREST.SplitLoadList(0) << std::endl;
+  
   stop("fitting multi forest... not finished yet");
 }
