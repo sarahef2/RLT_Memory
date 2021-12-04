@@ -40,7 +40,8 @@ void Reg_Uni_Split_A_Node(size_t Node,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           uvec& obs_id,
-                          uvec& var_id);
+                          uvec& var_id,
+                          Rand& rngl);
 
 void Reg_Uni_Terminate_Node(size_t Node, 
                             Reg_Uni_Tree_Class& OneTree,
@@ -54,13 +55,15 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           uvec& obs_id,
-                          uvec& var_id);
+                          uvec& var_id,
+                          Rand& rngl);
 
 void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
                                 uvec& obs_id,
-                                uvec& var_id);
+                                uvec& var_id,
+                                Rand& rngl);
 
 void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
                         uvec& obs_id,
@@ -73,20 +76,8 @@ void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
                         int nsplit,
                         size_t nmin,
                         double alpha,
-                        bool useobsweight);
-
-void Reg_Uni_Split_Cont2(Uni_Split_Class& TempSplit,
-                        uvec& obs_id,
-                        const vec& x,
-                        const vec& Y,
-                        const vec& obs_weight,
-                        double penalty,
-                        int split_gen,
-                        int split_rule,
-                        int nsplit,
-                        size_t nmin,
-                        double alpha,
-                        bool useobsweight);
+                        bool useobsweight,
+                        Rand& rngl);
 
 void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
                        uvec& obs_id,
@@ -100,7 +91,8 @@ void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
                        int nsplit,
                        size_t nmin,
                        double alpha,
-                       bool useobsweight);
+                       bool useobsweight,
+                       Rand& rngl);
 
 // splitting score calculations (continuous)
 
@@ -132,13 +124,6 @@ void reg_cont_score_best(uvec& indices,
                         double& temp_cut, 
                         double& temp_score);
 
-void reg_cont_score_best2(uvec& indices,
-                         const vec& x_sorted,
-                         const vec& Y,
-                         size_t lowindex, 
-                         size_t highindex, 
-                         double& temp_cut, 
-                         double& temp_score);
 
 void reg_cont_score_best_w(uvec& indices,
                           const vec& x,

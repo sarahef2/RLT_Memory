@@ -37,13 +37,13 @@ void printLog(const char* mode, const char* x, const int n1, const double n2)
 }
 
 // generate random integer in [min, max]
-
+/*
 int intRand(const int & min, const int & max) {
   static thread_local std::mt19937 generator;
-  std::uniform_int_distribution<int> distribution(min, max);
+  std::uniform_int_distribution<int> distribution(min, max); 
   return distribution(generator);
 }
-
+*/
 // simple math
 
 template <class T> const T& max(const T& a, const T& b) {

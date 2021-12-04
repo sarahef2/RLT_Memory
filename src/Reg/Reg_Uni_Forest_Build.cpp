@@ -85,7 +85,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
 
       // build the tree
       Reg_Uni_Split_A_Node(0, OneTree, REG_DATA, 
-                           Param, inbagObs, var_id);
+                           Param, inbagObs, var_id, rngl);
       
       // trim tree 
       TreeLength = OneTree.get_tree_length();
@@ -130,7 +130,9 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
           uvec proxy_id = linspace<uvec>(0, NTest-1, NTest);
           uvec TermNode(NTest, fill::zeros);          
           
-          vec tildex = shuffle( REG_DATA.X.unsafe_col(j).elem( oobagObs ) );
+          uvec oob_ind = rngl.random_suffle(oobagObs);
+          vec tildex = REG_DATA.X.col(j);
+          tildex = tildex.elem( oob_ind );  //shuffle( REG_DATA.X.unsafe_col(j).elem( oobagObs ) );
           
           Uni_Find_Terminal_Node_ShuffleJ(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, oobagObs, TermNode, tildex, j);
           

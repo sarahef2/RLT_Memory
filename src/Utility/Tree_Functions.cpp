@@ -132,7 +132,7 @@ void move_cont_index(size_t& lowindex, size_t& highindex, const vec& x, const uv
   
   if ( lowindex < (nmin - 1) and highindex > (indices.size() - nmin - 1) ) // if both need to be fixed, start with one randomly
   {
-    if ( intRand(0, 1) )
+    if ( 1 )
     { // fix lowindex first
       while( (x(indices(lowindex)) == x(indices(lowindex+1)) or lowindex < (nmin - 1)) and lowindex <= highindex ) lowindex++;
       while( (x(indices(highindex)) == x(indices(highindex+1)) or highindex > (indices.size() - nmin - 1)) and lowindex <= highindex ) highindex--;

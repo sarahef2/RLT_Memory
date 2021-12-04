@@ -14,7 +14,8 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           uvec& obs_id,
-                          uvec& var_id)
+                          uvec& var_id,
+                          Rand& rngl)
 {
   
   size_t mtry = Param.mtry;
@@ -33,7 +34,7 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
   mtry = ( (mtry <= P) ? mtry:P ); // take minimum
 
   // Choose the variables to try  
-  uvec var_try = arma::randperm(P, mtry);
+  uvec var_try =  rngl.rand_uvec(mtry, 0, P-1); //arma::randperm(P, mtry);
   
   //For each variable in var_try
   for (size_t j = 0; j < mtry; j++)
@@ -61,7 +62,8 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                         nsplit, 
                         nmin, 
                         alpha, 
-                        useobsweight);
+                        useobsweight,
+                         rngl);
 
     }else{ // continuous variable
       
@@ -76,7 +78,8 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                          nsplit,
                          nmin,
                          alpha,
-                         useobsweight);
+                         useobsweight,
+                         rngl);
       
     }
     

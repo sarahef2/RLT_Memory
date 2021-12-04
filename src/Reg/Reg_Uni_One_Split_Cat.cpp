@@ -21,7 +21,8 @@ void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
                        int nsplit,
                        size_t nmin,
                        double alpha,
-                       bool useobsweight)
+                       bool useobsweight,
+                       Rand& rngl)
 {
 
   std::vector<Reg_Cat_Class> cat_reduced(ncat + 1);
@@ -95,7 +96,7 @@ void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
   {
     for ( int k = 0; k < nsplit; k++ )
     {
-      size_t temp_cat = (size_t) intRand(lowindex, highindex);
+      size_t temp_cat = rngl.rand_sizet( lowindex, highindex); //intRand(lowindex, highindex);
       
       if (useobsweight)
         temp_score = reg_cat_score_w(cat_reduced, temp_cat, true_cat);
