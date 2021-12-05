@@ -101,7 +101,7 @@ Reg_Var_Forest <- function(x, y, testx,
                    verbose = verbose,
                    seed = seed, ...)
     
-    RLT.pred = predict(RLTfit, testX, var.est = TRUE, ncores = ncores)
+    RLT.pred = predict(RLT.fit, testX, var.est = TRUE, ncores = ncores)
     
     resultMat = list("Prediction" = RLT.pred$Prediction,
                      "var" = RLTPred$Variance, 
