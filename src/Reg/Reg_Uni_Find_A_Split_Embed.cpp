@@ -17,9 +17,10 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 Rand& rngl)
 {
   
-  Rcout << "    --- Reg_Find_A_Split with embedded model " << std::endl;
+  Rcout << "    --- Reg_Uni_Find_A_Split_Embed " << std::endl;
   
   PARAM_GLOBAL Embed_Param = Param;
-
+  
+  Embed_Param.print();
 }
 

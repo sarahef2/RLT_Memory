@@ -26,12 +26,13 @@ List RegMultiForestFit(arma::mat& X,
   // reading parameters 
   PARAM_GLOBAL Param(param);
 
+  Param.print();
+  
   // create data objects  
   RLT_REG_DATA REG_DATA(X, Y, Ncat, obsweight, varweight);
   
   size_t N = REG_DATA.X.n_rows;
   size_t P = REG_DATA.X.n_cols;
-  size_t LinearComb = REG_DATA.X.n_cols;
   size_t ntrees = Param.ntrees;
   int obs_track = Param.obs_track;
 
@@ -53,22 +54,52 @@ List RegMultiForestFit(arma::mat& X,
                                     RightNode,
                                     NodeAve);
   
-  Rcout << "print tree 0 ..." << std::endl;
-  Rcout << REG_FOREST.SplitVarList(0) << std::endl;
-  Rcout << REG_FOREST.SplitLoadList(0) << std::endl;
-
-  Reg_Multi_Tree_Class OneTree(REG_FOREST.SplitVarList(0),
-                               REG_FOREST.SplitLoadList(0),
-                               REG_FOREST.SplitValueList(0),
-                               REG_FOREST.LeftNodeList(0),
-                               REG_FOREST.RightNodeList(0),
-                               REG_FOREST.NodeAveList(0));
+  // initiate obs id and var id
+  uvec obs_id = linspace<uvec>(0, N-1, N);
+  uvec var_id = linspace<uvec>(0, P-1, P);
   
-  OneTree.initiate(5, 3);
+  // Initiate prediction objects
+  vec Prediction;
+  vec OOBPrediction;  
   
-  Rcout << "after initate ..." << std::endl;
-  Rcout << REG_FOREST.SplitVarList(0) << std::endl;
-  Rcout << REG_FOREST.SplitLoadList(0) << std::endl;
+  // VarImp
+  vec VarImp;
+  if (importance)
+    VarImp.zeros(P);  
   
-  stop("fitting multi forest... not finished yet");
+  // Run model fitting
+  Reg_Multi_Forest_Build((const RLT_REG_DATA&) REG_DATA,
+                         REG_FOREST,
+                         (const PARAM_GLOBAL&) Param,
+                         obs_id,
+                         var_id,
+                         ObsTrack,
+                         Prediction,
+                         OOBPrediction,
+                         VarImp);
+  
+  
+  //initialize return objects
+  List ReturnList;
+  
+  List Forest_R;
+  
+  //Save forest objects as part of return list  
+  Forest_R["SplitVar"] = SplitVar;
+  Forest_R["SplitLoad"] = SplitLoad;
+  Forest_R["SplitValue"] = SplitValue;
+  Forest_R["LeftNode"] = LeftNode;
+  Forest_R["RightNode"] = RightNode;
+  Forest_R["NodeAve"] = NodeAve;
+  
+  //Add to return list
+  // ReturnList["FittedForest"] = Forest_R;
+  
+  if (obs_track) ReturnList["ObsTrack"] = ObsTrack;
+  // if (importance) ReturnList["VarImp"] = VarImp;
+  
+  // ReturnList["Prediction"] = Prediction;
+  // ReturnList["OOBPrediction"] = OOBPrediction;
+  
+  return ReturnList;
 }

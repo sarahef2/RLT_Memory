@@ -114,27 +114,21 @@ public:
   };
 
   void print() {
-      Rcout << "--- Random Forest Parameters ---" << std::endl;
-  };
-    
-/*  
-      Rcout << "            N = " << N << std::endl;
-      Rcout << "            P = " << P << std::endl;
-      Rcout << "       ntrees = " << ntrees << std::endl;
-      Rcout << "         mtry = " << mtry << std::endl;
-      Rcout << "         nmin = " << nmin << std::endl;
-      Rcout << "        alpha = " << alpha << std::endl;
-      Rcout << "    split_gen = " << ((split_gen == 1) ? "Random" : (split_gen == 2) ? "Rank" : "Best") << std::endl;
-      if (split_gen < 3) Rcout << "   split_rule = " << split_rule << std::endl;
-      Rcout << "       nsplit = " << nsplit << std::endl;
-      Rcout << "  replacement = " << replacement << std::endl;
-      Rcout << "resample prob = " << resample_prob << std::endl;
-      Rcout << " useobsweight = " << (useobsweight ? "Yes" : "No") << std::endl;
-      Rcout << " usevarweight = " << (usevarweight ? "Yes" : "No") << std::endl;
-      Rcout << "   importance = " << (importance ? "Yes" : "No") << std::endl;
-      Rcout << "reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
+      Rcout << "----- RLT Forest Parameters -----" << std::endl;
+      Rcout << "         (N, P) = (" << N << ", " << P << ")"<< std::endl;
+      Rcout << "         ntrees = " << ntrees << std::endl;
+      Rcout << "           mtry = " << mtry << std::endl;
+      Rcout << "           nmin = " << nmin << std::endl;
+      Rcout << "      split_gen = " << ((split_gen == 1) ? "Random" : (split_gen == 2) ? "Rank" : "Best") << std::endl;
+      if (split_gen < 3)
+      Rcout << "         nsplit = " << nsplit << std::endl;
+      Rcout << "    replacement = " << replacement << std::endl;
+      Rcout << "  resample prob = " << resample_prob << std::endl;
+      Rcout << "    Obs weights = " << (useobsweight ? "Yes" : "No") << std::endl;
+      Rcout << "    Var weights = " << (usevarweight ? "Yes" : "No") << std::endl;
+      Rcout << "  reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
       Rcout << std::endl;
-*/
+  };
 
 };
 
@@ -183,6 +177,13 @@ public:
     while (i < SplitVar.n_elem and SplitVar(i) != -2) i++;
     return( (i < SplitVar.n_elem) ? i:SplitVar.n_elem );
   }
+  
+  void print() {
+    
+    Rcout << "This tree has length " << get_tree_length() << std::endl;
+    
+  }
+  
 };
 
 class Multi_Tree_Class{ // multivariate split trees
@@ -223,6 +224,13 @@ public:
     while (i < SplitVar.n_rows and SplitVar(i, 0) != -2) i++;
     return( (i < SplitVar.n_rows) ? i:SplitVar.n_rows );
   }
+  
+  void print() {
+    
+    Rcout << "This tree has length " << get_tree_length() << std::endl;
+
+  }
+  
 };
 
 
@@ -248,8 +256,13 @@ public:
   double value = 0;
   double score = -1;
   
+  Multi_Split_Class(arma::uvec& var,
+                   arma::vec& load) : 
+    var(var),
+    load(load) {}
+  
   void print(void) {
-    Rcout << "Splitting varible is " << var << " load is" << load << "value is " << value << " score is " << score << std::endl;
+    Rcout << "Splitting varible is\n" << var << "load is\n" << load << "value is " << value << "; score is " << score << std::endl;
   }
 };
 

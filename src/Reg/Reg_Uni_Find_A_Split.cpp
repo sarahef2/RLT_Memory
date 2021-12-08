@@ -22,13 +22,12 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
   size_t nmin = Param.nmin;
   double alpha = Param.alpha;
   bool useobsweight = Param.useobsweight;
-  bool usevarweight = Param.usevarweight;
+  //bool usevarweight = Param.usevarweight;
   size_t nsplit = Param.nsplit;
   size_t split_gen = Param.split_gen;
   size_t split_rule = Param.split_rule;
-  bool reinforcement = Param.reinforcement;
   
-  size_t N = obs_id.n_elem;
+  //size_t N = obs_id.n_elem;
   size_t P = var_id.n_elem;
   
   mtry = ( (mtry <= P) ? mtry:P ); // take minimum

@@ -167,4 +167,48 @@ void Reg_Uni_Forest_Pred(mat& Pred,
                          size_t usecores,
                          size_t verbose);
 
+
+// ########################
+// ## Multivariate Trees ##
+// ########################
+
+void Reg_Multi_Forest_Build(const RLT_REG_DATA& REG_DATA,
+                            Reg_Multi_Forest_Class& REG_FOREST,
+                            const PARAM_GLOBAL& Param,
+                            uvec& obs_id,
+                            uvec& var_id,
+                            umat& ObsTrack,
+                            vec& Prediction,
+                            vec& OOBPrediction,
+                            vec& VarImp);
+
+void Reg_Multi_Split_A_Node(size_t Node,
+                            Reg_Multi_Tree_Class& OneTree,
+                            const RLT_REG_DATA& REG_DATA,
+                            const PARAM_GLOBAL& Param,
+                            uvec& obs_id,
+                            uvec& var_id,
+                            Rand& rngl);
+
+void Reg_Multi_Terminate_Node(size_t Node,
+                              Reg_Multi_Tree_Class& OneTree,
+                              uvec& obs_id,
+                              const vec& Y,
+                              const vec& obs_weight,
+                              bool useobsweight);
+
+void Reg_Multi_Find_A_Split(Multi_Split_Class& OneSplit,
+                            const RLT_REG_DATA& REG_DATA,
+                            const PARAM_GLOBAL& Param,
+                            uvec& obs_id,
+                            uvec& var_id,
+                            Rand& rngl);
+
+void Reg_Multi_Find_A_Split_Embed(Multi_Split_Class& OneSplit,
+                                  const RLT_REG_DATA& REG_DATA,
+                                  const PARAM_GLOBAL& Param,
+                                  uvec& obs_id,
+                                  uvec& var_id,
+                                  Rand& rngl);
+
 #endif
