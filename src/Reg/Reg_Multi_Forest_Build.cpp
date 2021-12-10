@@ -84,7 +84,7 @@ void Reg_Multi_Forest_Build(const RLT_REG_DATA& REG_DATA,
                                    REG_FOREST.NodeAveList(nt));      
       
       size_t TreeLength = 1 + size/nmin*3;
-      OneTree.initiate(TreeLength, linear_comb);      
+      OneTree.initiate(TreeLength, linear_comb);
       
       // build the tree
       Rcout << "build tree " << nt << std::endl;

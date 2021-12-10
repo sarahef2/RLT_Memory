@@ -79,6 +79,7 @@ public:
 
     SplitVar.set_size(TreeLength);
     SplitVar.fill(-2);
+    SplitVar(0) = -3;
 
     SplitValue.zeros(TreeLength);
     LeftNode.zeros(TreeLength);

@@ -99,8 +99,6 @@ barplot(rf.fit$importance[, 1], main = "rf")
 barplot(as.vector(rangerfit$variable.importance), main = "ranger")
 
 
-
-
 # multivariate split 
 
 RLTfit <- RLT(trainX, trainY, ntrees = 1, ncores = 1, nmin = 100, 

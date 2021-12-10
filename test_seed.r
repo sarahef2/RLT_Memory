@@ -52,7 +52,7 @@ for (i in 1:3) {
   
   start_time <- Sys.time()
   RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, nmin = nmin/2, mtry = mtry,
-                split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, 
+                split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, resample.replace = TRUE,
                 importance = importance, seed = 1525405838)
   result_metric[i, 1] = difftime(Sys.time(), start_time, units = "secs")
   start_time <- Sys.time()

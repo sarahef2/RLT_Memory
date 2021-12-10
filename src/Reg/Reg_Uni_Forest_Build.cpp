@@ -52,7 +52,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
     
   if (importance)
     AllImp.zeros(ntrees, P);
-
+  
   #pragma omp parallel num_threads(usecores)
   {
     #pragma omp for schedule(static)
@@ -80,7 +80,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
                                  REG_FOREST.RightNodeList(nt),
                                  REG_FOREST.NodeAveList(nt));
       
-      size_t TreeLength = 1 + size/nmin*3;
+      size_t TreeLength = 3 + size/nmin*3;
       OneTree.initiate(TreeLength);
 
       // build the tree

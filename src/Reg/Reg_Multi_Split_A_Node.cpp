@@ -23,6 +23,9 @@ void Reg_Multi_Split_A_Node(size_t Node,
   bool useobsweight = Param.useobsweight;
   size_t linear_comb = Param.linear_comb;
   
+  if (Param.verbose)
+    Rcout << "at node" << Node << " ..." << std::endl;
+  
   if (N < 2*nmin)
   {
     TERMINATENODE:

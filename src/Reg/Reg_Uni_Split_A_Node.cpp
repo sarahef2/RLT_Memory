@@ -27,9 +27,9 @@ void Reg_Uni_Split_A_Node(size_t Node,
   {
     TERMINATENODE:
       Reg_Uni_Terminate_Node(Node, OneTree, obs_id, REG_DATA.Y, REG_DATA.obsweight, useobsweight);
-    
+
   }else{
-    
+
     //Set up another split
     Uni_Split_Class OneSplit;
     
@@ -39,9 +39,9 @@ void Reg_Uni_Split_A_Node(size_t Node,
       Reg_Uni_Find_A_Split_Embed(OneSplit, REG_DATA, Param, obs_id, var_id, rngl);
     }else{
       //Figure out where to split the node
-      Reg_Uni_Find_A_Split(OneSplit, REG_DATA, Param, obs_id, var_id,rngl);
+      Reg_Uni_Find_A_Split(OneSplit, REG_DATA, Param, obs_id, var_id, rngl);
     }
-    
+
     //Find the average for that node
     OneTree.NodeAve(Node) = arma::mean(REG_DATA.Y(obs_id));
     
@@ -61,7 +61,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
       split_id_cat(REG_DATA.X.unsafe_col(OneSplit.var), OneSplit.value, left_id, obs_id, REG_DATA.Ncat(OneSplit.var));
       
     }
-    
+
     // if this happens something about the splitting rule is wrong
     if (left_id.n_elem == N or obs_id.n_elem == N)
       goto TERMINATENODE;
@@ -69,9 +69,9 @@ void Reg_Uni_Split_A_Node(size_t Node,
     // check if the current tree is long enough to store two more nodes
     // if not, extend the current tree
     
-    if ( OneTree.SplitVar( OneTree.SplitVar.size() - 2) >= 0 )
+    if ( OneTree.SplitVar( OneTree.SplitVar.n_elem - 2) != -2 )
     {
-
+      
       // extend tree structure
       OneTree.extend();
     }
@@ -90,7 +90,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
     
     OneTree.LeftNode(Node) = NextLeft;
     OneTree.RightNode(Node) = NextRight;
-    
+
     // split the left and right nodes 
 
     Reg_Uni_Split_A_Node(NextLeft, 
