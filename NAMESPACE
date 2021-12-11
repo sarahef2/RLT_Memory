@@ -2,8 +2,12 @@
 
 S3method(predict,RLT)
 S3method(print,RLT)
+export(ARMA_EMPTY_UMAT)
+export(ARMA_EMPTY_VEC)
 export(RLT)
 export(Reg_Var_Forest)
 export(cindex)
 export(forest.kernel)
 export(get.one.tree)
+importFrom(Rcpp,sourceCpp)
+useDynLib(RLT)

@@ -10,6 +10,11 @@
 using namespace Rcpp;
 using namespace arma;
 
+
+
+//' @export
+//' @useDynLib RLT
+//' @importFrom Rcpp sourceCpp
 // [[Rcpp::export()]]
 arma::umat ARMA_EMPTY_UMAT()
 {
@@ -17,6 +22,9 @@ arma::umat ARMA_EMPTY_UMAT()
   return temp;
 }
 
+//' @export
+//' @useDynLib RLT
+//' @importFrom Rcpp sourceCpp
 // [[Rcpp::export()]]
 arma::vec ARMA_EMPTY_VEC()
 {
