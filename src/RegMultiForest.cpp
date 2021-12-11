@@ -24,7 +24,8 @@ List RegMultiForestFit(arma::mat& X,
             					 List& param)
 {
   // reading parameters 
-  PARAM_GLOBAL Param(param);
+  PARAM_GLOBAL Param;
+  Param.PARAM_READ_R(param);
 
   Param.print();
   

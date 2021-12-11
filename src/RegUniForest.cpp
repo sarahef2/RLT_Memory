@@ -24,7 +24,8 @@ List RegUniForestFit(arma::mat& X,
           					 List& param)
 {
   // reading parameters 
-  PARAM_GLOBAL Param(param);
+  PARAM_GLOBAL Param;
+  Param.PARAM_READ_R(param);
 
   // create data objects  
   RLT_REG_DATA REG_DATA(X, Y, Ncat, obsweight, varweight);

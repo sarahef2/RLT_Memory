@@ -147,6 +147,8 @@ Reg_Var_Forest <- function(x, y, testx,
 
     resultMat = list("Prediction" = RLT.pred$Prediction,
                      "var" = Var, 
+                     "Vh" = apply(BS.pred$PredictionAll, 1, var),
+                     "Vs" = apply(RLT.pred$PredictionAll, 1, var),
                      "Fit" = RLT.fit)
     
     class(resultMat) <- c("RLT", "Var", "reg")

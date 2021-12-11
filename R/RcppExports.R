@@ -2,34 +2,34 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 ARMA_EMPTY_UMAT <- function() {
-    .Call(`_RLT_ARMA_EMPTY_UMAT`)
+    .Call('_RLT_ARMA_EMPTY_UMAT', PACKAGE = 'RLT')
 }
 
 ARMA_EMPTY_VEC <- function() {
-    .Call(`_RLT_ARMA_EMPTY_VEC`)
+    .Call('_RLT_ARMA_EMPTY_VEC', PACKAGE = 'RLT')
 }
 
 UniKernel_Self <- function(SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose) {
-    .Call(`_RLT_UniKernel_Self`, SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose)
+    .Call('_RLT_UniKernel_Self', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose)
 }
 
 UniKernel_Cross <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose) {
-    .Call(`_RLT_UniKernel_Cross`, SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose)
+    .Call('_RLT_UniKernel_Cross', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose)
 }
 
 UniKernel_Train <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose) {
-    .Call(`_RLT_UniKernel_Train`, SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose)
+    .Call('_RLT_UniKernel_Train', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose)
 }
 
 RegMultiForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
-    .Call(`_RLT_RegMultiForestFit`, X, Y, Ncat, obsweight, varweight, ObsTrack, param)
+    .Call('_RLT_RegMultiForestFit', PACKAGE = 'RLT', X, Y, Ncat, obsweight, varweight, ObsTrack, param)
 }
 
 RegUniForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
-    .Call(`_RLT_RegUniForestFit`, X, Y, Ncat, obsweight, varweight, ObsTrack, param)
+    .Call('_RLT_RegUniForestFit', PACKAGE = 'RLT', X, Y, Ncat, obsweight, varweight, ObsTrack, param)
 }
 
 RegUniForestPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose) {
-    .Call(`_RLT_RegUniForestPred`, SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose)
+    .Call('_RLT_RegUniForestPred', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose)
 }
 

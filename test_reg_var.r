@@ -114,14 +114,14 @@ est_sd = matrix(NA, nsim, testn)
 
 for (i in 1:nsim)
 {
-  cat(paste("\n---run", i, "...\n"))
+  cat(paste("\n\n---run", i, "...\n"))
   
   X = matrix(runif( trainn*p ), trainn, p)
   y = 2*X[, 1] + 3*X[, 2] - 5*X[, 3] - 1*X[, 4] + 1 + rnorm(trainn)
   
-  Var.Est = Reg_Var_Forest(X, y, testX, ncores = 12, nmin = 20,
+  Var.Est = Reg_Var_Forest(X, y, testX, ncores = 12, nmin = 5,
                            mtry = p/2, split.gen = "best", # nsplit = 4, 
-                           ntrees = 10000, resample.prob = 0.80)
+                           ntrees = 20000, resample.prob = 0.80)
   
   rfpred[i, ] = Var.Est$Prediction
   est_var[i, ] = Var.Est$var

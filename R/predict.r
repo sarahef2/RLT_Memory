@@ -9,7 +9,7 @@
 #' @param keep.all whether to keep the prediction from all trees
 #' @param ncores   number of cores
 #' @param ... ...
-#' 
+#'
 #' @return 
 #' 
 #' A \code{RLT} prediction object, constructed as a list consisting

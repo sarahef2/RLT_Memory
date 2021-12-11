@@ -11,10 +11,10 @@
 #' 
 #' \itemize{\item \code{embed.ntrees}: number of trees in the embedded model
 #' \item \code{embed.resample.prob}: proportion of samples (of the internal node)
-#' in the embedded model \item \code{embed.mtry.prop}: proportion of variables
+#' in the embedded model \item \code{embed.mtry}: number or proportion of variables
 #' \item \code{embed.nmin} terminal node size \item \code{embed.split.gen} random 
 #' cutting point search method (`"random"`, `"rank"` or `"best"`) \item \code{embed.nsplit} 
-#' number of random cutting points.
+#' number of random cutting points.}
 #' 
 #' For some other experimental features, please see \code{\link{check_param_RLT}}.
 #'                        

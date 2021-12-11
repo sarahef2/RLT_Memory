@@ -16,38 +16,38 @@ using namespace arma;
 
 class PARAM_GLOBAL{
 public:
-  size_t N;
-  size_t P;
-  size_t ntrees;
-  size_t mtry;
-  size_t nmin;
-  size_t split_gen;
-  size_t nsplit;
-  bool replacement;
-  double resample_prob;
-  bool obs_track;
-  bool useobsweight;
-  bool usevarweight;
-  size_t linear_comb;
-  bool importance;
-  bool reinforcement;
-  size_t ncores;
-  size_t verbose;
-  size_t seed;
-  bool failcount;
-  double alpha;
-  size_t split_rule;
-  size_t varweighttype;
-  
+  size_t N = 0;
+  size_t P = 0;
+  size_t ntrees = 1;
+  size_t mtry = 1;
+  size_t nmin = 1;
+  size_t split_gen = 1;
+  size_t nsplit = 1;
+  bool replacement = 0;
+  double resample_prob = 0.8;
+  bool obs_track = 0;
+  bool useobsweight = 0;
+  bool usevarweight = 0;
+  size_t linear_comb = 1;
+  bool importance = 0;
+  bool reinforcement = 0;
+  size_t ncores = 1;
+  size_t verbose = 0;
+  size_t seed = 1;
+  bool failcount = 0;
+  double alpha = 0;
+  size_t split_rule = 1;
+  size_t varweighttype = 1;
 // RLT parameters 
-  size_t embed_ntrees;
-  double embed_resample_prob;
-  double embed_mtry_prop;
-  size_t embed_nmin;
-  size_t embed_split_gen;
-  size_t embed_nsplit;
+  size_t embed_ntrees = 50;
+  double embed_resample_prob = 0.8;
+  double embed_mtry = 0.5;
+  size_t embed_nmin = 5;
+  size_t embed_split_gen = 1;
+  size_t embed_nsplit = 1;
+  double embed_mute = 0;
 
-  PARAM_GLOBAL(List& param){
+  void PARAM_READ_R(List& param){
     N             = param["n"];
     P             = param["p"];
     ntrees        = param["ntrees"];
@@ -74,10 +74,11 @@ public:
 // RLT parameters
     embed_ntrees        = param["embed.ntrees"];
     embed_resample_prob = param["embed.resample.prob"];
-    embed_mtry_prop     = param["embed.mtry.prop"];
+    embed_mtry          = param["embed.mtry"];
     embed_nmin          = param["embed.nmin"];
     embed_split_gen     = param["embed.split.gen"];
     embed_nsplit        = param["embed.nsplit"];
+    embed_mute          = param["embed.mute"];
   };
   
   void copyfrom(const PARAM_GLOBAL& Input){
@@ -107,10 +108,11 @@ public:
   // RLT parameters
       embed_ntrees        = Input.embed_ntrees;
       embed_resample_prob = Input.embed_resample_prob;
-      embed_mtry_prop     = Input.embed_mtry_prop;
+      embed_mtry          = Input.embed_mtry;
       embed_nmin          = Input.embed_nmin;
       embed_split_gen     = Input.embed_split_gen;
       embed_nsplit        = Input.embed_nsplit;
+      embed_mute          = Input.embed_mute;
   };
 
   void print() {
@@ -128,6 +130,18 @@ public:
       Rcout << "    Var weights = " << (usevarweight ? "Yes" : "No") << std::endl;
       Rcout << "  reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
       Rcout << std::endl;
+  };
+  
+  void rlt_print() {
+    
+    Rcout << "     embed_ntrees        = " << embed_ntrees << std::endl;
+    Rcout << "     embed_resample_prob = " << embed_resample_prob << std::endl;
+    Rcout << "     embed_mtry          = " << embed_mtry << std::endl;
+    Rcout << "     embed_nmin          = " << embed_nmin << std::endl;
+    Rcout << "     embed_split_gen     = " << embed_split_gen << std::endl;
+    Rcout << "     embed_nsplit        = " << embed_nsplit << std::endl;
+    Rcout << "     embed_mute          = " << embed_mute << std::endl;
+    
   };
 
 };

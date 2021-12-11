@@ -149,7 +149,7 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
     stop("param.control must be a list")
   }
   
-  RLT.control = set_embed_param(param.control, reinforcement)
+  RLT.control = set_embed_param(param.control, reinforcement, n, p)
 
   param <- list("n" = n,
                 "p" = p,
@@ -194,16 +194,17 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
 #' @description This is an internal function to set parameters for embedded model. 
 #' @keywords internal
 
-set_embed_param <- function(control, reinforcement)
+set_embed_param <- function(control, reinforcement, n, p)
 {
   if (!reinforcement) ## no RLT, set some default to prevent crash
   {
     embed.ntrees = 1
     embed.resample.prob = 0.8
-    embed.mtry.prop = 0.33
+    embed.mtry = 0.33
     embed.nmin = 1
     embed.split.gen = 1
     embed.nsplit = 1
+    embed.mute = 0
   }else{
 
     if (is.null(control$embed.ntrees)) {
@@ -218,11 +219,11 @@ set_embed_param <- function(control, reinforcement)
     
     storage.mode(embed.resample.prob) <- "double"
     
-    if (is.null(control$embed.mtry.prop)) { # for embedded model, mtry is proportion
-      embed.mtry.prop <- 1/2
-    } else embed.mtry.prop = max(min(control$embed.mtry.prop, 1), 0)
+    if (is.null(control$embed.mtry)) {
+      embed.mtry <- 1/2
+    } else embed.mtry = max(0, min(control$embed.mtry, p))
     
-    storage.mode(embed.mtry.prop) <- "double"
+    storage.mode(embed.mtry) <- "double"
     
     if (is.null(control$embed.nmin)) {
       embed.nmin <- 5
@@ -241,12 +242,19 @@ set_embed_param <- function(control, reinforcement)
     } else embed.nsplit = max(1, control$embed.nsplit)
     
     storage.mode(embed.nsplit) <- "integer"
+    
+    if (is.null(control$embed.mute)) {
+      embed.mute <- 0
+    } else embed.mute = max(0, min(control$embed.mute, p))
+    
+    storage.mode(embed.mute) <- "double"
   }
   
   return(list("embed.ntrees" = embed.ntrees,
               "embed.resample.prob" = embed.resample.prob,
-              "embed.mtry.prop" = embed.mtry.prop,
+              "embed.mtry" = embed.mtry,
               "embed.nmin" = embed.nmin,
               "embed.split.gen" = embed.split.gen,
-              "embed.nsplit" = embed.nsplit))
+              "embed.nsplit" = embed.nsplit,
+              "embed.mute" = embed.mute))
 }

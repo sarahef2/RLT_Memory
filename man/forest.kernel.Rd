@@ -7,10 +7,9 @@
 \usage{
 forest.kernel(
   object,
-  X1,
+  X1 = NULL,
   X2 = NULL,
-  as.train = FALSE,
-  ncores = 1,
+  vs.train = FALSE,
   verbose = FALSE,
   ...
 )
@@ -18,24 +17,26 @@ forest.kernel(
 \arguments{
 \item{object}{A fitted RLT object.}
 
-\item{X1}{The the first dataset.}
+\item{X1}{The the first dataset. This calculates an \eqn{n_1 \times n_1} kernel
+matrix of \code{X1}.}
 
-\item{X2}{The the second dataset.}
+\item{X2}{The the second dataset of the relative kernel weights are required.
+If \code{X2} is supplied, then calculate an \eqn{n_1 \times n_2}
+kernel matrix. If \code{vs.train} is used, then this must be the original
+training data.}
 
-\item{as.train}{If \verb{X2`` is the training data and the kernel weights against the training data is desired. To perform this, the fitted object must contain }ObsTrack\verb{(using}track.obs\verb{). Defult is }FALSE`.}
-
-\item{ncores}{Number of cores. Default is 1.}
+\item{vs.train}{To calculate the kernel weights with respect to the training data.
+This is slightly different than supplying the training data to \code{X2}
+due to re-samplings of the training process. Hence, \code{ObsTrack} must
+be available from the fitted object (using \code{resample.track = TRUE}).}
 
 \item{verbose}{Whether fitting should be printed.}
 
 \item{...}{...   Additional arguments.}
-
-\item{self}{If \code{TRUE}, then calculate the n by n kernel matrix of \code{X1}.
-If \code{FALSE} then calculate the kernel matrix between \code{X1}
-and \code{X2}. Default is \code{TRUE}.}
 }
 \description{
-\preformatted{Get random forest induced kernel weights between two sets
-             of data.
+\preformatted{Get random forest induced kernel weight matrix of testing samples 
+             or between any two sets of data. This is an experimental feature.
+             Use at your own risk.
 }
 }

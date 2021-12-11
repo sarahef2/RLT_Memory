@@ -4,19 +4,7 @@
 \alias{RegForest}
 \title{RegForest}
 \usage{
-RegForest(
-  x,
-  y,
-  ncat,
-  param,
-  RLT.control,
-  obs.w,
-  var.w,
-  ncores,
-  verbose,
-  ObsTrack,
-  ...
-)
+RegForest(x, y, ncat, obs.w, var.w, resample.preset, param, ...)
 }
 \description{
 Internal function for fitting regression forest

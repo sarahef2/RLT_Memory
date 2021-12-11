@@ -106,6 +106,11 @@ RLTfit <- RLT(trainX, trainY, ntrees = 1, ncores = 1, nmin = 100,
 
 
 
+# RLT split 
+
+RLTfit <- RLT(trainX, trainY, ntrees = 1, ncores = 1, nmin = 100, 
+              mtry = 3, linear.comb = 1, reinforcement = TRUE)
+
 
 
 
