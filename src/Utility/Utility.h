@@ -126,50 +126,33 @@ public:
     
   };
   
-  // Sampling index without replacement
-  arma::uvec sample(size_t Num, size_t min, size_t max){
+  // Sampling in a range without replacement
+  arma::uvec sample(size_t Num, size_t min, size_t max) {
 
-    size_t n = max - min + 1;
-    
-    if (Num > n)
-      Num = n;
+    if (max < min) max = min;
 
-    arma::uvec z = arma::linspace<uvec>(min, max, n);
-    arma::uvec sample_set(Num);
+    size_t N = max - min + 1;
+
+    arma::uvec vector = arma::linspace<uvec>(min, max, N);
     
-    if( n < 2 * Num ){
+    if (Num > N) Num = N;
+
+    for (size_t i = 0; i < Num; i++){
       
-      arma::uvec ind = this -> rand_uvec(n, 0, n-1);
+      boost::random::uniform_int_distribution<int> rand(i, N - 1);
       
-      for(size_t i = 0; i < n ; i++){
-        
-        size_t temp = z(i);
-        z(i) = z(ind(i));
-        z(ind(i)) = temp;
-        
-      }
-      
-      sample_set = z.subvec(0, Num-1);
-      
-    }else{
-      
-      for(size_t i = 0; i < Num; i++){
-        
-        boost::random::uniform_real_distribution<double> rand(i, z.n_elem-1);
-        
-        size_t randomloc = rand(this -> lrng);
-        
-        sample_set(i) = z(randomloc);
-        
-        // switch
-        size_t temp = z(i);
-        z(i) = z(randomloc);
-        z(randomloc) = temp;
-      }
+      size_t randomloc = rand(this -> lrng);
+
+      // swap
+      size_t temp = vector(i);
+      vector(i) = vector(randomloc);
+      vector(randomloc) = temp;
       
     }
+
+    vector.resize(Num);
     
-    return sample_set;
+    return vector;
     
   };
   

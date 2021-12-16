@@ -31,6 +31,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mysample
+arma::uvec mysample(size_t Num, size_t min, size_t max, size_t seed);
+RcppExport SEXP _RLT_mysample(SEXP NumSEXP, SEXP minSEXP, SEXP maxSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< size_t >::type Num(NumSEXP);
+    Rcpp::traits::input_parameter< size_t >::type min(minSEXP);
+    Rcpp::traits::input_parameter< size_t >::type max(maxSEXP);
+    Rcpp::traits::input_parameter< size_t >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(mysample(Num, min, max, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
 // UniKernel_Self
 List UniKernel_Self(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X, arma::uvec& Ncat, size_t verbose);
 RcppExport SEXP _RLT_UniKernel_Self(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP verboseSEXP) {
@@ -103,8 +117,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // RegUniForestFit
-List RegUniForestFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, arma::vec& obsweight, arma::vec& varweight, arma::umat& ObsTrack, List& param);
-RcppExport SEXP _RLT_RegUniForestFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP ObsTrackSEXP, SEXP paramSEXP) {
+List RegUniForestFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, arma::vec& obsweight, arma::vec& varweight, arma::umat& ObsTrack, List& param_r);
+RcppExport SEXP _RLT_RegUniForestFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP ObsTrackSEXP, SEXP param_rSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -114,8 +128,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec& >::type obsweight(obsweightSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type varweight(varweightSEXP);
     Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
-    Rcpp::traits::input_parameter< List& >::type param(paramSEXP);
-    rcpp_result_gen = Rcpp::wrap(RegUniForestFit(X, Y, Ncat, obsweight, varweight, ObsTrack, param));
+    Rcpp::traits::input_parameter< List& >::type param_r(param_rSEXP);
+    rcpp_result_gen = Rcpp::wrap(RegUniForestFit(X, Y, Ncat, obsweight, varweight, ObsTrack, param_r));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -144,6 +158,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_RLT_ARMA_EMPTY_UMAT", (DL_FUNC) &_RLT_ARMA_EMPTY_UMAT, 0},
     {"_RLT_ARMA_EMPTY_VEC", (DL_FUNC) &_RLT_ARMA_EMPTY_VEC, 0},
+    {"_RLT_mysample", (DL_FUNC) &_RLT_mysample, 4},
     {"_RLT_UniKernel_Self", (DL_FUNC) &_RLT_UniKernel_Self, 7},
     {"_RLT_UniKernel_Cross", (DL_FUNC) &_RLT_UniKernel_Cross, 8},
     {"_RLT_UniKernel_Train", (DL_FUNC) &_RLT_UniKernel_Train, 9},

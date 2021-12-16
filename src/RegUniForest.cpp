@@ -21,12 +21,14 @@ List RegUniForestFit(arma::mat& X,
           					 arma::vec& obsweight,
           					 arma::vec& varweight,
           					 arma::umat& ObsTrack,
-          					 List& param)
+          					 List& param_r)
 {
   // reading parameters 
   PARAM_GLOBAL Param;
-  Param.PARAM_READ_R(param);
+  Param.PARAM_READ_R(param_r);
 
+  if (Param.verbose) Param.print();
+  
   // create data objects  
   RLT_REG_DATA REG_DATA(X, Y, Ncat, obsweight, varweight);
   

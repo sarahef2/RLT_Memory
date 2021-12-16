@@ -27,32 +27,29 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
   size_t split_gen = Param.split_gen;
   size_t split_rule = Param.split_rule;
   
-  //size_t N = obs_id.n_elem;
-  size_t P = var_id.n_elem;
+  // Choose the variables to try
+  mtry = ( (mtry <= var_id.n_elem) ? mtry : var_id.n_elem ); // take minimum
   
-  mtry = ( (mtry <= P) ? mtry:P ); // take minimum
-
-  // Choose the variables to try  
-  uvec var_try =  rngl.rand_uvec(mtry, 0, P-1); //arma::randperm(P, mtry);
+  uvec sampled = rngl.sample(mtry, 0, var_id.n_elem - 1 );
+  
+  uvec var_try = var_id(sampled);
   
   //For each variable in var_try
-  for (size_t j = 0; j < mtry; j++)
+  for (auto j : var_try)
   {
-    size_t temp_var = var_id(var_try(j));
-    
     //Initialize objects
     Uni_Split_Class TempSplit;
-    TempSplit.var = temp_var;
+    TempSplit.var = j;
     TempSplit.value = 0;
     TempSplit.score = -1;
       
-    if (REG_DATA.Ncat(temp_var) > 1) // categorical variable 
+    if (REG_DATA.Ncat(j) > 1) // categorical variable 
     {
       
       Reg_Uni_Split_Cat(TempSplit, 
                         obs_id, 
-                        REG_DATA.X.unsafe_col(temp_var), 
-                        REG_DATA.Ncat(temp_var),
+                        REG_DATA.X.unsafe_col(j), 
+                        REG_DATA.Ncat(j),
                         REG_DATA.Y, 
                         REG_DATA.obsweight, 
                         0.0, // penalty
@@ -62,13 +59,13 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                         nmin, 
                         alpha, 
                         useobsweight,
-                         rngl);
-
+                        rngl);
+      
     }else{ // continuous variable
       
       Reg_Uni_Split_Cont(TempSplit,
                          obs_id,
-                         REG_DATA.X.unsafe_col(temp_var), 
+                         REG_DATA.X.unsafe_col(j), 
                          REG_DATA.Y,
                          REG_DATA.obsweight,
                          0.0, // penalty

@@ -34,17 +34,18 @@ public:
   size_t ncores = 1;
   size_t verbose = 0;
   size_t seed = 1;
+// other parameters
   bool failcount = 0;
   double alpha = 0;
   size_t split_rule = 1;
-  size_t varweighttype = 1;
+  size_t varweighttype = 0;
 // RLT parameters 
-  size_t embed_ntrees = 50;
-  double embed_resample_prob = 0.8;
-  double embed_mtry = 0.5;
-  size_t embed_nmin = 5;
-  size_t embed_split_gen = 1;
-  size_t embed_nsplit = 1;
+  size_t embed_ntrees = 0;
+  double embed_resample_prob = 0;
+  double embed_mtry = 0;
+  size_t embed_nmin = 0;
+  size_t embed_split_gen = 0;
+  size_t embed_nsplit = 0;
   double embed_mute = 0;
 
   void PARAM_READ_R(List& param){
@@ -132,6 +133,25 @@ public:
       Rcout << std::endl;
   };
   
+  void print() const {
+    
+    Rcout << "----- RLT Forest Parameters -----" << std::endl;
+    Rcout << "         (N, P) = (" << N << ", " << P << ")"<< std::endl;
+    Rcout << "         ntrees = " << ntrees << std::endl;
+    Rcout << "           mtry = " << mtry << std::endl;
+    Rcout << "           nmin = " << nmin << std::endl;
+    Rcout << "      split_gen = " << ((split_gen == 1) ? "Random" : (split_gen == 2) ? "Rank" : "Best") << std::endl;
+    if (split_gen < 3)
+      Rcout << "         nsplit = " << nsplit << std::endl;
+    Rcout << "    replacement = " << replacement << std::endl;
+    Rcout << "  resample prob = " << resample_prob << std::endl;
+    Rcout << "    Obs weights = " << (useobsweight ? "Yes" : "No") << std::endl;
+    Rcout << "    Var weights = " << (usevarweight ? "Yes" : "No") << std::endl;
+    Rcout << "  reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
+    Rcout << std::endl;    
+    
+  } 
+  
   void rlt_print() {
     
     Rcout << "     embed_ntrees        = " << embed_ntrees << std::endl;
@@ -143,7 +163,18 @@ public:
     Rcout << "     embed_mute          = " << embed_mute << std::endl;
     
   };
-
+  
+  void rlt_print() const {
+    
+    Rcout << "     embed_ntrees        = " << embed_ntrees << std::endl;
+    Rcout << "     embed_resample_prob = " << embed_resample_prob << std::endl;
+    Rcout << "     embed_mtry          = " << embed_mtry << std::endl;
+    Rcout << "     embed_nmin          = " << embed_nmin << std::endl;
+    Rcout << "     embed_split_gen     = " << embed_split_gen << std::endl;
+    Rcout << "     embed_nsplit        = " << embed_nsplit << std::endl;
+    Rcout << "     embed_mute          = " << embed_mute << std::endl;
+    
+  };
 };
 
 // *************** //

@@ -22,11 +22,11 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
   // parameters to use
   size_t ntrees = Param.ntrees;
   bool replacement = Param.replacement;
-  size_t P = Param.P;
+  size_t P = var_id.n_elem;
   size_t N = obs_id.n_elem;
   size_t size = (size_t) N*Param.resample_prob;
   size_t nmin = Param.nmin;
-  bool importance = Param.importance;  
+  bool importance = Param.importance;
   size_t usecores = checkCores(Param.ncores, Param.verbose);
   size_t seed = Param.seed;
 
@@ -110,7 +110,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       
       if (importance and oobagObs.n_elem > 1)
       {
-        uvec AllVar = conv_to<uvec>::from(unique( OneTree.SplitVar( find( OneTree.SplitVar >= 0 ) ) ));
+        // uvec AllVar = conv_to<uvec>::from(unique( OneTree.SplitVar( find( OneTree.SplitVar >= 0 ) ) ));
         
         size_t NTest = oobagObs.n_elem;
         
@@ -125,16 +125,19 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
         
         double baseImp = mean(square(oobY - oobpred));
         
-        for (auto j : AllVar)
+
+        for (size_t j = 0; j < P; j++)
         {
+          size_t suffle_var_j = var_id(j);
+          
           uvec proxy_id = linspace<uvec>(0, NTest-1, NTest);
-          uvec TermNode(NTest, fill::zeros);          
+          uvec TermNode(NTest, fill::zeros);
           
           uvec oob_ind = rngl.random_suffle(oobagObs);
-          vec tildex = REG_DATA.X.col(j);
+          vec tildex = REG_DATA.X.col(suffle_var_j);
           tildex = tildex.elem( oob_ind );  //shuffle( REG_DATA.X.unsafe_col(j).elem( oobagObs ) );
           
-          Uni_Find_Terminal_Node_ShuffleJ(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, oobagObs, TermNode, tildex, j);
+          Uni_Find_Terminal_Node_ShuffleJ(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, oobagObs, TermNode, tildex, suffle_var_j);
           
           // get prediction
           vec oobpred = OneTree.NodeAve(TermNode);

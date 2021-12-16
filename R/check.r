@@ -93,8 +93,11 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
   
   # splitting rules 
   
-  split.gen = match(split.gen, c("random", "rank", "best"))
-  storage.mode(split.gen) <- "integer"  
+  split.gen = match(split.gen, c("random", "rank", "best"), 
+                    nomatch = 0)
+  storage.mode(split.gen) <- "integer"
+  if (split.gen == 0) stop("split.gen not matched ...")
+  
   
   nsplit = max(1, nsplit)
   storage.mode(nsplit) <- "integer"  
@@ -233,7 +236,11 @@ set_embed_param <- function(control, reinforcement, n, p)
     
     if (is.null(control$embed.split.gen)) {
       embed.split.gen <- 1
-    } else embed.split.gen = match(control$embed.split.gen, c("random", "rank", "best"))
+    } else embed.split.gen = match(control$embed.split.gen, 
+                                   c("random", "rank", "best"),
+                                   nomatch = 0)
+    
+    if (embed.split.gen == 0) stop("embed.split.gen not matched ...")
     
     storage.mode(embed.split.gen) <- "integer"
     

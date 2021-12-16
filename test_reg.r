@@ -10,18 +10,18 @@ set.seed(1)
 trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 100
+p = 10
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
 X = data.frame(X1, X2)
 for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
 #y = 1 + X[, 1] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
-y = 1 + X[, 1] + rnorm(n)
+y = 1 + rowSums(X[, 1:(p/4)]) + rowSums(data.matrix(X[, (p/2) : (p/1.5)])) + rnorm(n)
 
-ntrees = 1000
-ncores = 10
-nmin = 20
+ntrees = 100
+ncores = 8
+nmin = 2
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
@@ -43,7 +43,7 @@ rownames(metric) = c("rlt", "rsf", "rf", "ranger")
 colnames(metric) = c("fit.time", "pred.time", "pred.error", "obj.size", "ave.tree.size")
 
 start_time <- Sys.time()
-RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, nmin = nmin/2, mtry = mtry,
+RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, nmin = nmin/2+1, mtry = mtry,
               split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, 
               importance = importance)
 metric[1, 1] = difftime(Sys.time(), start_time, units = "secs")
@@ -56,7 +56,7 @@ metric[1, 5] = mean(unlist(lapply(RLTfit$FittedForest$SplitVar, length)))
 
 options(rf.cores = ncores)
 start_time <- Sys.time()
-rsffit <- rfsrc(y ~ ., data = data.frame(trainX, "y"= trainY), ntree = ntrees, nodesize = nmin/2, mtry = mtry, 
+rsffit <- rfsrc(y ~ ., data = data.frame(trainX, "y"= trainY), ntree = ntrees, nodesize = nmin, mtry = mtry, 
                 nsplit = nsplit, sampsize = trainn*sampleprob, importance = importance)
 metric[2, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
@@ -108,16 +108,25 @@ RLTfit <- RLT(trainX, trainY, ntrees = 1, ncores = 1, nmin = 100,
 
 # RLT split 
 
-RLTfit <- RLT(trainX, trainY, ntrees = 1, ncores = 1, nmin = 100, 
-              mtry = 3, linear.comb = 1, reinforcement = TRUE)
+
+set.seed(1)
+
+n = 1000
+p = 10
+X = matrix(rnorm(n*p), n, p)
+y = 1 + X[, 1] + X[, 9] + X[, 3]  + rnorm(n)
+
+RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 10,
+              mtry = 3, linear.comb = 1, reinforcement = TRUE,
+              param.control = list("embed.ntrees" = 100,
+                                   "embed.mtry" = 4,
+                                   "embed.nmin" = 5,
+                                   "embed.split.gen" = "random",
+                                   "embed.nsplit" = 3,
+                                   "embed.resample.prob" = 0.75,
+                                   "embed.mute" = 0.99))
 
 
 
-
-
-
-
-
-
-
+my_sample(1, 10, 10)
 
