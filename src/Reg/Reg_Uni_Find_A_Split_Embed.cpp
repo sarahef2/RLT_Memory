@@ -12,12 +12,11 @@ using namespace arma;
 void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
-                                uvec& obs_id,
-                                uvec& var_id,
+                                const uvec& obs_id,
+                                const uvec& var_id,
+                                uvec& new_var_id,
                                 Rand& rngl)
 {
-  
-  Rcout << "    --- Reg_Uni_Find_A_Split_Embed " << std::endl;
 
   // set embeded model parameters 
   PARAM_GLOBAL Embed_Param;
@@ -27,6 +26,10 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
   Embed_Param.ntrees = Param.embed_ntrees;
   Embed_Param.nmin = Param.embed_nmin;
   Embed_Param.importance = 1;
+  
+  Embed_Param.useobsweight = Param.useobsweight;  
+  Embed_Param.usevarweight = Param.usevarweight;  
+  
   Embed_Param.seed = rngl.rand_sizet(0, INT_MAX);
   Embed_Param.ncores = 1;
   Embed_Param.verbose = 0;
@@ -88,26 +91,64 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                        obs_id,
                        var_id,
                        ObsTrack,
+                       0, // no prediction
                        Prediction,
                        OOBPrediction,
                        VarImp);
   
-  Rcout << "variable importance is " << VarImp << std::endl;
+  new_var_id = var_id(sort_index(VarImp, "descend"));
   
-  size_t var_best = var_id(VarImp.index_max());
+  size_t var_best = new_var_id(0);
   
-  Rcout << "the best variable is " << var_best << std::endl;
+  new_var_id.resize(p_new);
+
+  // record and update 
+  // the splitting rule 
+
+  OneSplit.var = var_best;
+
+  size_t split_gen = Param.split_gen;
+  size_t split_rule = Param.split_rule;    
+  size_t nsplit = Param.nsplit;
+  size_t nmin = Param.nmin;
+  double alpha = Param.alpha; 
+  bool useobsweight = Param.useobsweight;  
   
-  var_id = var_id(sort_index(VarImp, "descend"));
   
-  Rcout << "variable order is" << var_id << std::endl;
-  
-  var_id.resize(p_new);
+  if (REG_DATA.Ncat(var_best) > 1) // categorical variable 
+  {
     
-  Rcout << "after muting we will have " << p_new << " variates: " << var_id << std::endl;
-  
-  
-  
-  
+    Reg_Uni_Split_Cat(OneSplit, 
+                      obs_id, 
+                      REG_DATA.X.unsafe_col(var_best), 
+                      REG_DATA.Ncat(var_best),
+                      REG_DATA.Y, 
+                      REG_DATA.obsweight, 
+                      0.0, // penalty
+                      split_gen, 
+                      split_rule, 
+                      nsplit, 
+                      nmin, 
+                      alpha, 
+                      useobsweight,
+                      rngl);
+    
+  }else{ // continuous variable
+    
+    Reg_Uni_Split_Cont(OneSplit,
+                       obs_id,
+                       REG_DATA.X.unsafe_col(var_best), 
+                       REG_DATA.Y,
+                       REG_DATA.obsweight,
+                       0.0, // penalty
+                       split_gen,
+                       split_rule,
+                       nsplit,
+                       nmin,
+                       alpha,
+                       useobsweight,
+                       rngl);
+    
+  }
 }
 

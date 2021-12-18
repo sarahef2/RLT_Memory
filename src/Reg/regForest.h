@@ -28,9 +28,10 @@ List RegUniForestFit(mat& X,
 void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
                           Reg_Uni_Forest_Class& REG_FOREST,
                           const PARAM_GLOBAL& Param,
-                          uvec& obs_id,
-                          uvec& var_id,
+                          const uvec& obs_id,
+                          const uvec& var_id,
                           umat& ObsTrack,
+                          bool do_prediction,
                           vec& Prediction,
                           vec& OOBPrediction,
                           vec& VarImp);
@@ -40,7 +41,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           uvec& obs_id,
-                          uvec& var_id,
+                          const uvec& var_id,
                           Rand& rngl);
 
 void Reg_Uni_Terminate_Node(size_t Node, 
@@ -54,19 +55,20 @@ void Reg_Uni_Terminate_Node(size_t Node,
 void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
-                          uvec& obs_id,
-                          uvec& var_id,
+                          const uvec& obs_id,
+                          const uvec& var_id,
                           Rand& rngl);
 
 void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
-                                uvec& obs_id,
-                                uvec& var_id,
+                                const uvec& obs_id,
+                                const uvec& var_id,
+                                uvec& new_var_id,
                                 Rand& rngl);
 
 void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
-                        uvec& obs_id,
+                        const uvec& obs_id,
                         const vec& x,
                         const vec& Y,
                         const vec& obs_weight,
@@ -80,7 +82,7 @@ void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
                         Rand& rngl);
 
 void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
-                       uvec& obs_id,
+                       const uvec& obs_id,
                        const vec& x,
                        const size_t ncat,
                        const vec& Y,
@@ -96,43 +98,43 @@ void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
 
 // splitting score calculations (continuous)
 
-double reg_cont_score_at_cut(uvec& obs_id,
-                            const vec& x,
-                            const vec& Y,
-                            double a_random_cut);
+double reg_cont_score_at_cut(const uvec& obs_id,
+                             const vec& x,
+                             const vec& Y,
+                             double a_random_cut);
 
-double reg_cont_score_at_cut_w(uvec& obs_id,
-                              const vec& x,
-                              const vec& Y,
-                              double a_random_cut,
-                              const vec& obs_weight);
+double reg_cont_score_at_cut_w(const uvec& obs_id,
+                               const vec& x,
+                               const vec& Y,
+                               double a_random_cut,
+                               const vec& obs_weight);
 
 double reg_cont_score_at_index(uvec& indices,
-                              const vec& Y,
-                              size_t a_random_ind);
+                               const vec& Y,
+                               size_t a_random_ind);
 
 double reg_cont_score_at_index_w(uvec& indices,
-                                const vec& Y,
-                                size_t a_random_ind,
-                                const vec& obs_weight);
+                                 const vec& Y,
+                                 size_t a_random_ind,
+                                 const vec& obs_weight);
 
 void reg_cont_score_best(uvec& indices,
-                        const vec& x,
-                        const vec& Y,
-                        size_t lowindex, 
-                        size_t highindex, 
-                        double& temp_cut, 
-                        double& temp_score);
+                         const vec& x,
+                         const vec& Y,
+                         size_t lowindex, 
+                         size_t highindex, 
+                         double& temp_cut, 
+                         double& temp_score);
 
 
 void reg_cont_score_best_w(uvec& indices,
-                          const vec& x,
-                          const vec& Y,
-                          size_t lowindex, 
-                          size_t highindex, 
-                          double& temp_cut, 
-                          double& temp_score,
-                          const vec& obs_weight);
+                           const vec& x,
+                           const vec& Y,
+                           size_t lowindex, 
+                           size_t highindex, 
+                           double& temp_cut, 
+                           double& temp_score,
+                           const vec& obs_weight);
 
 // splitting score calculations (categorical)
 

@@ -10,7 +10,7 @@ using namespace Rcpp;
 using namespace arma;
 
 void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
-                       uvec& obs_id,
+                       const uvec& obs_id,
                        const vec& x,
                        const size_t ncat,
                        const vec& Y,

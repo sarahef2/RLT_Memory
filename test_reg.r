@@ -10,7 +10,7 @@ set.seed(1)
 trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 10
+p = 1000
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
@@ -18,13 +18,14 @@ X = data.frame(X1, X2)
 for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
 #y = 1 + X[, 1] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 y = 1 + rowSums(X[, 1:(p/4)]) + rowSums(data.matrix(X[, (p/2) : (p/1.5)])) + rnorm(n)
+#y = 1 + X[, 1] + rnorm(n)
 
 ntrees = 100
 ncores = 8
 nmin = 2
 mtry = p/2
 sampleprob = 0.85
-rule = "best"
+rule = "random"
 nsplit = ifelse(rule == "best", 0, 3)
 importance = TRUE 
 
@@ -112,20 +113,30 @@ RLTfit <- RLT(trainX, trainY, ntrees = 1, ncores = 1, nmin = 100,
 set.seed(1)
 
 n = 1000
-p = 10
+p = 100
 X = matrix(rnorm(n*p), n, p)
 y = 1 + X[, 1] + X[, 9] + X[, 3]  + rnorm(n)
 
-RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 10,
+testX = matrix(rnorm(n*p), n, p)
+testy = 1 + testX[, 1] + testX[, 9] + testX[, 3]  + rnorm(n)
+
+
+RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 100,
               mtry = 3, linear.comb = 1, reinforcement = TRUE,
+              resample.prob = 0.8, resample.replace = TRUE,
+              importance = TRUE, 
               param.control = list("embed.ntrees" = 100,
                                    "embed.mtry" = 4,
-                                   "embed.nmin" = 5,
+                                   "embed.nmin" = 10,
                                    "embed.split.gen" = "random",
                                    "embed.nsplit" = 3,
                                    "embed.resample.prob" = 0.75,
-                                   "embed.mute" = 0.99))
+                                   "embed.mute" = 0.5))
+get.one.tree(RLTfit, 1)
 
+mean((RLTfit$OOBPrediction - y)^2)
+pred = predict(RLTfit, testX) 
+mean((pred$Prediction - testy)^2)
 
 
 my_sample(1, 10, 10)

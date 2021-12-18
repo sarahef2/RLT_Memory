@@ -129,6 +129,7 @@ public:
   // Sampling in a range without replacement
   arma::uvec sample(size_t Num, size_t min, size_t max) {
 
+  
     if (max < min) max = min;
 
     size_t N = max - min + 1;
@@ -149,7 +150,7 @@ public:
       vector(randomloc) = temp;
       
     }
-
+    
     vector.resize(Num);
     
     return vector;

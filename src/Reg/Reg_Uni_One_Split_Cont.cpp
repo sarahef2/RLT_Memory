@@ -11,7 +11,7 @@ using namespace arma;
 
 //Find a split on a particular variable
 void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
-                        uvec& obs_id,
+                        const uvec& obs_id,
                         const vec& x,
                         const vec& Y,
                         const vec& obs_weight,
@@ -120,7 +120,7 @@ void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
 }
 
 //Calculate a score at a random cut
-double reg_cont_score_at_cut(uvec& obs_id,
+double reg_cont_score_at_cut(const uvec& obs_id,
                         const vec& x,
                         const vec& Y,
                         double a_random_cut)
@@ -151,7 +151,7 @@ double reg_cont_score_at_cut(uvec& obs_id,
 }
 
 
-double reg_cont_score_at_cut_w(uvec& obs_id,
+double reg_cont_score_at_cut_w(const uvec& obs_id,
                           const vec& x,
                           const vec& Y,
                           double a_random_cut,

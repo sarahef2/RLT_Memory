@@ -15,7 +15,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           uvec& obs_id,
-                          uvec& var_id,
+                          const uvec& var_id,
                           Rand& rngl)
 {
   size_t N = obs_id.n_elem;
@@ -25,7 +25,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
   // in rf, it is N <= nmin
   if (N < 2*nmin)
   {
-    TERMINATENODE:
+TERMINATENODE:
       Reg_Uni_Terminate_Node(Node, OneTree, obs_id, REG_DATA.Y, REG_DATA.obsweight, useobsweight);
 
   }else{
@@ -33,13 +33,28 @@ void Reg_Uni_Split_A_Node(size_t Node,
     //Set up another split
     Uni_Split_Class OneSplit;
     
-    //If reinforcement- NOT IMPLEMENTED
+    uvec new_var_id; 
+    
     if (Param.reinforcement)
     {
-      Reg_Uni_Find_A_Split_Embed(OneSplit, REG_DATA, Param, obs_id, var_id, rngl);
+      //If reinforcement, split with embedded model
+      Reg_Uni_Find_A_Split_Embed(OneSplit,
+                                 REG_DATA,
+                                 Param,
+                                 (const uvec&) obs_id,
+                                 var_id,
+                                 new_var_id,
+                                 rngl);
+      
+      
     }else{
-      //Figure out where to split the node
-      Reg_Uni_Find_A_Split(OneSplit, REG_DATA, Param, obs_id, var_id, rngl);
+      //regular univariate split
+      Reg_Uni_Find_A_Split(OneSplit,
+                           REG_DATA,
+                           Param,
+                           (const uvec&) obs_id,
+                           var_id,
+                           rngl);
     }
 
     //Find the average for that node
@@ -55,11 +70,9 @@ void Reg_Uni_Split_A_Node(size_t Node,
     
     if ( REG_DATA.Ncat(OneSplit.var) == 1 )
     {
-      split_id(REG_DATA.X.unsafe_col(OneSplit.var), OneSplit.value, left_id, obs_id);  
-      
+      split_id(REG_DATA.X.unsafe_col(OneSplit.var), OneSplit.value, left_id, obs_id); 
     }else{
       split_id_cat(REG_DATA.X.unsafe_col(OneSplit.var), OneSplit.value, left_id, obs_id, REG_DATA.Ncat(OneSplit.var));
-      
     }
 
     // if this happens something about the splitting rule is wrong
@@ -92,23 +105,47 @@ void Reg_Uni_Split_A_Node(size_t Node,
     OneTree.RightNode(Node) = NextRight;
 
     // split the left and right nodes 
-
-    Reg_Uni_Split_A_Node(NextLeft, 
-                         OneTree,
-                         REG_DATA,
-                         Param,
-                         left_id, 
-                         var_id,
-                         rngl);
-
-    
-    Reg_Uni_Split_A_Node(NextRight,                          
-                         OneTree,
-                         REG_DATA,
-                         Param,
-                         obs_id, 
-                         var_id,
-                         rngl);
+    if (Param.reinforcement)
+    {
+      Reg_Uni_Split_A_Node(NextLeft, 
+                           OneTree,
+                           REG_DATA,
+                           Param,
+                           left_id, 
+                           new_var_id,
+                           rngl);
+  
+      
+      Reg_Uni_Split_A_Node(NextRight,                          
+                           OneTree,
+                           REG_DATA,
+                           Param,
+                           obs_id, 
+                           new_var_id,
+                           rngl);
+    }else{
+      
+      Reg_Uni_Split_A_Node(NextLeft, 
+                           OneTree,
+                           REG_DATA,
+                           Param,
+                           left_id, 
+                           var_id,
+                           rngl);
+      
+      
+      Reg_Uni_Split_A_Node(NextRight,                          
+                           OneTree,
+                           REG_DATA,
+                           Param,
+                           obs_id, 
+                           var_id,
+                           rngl);      
+      
+      
+      
+      
+    }
 
   }
 }

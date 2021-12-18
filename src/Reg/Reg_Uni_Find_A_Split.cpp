@@ -13,8 +13,8 @@ using namespace arma;
 void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
-                          uvec& obs_id,
-                          uvec& var_id,
+                          const uvec& obs_id,
+                          const uvec& var_id,
                           Rand& rngl)
 {
   
