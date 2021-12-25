@@ -48,17 +48,12 @@ void set_obstrack(arma::umat& ObsTrack,
                   const bool replacement,
                   Rand& rngl)
 {
-	size_t N = ObsTrack.n_rows;
+  
+  size_t N = ObsTrack.n_rows;
   arma::uvec insample;
   
-	if (replacement)
-	{
-	  insample = rngl.rand_uvec(size, 0, N-1);
+  insample = rngl.sample(0, N-1, size, replacement);
 
-	}else{
-		insample = rngl.sample(size, 0, N-1);
-	}
-	
   for (size_t i = 0; i < size; i++)
     ObsTrack(insample(i), nt) ++;
 	

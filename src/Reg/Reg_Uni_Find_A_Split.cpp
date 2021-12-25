@@ -28,12 +28,12 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
   size_t split_rule = Param.split_rule;
   
   // Choose the variables to try
-  mtry = ( (mtry <= var_id.n_elem) ? mtry : var_id.n_elem ); // take minimum
-  
-  uvec sampled = rngl.sample(mtry, 0, var_id.n_elem - 1 );
-  
-  uvec var_try = var_id(sampled);
-  
+  //mtry = ( (mtry <= var_id.n_elem) ? mtry : var_id.n_elem ); // take minimum
+
+  //uvec sampled = rngl.sample(0, var_id.n_elem - 1, mtry);
+
+  uvec var_try = rngl.sample(var_id, mtry);
+
   //For each variable in var_try
   for (auto j : var_try)
   {

@@ -28,12 +28,13 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
   size_t size = (size_t) N*Param.resample_prob;
   size_t nmin = Param.nmin;
   bool importance = Param.importance;
+  bool reinforcement = Param.reinforcement;
   size_t usecores = checkCores(Param.ncores, Param.verbose);
   size_t seed = Param.seed;
 
   // set seed
   Rand rng(seed);
-  arma::uvec seed_vec = rng.rand_uvec(ntrees, 0, INT_MAX);
+  arma::uvec seed_vec = rng.rand_uvec(0, INT_MAX, ntrees);
   
   // track obs matrix
   bool obs_track_pre = false;
@@ -61,7 +62,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
   
   #pragma omp parallel num_threads(usecores)
   {
-    #pragma omp for schedule(static)
+    #pragma omp for schedule(dynamic)
     for (size_t nt = 0; nt < ntrees; nt++) // fit all trees
     {
       // set xoshiro random seed
@@ -69,12 +70,10 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       
       // get inbag and oobag samples
       uvec inbag_id, oobagObs;
-      
+
       //If ObsTrack isn't given, set ObsTrack
       if (!obs_track_pre)
         set_obstrack(ObsTrack, nt, size, replacement, rngl);
-
-      // Rcout << ObsTrack.col(nt) << std::endl; 
       
       // Find the samples from pre-defined ObsTrack
       get_samples(inbag_id, oobagObs, obs_id, ObsTrack.unsafe_col(nt));
@@ -90,8 +89,16 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
       OneTree.initiate(TreeLength);
 
       // build the tree
-      Reg_Uni_Split_A_Node(0, OneTree, REG_DATA, 
-                           Param, inbag_id, var_id, rngl);
+      if (reinforcement)
+      {
+        uvec var_protect;
+        
+        Reg_Uni_Split_A_Node_Embed(0, OneTree, REG_DATA, 
+                                   Param, inbag_id, var_id, var_protect, rngl);
+      }else{
+        Reg_Uni_Split_A_Node(0, OneTree, REG_DATA, 
+                             Param, inbag_id, var_id, rngl);
+      }
       
       // trim tree 
       TreeLength = OneTree.get_tree_length();
@@ -151,7 +158,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
           uvec proxy_id = linspace<uvec>(0, NTest-1, NTest);
           uvec TermNode(NTest, fill::zeros);
           
-          uvec oob_ind = rngl.random_suffle(oobagObs);
+          uvec oob_ind = rngl.shuffle(oobagObs);
           vec tildex = REG_DATA.X.col(suffle_var_j);
           tildex = tildex.elem( oob_ind );  //shuffle( REG_DATA.X.unsafe_col(j).elem( oobagObs ) );
           

@@ -13,12 +13,12 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
                                 const uvec& obs_id,
-                                const uvec& var_id,
-                                uvec& new_var_id,
+                                uvec& var_id,
+                                uvec& var_protect,
                                 Rand& rngl)
 {
 
-  // set embeded model parameters 
+  // set embedded model parameters 
   PARAM_GLOBAL Embed_Param;
   
   Embed_Param.N = obs_id.n_elem;
@@ -27,8 +27,8 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
   Embed_Param.nmin = Param.embed_nmin;
   Embed_Param.importance = 1;
   
-  Embed_Param.useobsweight = Param.useobsweight;  
-  Embed_Param.usevarweight = Param.usevarweight;  
+  Embed_Param.useobsweight = Param.useobsweight;
+  Embed_Param.usevarweight = Param.usevarweight;
   
   Embed_Param.seed = rngl.rand_sizet(0, INT_MAX);
   Embed_Param.ncores = 1;
@@ -53,7 +53,7 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
 
   if (p_new < 1)
     p_new = 1;
-  
+    
   // start fitting embedded model 
   
   size_t N = Embed_Param.N;
@@ -89,18 +89,26 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                        REG_FOREST,
                        (const PARAM_GLOBAL&) Embed_Param,
                        obs_id,
-                       var_id,
+                       (const uvec&) var_id,
                        ObsTrack,
                        0, // no prediction
                        Prediction,
                        OOBPrediction,
                        VarImp);
   
-  new_var_id = var_id(sort_index(VarImp, "descend"));
+  var_id = var_id(sort_index(VarImp, "descend"));
   
-  size_t var_best = new_var_id(0);
-  
-  new_var_id.resize(p_new);
+  // protected variables
+  size_t embed_protect = (Param.embed_protect < var_id.n_elem) ? Param.embed_protect : var_id.n_elem;
+  var_protect = join_cols(var_protect, var_id.subvec(0, embed_protect-1));
+  var_protect = unique(var_protect);
+
+  // Rcout << "at here, protect" << var_protect << std::endl;
+  // new variable list
+  size_t var_best = var_id(0);
+  var_id.resize(p_new);
+  var_id = join_cols(var_id, var_protect);
+  var_id = unique(var_id);
 
   // record and update 
   // the splitting rule 

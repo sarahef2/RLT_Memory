@@ -208,16 +208,17 @@ set_embed_param <- function(control, reinforcement, n, p)
     embed.split.gen = 1
     embed.nsplit = 1
     embed.mute = 0
+    embed.protect = 0
   }else{
 
     if (is.null(control$embed.ntrees)) {
-      embed.ntrees <- 50
+      embed.ntrees <- 100
     } else embed.ntrees = max(control$embed.ntrees, 1)
     
     storage.mode(embed.ntrees) <- "integer"
     
     if (is.null(control$embed.resample.prob)) {
-      embed.resample.prob <- 0.8
+      embed.resample.prob <- 1
     } else embed.resample.prob = max(0, min(control$embed.resample.prob, 1))
     
     storage.mode(embed.resample.prob) <- "double"
@@ -255,6 +256,12 @@ set_embed_param <- function(control, reinforcement, n, p)
     } else embed.mute = max(0, min(control$embed.mute, p))
     
     storage.mode(embed.mute) <- "double"
+    
+    if (is.null(control$embed.protect)) {
+      embed.protect <- ceiling(2*log(n))
+    } else embed.protect = max(0, min(control$embed.protect, p))
+    
+    storage.mode(embed.protect) <- "integer"    
   }
   
   return(list("embed.ntrees" = embed.ntrees,
@@ -263,5 +270,6 @@ set_embed_param <- function(control, reinforcement, n, p)
               "embed.nmin" = embed.nmin,
               "embed.split.gen" = embed.split.gen,
               "embed.nsplit" = embed.nsplit,
-              "embed.mute" = embed.mute))
+              "embed.mute" = embed.mute,
+              "embed.protect" = embed.protect))
 }

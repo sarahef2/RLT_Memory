@@ -84,17 +84,23 @@
 #'                        potential, then a single variable is used. Currently restricted to
 #'                        less than 5 number of variables in the linear combination. 
 #'                        
-#' @param importance      Whether to calculate variable importance measures.
+#' @param importance      Whether to calculate variable importance measures. The calculation 
+#'                        follows Breiman's original permutation strategy. 
 #' 
 #' @param var.ready       Construct \code{resample.preset} automatically to allow variance 
-#'                        estimations. If this is used, then \code{resample.replace} will 
-#'                        be set to `FALSE` and \code{resample.prob} should be no 
+#'                        estimations for prediction. If this is used, then \code{resample.replace} 
+#'                        will be set to `FALSE` and \code{resample.prob} should be no 
 #'                        larger than \eqn{n / 2}. It is recommended to use a very large
-#'                        \code{ntrees}, e.g, 10000 or larger. 
+#'                        \code{ntrees}, e.g, 10000 or larger. For \code{resample.prob} greater than 
+#'                        \eqn{n / 2}, one should use the \code{\link{Reg_Var_Forest}} function. 
 #'                        
 #' @param param.control   A list of additional parameters. This can be used to 
-#'                        specify embedded model settings for reinforcement 
-#'                        splitting rules. See \code{set_embed_param}.
+#'                        specify other features in a random forest and set embedded 
+#'                        model parameters for reinforcement splitting rules. 
+#'                        See \code{check_param_RLT} and \code{set_embed_param} for 
+#'                        more details. using \code{reinforcement = TRUE} will automatically
+#'                        generate some default tunings. However, they are not necessarily
+#'                        good. 
 #' 
 #' @param ncores          Number of cores. Default is 0 (using all available cores).
 #' 

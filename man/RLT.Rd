@@ -93,13 +93,15 @@ of the combination. When a categorical variable has the highest
 potential, then a single variable is used. Currently restricted to
 less than 5 number of variables in the linear combination.}
 
-\item{importance}{Whether to calculate variable importance measures.}
+\item{importance}{Whether to calculate variable importance measures. The calculation
+follows Breiman's original permutation strategy.}
 
 \item{var.ready}{Construct \code{resample.preset} automatically to allow variance
-estimations. If this is used, then \code{resample.replace} will
-be set to \code{FALSE} and \code{resample.prob} should be no
+estimations for prediction. If this is used, then \code{resample.replace}
+will be set to \code{FALSE} and \code{resample.prob} should be no
 larger than \eqn{n / 2}. It is recommended to use a very large
-\code{ntrees}, e.g, 10000 or larger.}
+\code{ntrees}, e.g, 10000 or larger. For \code{resample.prob} greater than
+\eqn{n / 2}, one should use the \code{\link{Reg_Var_Forest}} function.}
 
 \item{reinforcement}{Should reinforcement splitting rule be used. Default
 is \code{"FALSE"}, i.e., regular random forests. When it
@@ -108,8 +110,12 @@ automatically chosen. They can also be specified in
 \code{RLT.control}.}
 
 \item{param.control}{A list of additional parameters. This can be used to
-specify embedded model settings for reinforcement
-splitting rules. See \code{set_embed_param}.}
+specify other features in a random forest and set embedded
+model parameters for reinforcement splitting rules.
+See \code{check_param_RLT} and \code{set_embed_param} for
+more details. using \code{reinforcement = TRUE} will automatically
+generate some default tunings. However, they are not necessarily
+good.}
 
 \item{ncores}{Number of cores. Default is 0 (using all available cores).}
 

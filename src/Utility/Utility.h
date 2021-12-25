@@ -66,22 +66,9 @@ public:
   
   // Initialize
   Rand(size_t seed){
-    
     dqrng::xoshiro256plus rng(seed);
     lrng = rng;
-    
   }
-  
-  template<typename V>
-  V random_suffle(V z){
-    
-   uvec temp = this -> sample(z.n_elem, 0, z.n_elem -1);
-  
-   V z_shuffle = z(temp); 
-    
-    return z_shuffle;
-    
-   }
   
   // Random
   size_t rand_sizet(size_t min, size_t max){
@@ -93,7 +80,9 @@ public:
   };
   
   // Discrete Uniform
-  arma::uvec rand_uvec(size_t Num, size_t min, size_t max){
+  arma::uvec rand_uvec(size_t min, size_t max, size_t Num){
+    
+    if (max < min) max = min;
     
     boost::random::uniform_int_distribution<int> rand(min, max);
     
@@ -110,8 +99,10 @@ public:
   };
   
   // Uniform Distribution
-  arma::vec rand_vec(size_t Num, double min, double max){
+  arma::vec rand_vec(double min, double max, size_t Num){
 
+    if (max < min) max = min;
+    
     boost::random::uniform_real_distribution<double> rand(min, max);
     
     arma::vec x(Num);
@@ -127,35 +118,95 @@ public:
   };
   
   // Sampling in a range without replacement
-  arma::uvec sample(size_t Num, size_t min, size_t max) {
+  arma::uvec sample(size_t min, size_t max, size_t Num) {
 
-  
     if (max < min) max = min;
 
     size_t N = max - min + 1;
 
-    arma::uvec vector = arma::linspace<uvec>(min, max, N);
+    arma::uvec x = arma::linspace<uvec>(min, max, N);
     
-    if (Num > N) Num = N;
+    if (Num > N) 
+    {
+      Rcout << "Num = " << Num << " N = " << N << " min = " << min << " max = " << max << std::endl;
+      Num = N;
+    }
 
+    //boost::uniform_01<dqrng::xoshiro256plus> rand(this -> lrng);
+      
+    //boost::random::uniform_real_distribution<double> rand(0, 1);
+      
     for (size_t i = 0; i < Num; i++){
-      
-      boost::random::uniform_int_distribution<int> rand(i, N - 1);
-      
-      size_t randomloc = rand(this -> lrng);
 
+      boost::random::uniform_int_distribution<int> rand(i, N-1);
+      
+      size_t randomloc = rand(this->lrng);
+      
+      //size_t randomloc = i + (size_t) (N-i)*rand(this -> lrng);
+      
+      //size_t randomloc = i + (size_t) (N-i)*rand();
+      
       // swap
-      size_t temp = vector(i);
-      vector(i) = vector(randomloc);
-      vector(randomloc) = temp;
+      size_t temp = x(i);
+      x(i) = x(randomloc);
+      x(randomloc) = temp;
       
     }
     
-    vector.resize(Num);
+    x.resize(Num);
     
-    return vector;
+    return x;
     
   };
+  
+  arma::uvec sample(size_t min, size_t max, size_t Num, bool replace) {
+    
+    if (replace == 0)
+      return this->sample(min, max, Num);
+    else{
+      
+      if (max < min) max = min;
+      
+      //size_t N = max - min + 1;
+      
+      //boost::uniform_01<dqrng::xoshiro256plus> rand(this -> lrng);
+      
+      boost::random::uniform_int_distribution<int> rand(min, max);
+      
+      arma::uvec x(Num);
+      
+      for(size_t i = 0; i < Num; i++){
+        
+        //x(i) = min + (size_t) N*rand();
+        x(i) = rand(this->lrng);
+      }
+      
+      return x;
+      
+    }
+    
+  };
+
+  // Sampling a vector without replacement
+  template<typename T> T sample(T x, size_t Num) {
+    
+    size_t N = x.n_elem;
+    
+    arma::uvec loc = this->sample(0, N-1, Num);
+    
+    return x(loc);
+    
+  }
+  
+  // shuffle
+  template<typename T> T shuffle(T z){
+    
+    arma::uvec temp = this->sample(0, z.n_elem -1, z.n_elem);
+    
+    T z_shuffle = z(temp);
+    
+    return z_shuffle;
+  }
   
 };
 

@@ -20,7 +20,7 @@ void Reg_Multi_Find_A_Split(Multi_Split_Class& OneSplit,
   
   Rcout << "Reg_Multi_Find_A_Split:" << std::endl;
   
-  uvec var_index = rngl.rand_uvec(Param.mtry, 0, var_id.n_elem - 1);
+  uvec var_index = rngl.rand_uvec(0, var_id.n_elem - 1, Param.mtry);
   
   // check categorical 
 

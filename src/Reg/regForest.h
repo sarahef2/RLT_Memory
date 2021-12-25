@@ -44,6 +44,15 @@ void Reg_Uni_Split_A_Node(size_t Node,
                           const uvec& var_id,
                           Rand& rngl);
 
+void Reg_Uni_Split_A_Node_Embed(size_t Node,
+                                Reg_Uni_Tree_Class& OneTree,
+                                const RLT_REG_DATA& REG_DATA,
+                                const PARAM_GLOBAL& Param,
+                                uvec& obs_id,
+                                const uvec& var_id,
+                                const uvec& var_protect,
+                                Rand& rngl);
+  
 void Reg_Uni_Terminate_Node(size_t Node, 
                             Reg_Uni_Tree_Class& OneTree,
                             uvec& obs_id,
@@ -63,8 +72,8 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
                                 const uvec& obs_id,
-                                const uvec& var_id,
-                                uvec& new_var_id,
+                                uvec& var_id,
+                                uvec& var_protect,
                                 Rand& rngl);
 
 void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,

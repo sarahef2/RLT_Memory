@@ -32,40 +32,23 @@ TERMINATENODE:
 
     //Set up another split
     Uni_Split_Class OneSplit;
-    
-    uvec new_var_id; 
-    
-    if (Param.reinforcement)
-    {
-      //If reinforcement, split with embedded model
-      Reg_Uni_Find_A_Split_Embed(OneSplit,
-                                 REG_DATA,
-                                 Param,
-                                 (const uvec&) obs_id,
-                                 var_id,
-                                 new_var_id,
-                                 rngl);
-      
-      
-    }else{
-      //regular univariate split
-      Reg_Uni_Find_A_Split(OneSplit,
-                           REG_DATA,
-                           Param,
-                           (const uvec&) obs_id,
-                           var_id,
-                           rngl);
-    }
 
-    //Find the average for that node
-    OneTree.NodeAve(Node) = arma::mean(REG_DATA.Y(obs_id));
+    //regular univariate split
+    Reg_Uni_Find_A_Split(OneSplit,
+                         REG_DATA,
+                         Param,
+                         (const uvec&) obs_id,
+                         var_id,
+                         rngl);
     
     // if did not find a good split, terminate
     if (OneSplit.score <= 0)
       goto TERMINATENODE;
-      
+    
+    // record internal node mean 
+    OneTree.NodeAve(Node) = arma::mean(REG_DATA.Y(obs_id));
+    
     // construct indices for left and right nodes
-
     uvec left_id(obs_id.n_elem);
     
     if ( REG_DATA.Ncat(OneSplit.var) == 1 )
@@ -79,25 +62,20 @@ TERMINATENODE:
     if (left_id.n_elem == N or obs_id.n_elem == N)
       goto TERMINATENODE;
     
+    // record internal node to tree 
+    OneTree.SplitVar(Node) = OneSplit.var;
+    OneTree.SplitValue(Node) = OneSplit.value;
+    
     // check if the current tree is long enough to store two more nodes
     // if not, extend the current tree
     
     if ( OneTree.SplitVar( OneTree.SplitVar.n_elem - 2) != -2 )
-    {
-      
-      // extend tree structure
       OneTree.extend();
-    }
-
+    
     // get ready find the locations of next left and right nodes     
     size_t NextLeft = Node;
     size_t NextRight = Node;
     
-    // record tree 
-    
-    OneTree.SplitVar(Node) = OneSplit.var;
-    OneTree.SplitValue(Node) = OneSplit.value;
-
     //Find locations of the next nodes
     OneTree.find_next_nodes(NextLeft, NextRight);
     
@@ -105,47 +83,21 @@ TERMINATENODE:
     OneTree.RightNode(Node) = NextRight;
 
     // split the left and right nodes 
-    if (Param.reinforcement)
-    {
-      Reg_Uni_Split_A_Node(NextLeft, 
-                           OneTree,
-                           REG_DATA,
-                           Param,
-                           left_id, 
-                           new_var_id,
-                           rngl);
-  
-      
-      Reg_Uni_Split_A_Node(NextRight,                          
-                           OneTree,
-                           REG_DATA,
-                           Param,
-                           obs_id, 
-                           new_var_id,
-                           rngl);
-    }else{
-      
-      Reg_Uni_Split_A_Node(NextLeft, 
-                           OneTree,
-                           REG_DATA,
-                           Param,
-                           left_id, 
-                           var_id,
-                           rngl);
-      
-      
-      Reg_Uni_Split_A_Node(NextRight,                          
-                           OneTree,
-                           REG_DATA,
-                           Param,
-                           obs_id, 
-                           var_id,
-                           rngl);      
-      
-      
-      
-      
-    }
+    Reg_Uni_Split_A_Node(NextLeft, 
+                         OneTree,
+                         REG_DATA,
+                         Param,
+                         left_id, 
+                         var_id,
+                         rngl);
+    
+    Reg_Uni_Split_A_Node(NextRight,                          
+                         OneTree,
+                         REG_DATA,
+                         Param,
+                         obs_id, 
+                         var_id,
+                         rngl);
 
   }
 }

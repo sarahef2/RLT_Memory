@@ -47,6 +47,7 @@ public:
   size_t embed_split_gen = 0;
   size_t embed_nsplit = 0;
   double embed_mute = 0;
+  size_t embed_protect = 0;
 
   void PARAM_READ_R(List& param){
     N             = param["n"];
@@ -80,6 +81,7 @@ public:
     embed_split_gen     = param["embed.split.gen"];
     embed_nsplit        = param["embed.nsplit"];
     embed_mute          = param["embed.mute"];
+    embed_protect       = param["embed.protect"];
   };
   
   void copyfrom(const PARAM_GLOBAL& Input){
@@ -114,6 +116,7 @@ public:
       embed_split_gen     = Input.embed_split_gen;
       embed_nsplit        = Input.embed_nsplit;
       embed_mute          = Input.embed_mute;
+      embed_protect       = Input.embed_protect;
   };
 
   void print() {
@@ -154,13 +157,14 @@ public:
   
   void rlt_print() {
     
-    Rcout << "     embed_ntrees        = " << embed_ntrees << std::endl;
-    Rcout << "     embed_resample_prob = " << embed_resample_prob << std::endl;
-    Rcout << "     embed_mtry          = " << embed_mtry << std::endl;
-    Rcout << "     embed_nmin          = " << embed_nmin << std::endl;
-    Rcout << "     embed_split_gen     = " << embed_split_gen << std::endl;
-    Rcout << "     embed_nsplit        = " << embed_nsplit << std::endl;
-    Rcout << "     embed_mute          = " << embed_mute << std::endl;
+    Rcout << "     embed.ntrees        = " << embed_ntrees << std::endl;
+    Rcout << "     embed.resample_prob = " << embed_resample_prob << std::endl;
+    Rcout << "     embed.mtry          = " << embed_mtry << std::endl;
+    Rcout << "     embed.nmin          = " << embed_nmin << std::endl;
+    Rcout << "     embed.split_gen     = " << embed_split_gen << std::endl;
+    Rcout << "     embed.nsplit        = " << embed_nsplit << std::endl;
+    Rcout << "     embed.mute          = " << embed_mute << std::endl;
+    Rcout << "     embed.protect       = " << embed_protect << std::endl;
     
   };
   
@@ -173,6 +177,7 @@ public:
     Rcout << "     embed_split_gen     = " << embed_split_gen << std::endl;
     Rcout << "     embed_nsplit        = " << embed_nsplit << std::endl;
     Rcout << "     embed_mute          = " << embed_mute << std::endl;
+    Rcout << "     embed.protect       = " << embed_protect << std::endl;
     
   };
 };
