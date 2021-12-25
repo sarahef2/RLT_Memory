@@ -58,7 +58,7 @@ forest.kernel <- function(object,
     
     if (is.null(X2))
     {
-      K <- Kernel_Self(object$FittedForest$SplitVar,
+      K <- UniKernel_Self(object$FittedForest$SplitVar,
                           object$FittedForest$SplitValue,
                           object$FittedForest$LeftNode,
                           object$FittedForest$RightNode,
@@ -92,7 +92,7 @@ forest.kernel <- function(object,
       {
         # cross-kernel of X1 and X2
 
-        K <- Kernel_Cross(object$FittedForest$SplitVar,
+        K <- UniKernel_Cross(object$FittedForest$SplitVar,
                              object$FittedForest$SplitValue,
                              object$FittedForest$LeftNode,
                              object$FittedForest$RightNode,
@@ -113,7 +113,7 @@ forest.kernel <- function(object,
         if (nrow(ObsTrack) != nrow(X2))
           stop("X2 must be the original training data")
         
-        K <- Kernel_Train(object$FittedForest$SplitVar,
+        K <- UniKernel_Train(object$FittedForest$SplitVar,
                              object$FittedForest$SplitValue,
                              object$FittedForest$LeftNode,
                              object$FittedForest$RightNode,

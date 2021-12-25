@@ -38,10 +38,10 @@ RegForest <- function(x, y, ncat,
     class(fit) <- c("RLT", "fit", "reg", "uni")
   }else{
     # fit model
-    fit = RegMultiForestFit(x, y, ncat,
-                            obs.w, var.w,
-                            resample.preset,
-                            param)
+    fit = RegUniCombForestFit(x, y, ncat,
+							  obs.w, var.w,
+							  resample.preset,
+							  param)
     
     fit[["parameters"]] = param
     fit[["ncat"]] = ncat

@@ -61,14 +61,14 @@ void Reg_Uni_Terminate_Node(size_t Node,
                             bool useobsweight);
 
 
-void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
+void Reg_Uni_Find_A_Split(Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           const uvec& obs_id,
                           const uvec& var_id,
                           Rand& rngl);
 
-void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
+void Reg_Uni_Find_A_Split_Embed(Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
                                 const uvec& obs_id,
@@ -76,7 +76,7 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                                 uvec& var_protect,
                                 Rand& rngl);
 
-void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
+void Reg_Uni_Split_Cont(Split_Class& TempSplit,
                         const uvec& obs_id,
                         const vec& x,
                         const vec& Y,
@@ -90,7 +90,7 @@ void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
                         bool useobsweight,
                         Rand& rngl);
 
-void Reg_Uni_Split_Cat(Uni_Split_Class& TempSplit,
+void Reg_Uni_Split_Cat(Split_Class& TempSplit,
                        const uvec& obs_id,
                        const vec& x,
                        const size_t ncat,
@@ -179,47 +179,59 @@ void Reg_Uni_Forest_Pred(mat& Pred,
                          size_t verbose);
 
 
-// ########################
-// ## Multivariate Trees ##
-// ########################
+// #############################
+// ## Combination Split Trees ##
+// #############################
 
-void Reg_Multi_Forest_Build(const RLT_REG_DATA& REG_DATA,
-                            Reg_Multi_Forest_Class& REG_FOREST,
+void Reg_Uni_Comb_Forest_Build(const RLT_REG_DATA& REG_DATA,
+                            Reg_Uni_Comb_Forest_Class& REG_FOREST,
                             const PARAM_GLOBAL& Param,
-                            uvec& obs_id,
-                            uvec& var_id,
+                            const uvec& obs_id,
+                            const uvec& var_id,
                             umat& ObsTrack,
+                            bool do_prediction,
                             vec& Prediction,
                             vec& OOBPrediction,
                             vec& VarImp);
 
-void Reg_Multi_Split_A_Node(size_t Node,
-                            Reg_Multi_Tree_Class& OneTree,
+void Reg_Uni_Comb_Split_A_Node(size_t Node,
+                            Reg_Uni_Comb_Tree_Class& OneTree,
                             const RLT_REG_DATA& REG_DATA,
                             const PARAM_GLOBAL& Param,
                             uvec& obs_id,
-                            uvec& var_id,
+                            const uvec& var_id,
                             Rand& rngl);
 
-void Reg_Multi_Terminate_Node(size_t Node,
-                              Reg_Multi_Tree_Class& OneTree,
+void Reg_Uni_Comb_Terminate_Node(size_t Node,
+                              Reg_Uni_Comb_Tree_Class& OneTree,
                               uvec& obs_id,
                               const vec& Y,
                               const vec& obs_weight,
                               bool useobsweight);
 
-void Reg_Multi_Find_A_Split(Multi_Split_Class& OneSplit,
-                            const RLT_REG_DATA& REG_DATA,
-                            const PARAM_GLOBAL& Param,
-                            uvec& obs_id,
-                            uvec& var_id,
-                            Rand& rngl);
-
-void Reg_Multi_Find_A_Split_Embed(Multi_Split_Class& OneSplit,
+void Reg_Uni_Comb_Split_A_Node_Embed(size_t Node,
+                                  Reg_Uni_Comb_Tree_Class& OneTree,
                                   const RLT_REG_DATA& REG_DATA,
                                   const PARAM_GLOBAL& Param,
                                   uvec& obs_id,
-                                  uvec& var_id,
+                                  const uvec& var_id,
+                                  const uvec& var_protect,
                                   Rand& rngl);
+
+void Reg_Uni_Comb_Find_A_Split(Comb_Split_Class& OneSplit,
+                            const RLT_REG_DATA& REG_DATA,
+                            const PARAM_GLOBAL& Param,
+                            const uvec& obs_id,
+                            const uvec& var_id,
+                            Rand& rngl);
+
+void Reg_Uni_Comb_Find_A_Split_Embed(Comb_Split_Class& OneSplit,
+                                  const RLT_REG_DATA& REG_DATA,
+                                  const PARAM_GLOBAL& Param,
+                                  const uvec& obs_id,
+                                  const uvec& var_id,
+                                  Rand& rngl);
+
+
 
 #endif

@@ -10,7 +10,7 @@ using namespace Rcpp;
 using namespace arma;
 
 //Figuring out where to split a node, called from Split_A_Node
-void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
+void Reg_Uni_Find_A_Split(Split_Class& OneSplit,
                           const RLT_REG_DATA& REG_DATA,
                           const PARAM_GLOBAL& Param,
                           const uvec& obs_id,
@@ -38,7 +38,7 @@ void Reg_Uni_Find_A_Split(Uni_Split_Class& OneSplit,
   for (auto j : var_try)
   {
     //Initialize objects
-    Uni_Split_Class TempSplit;
+    Split_Class TempSplit;
     TempSplit.var = j;
     TempSplit.value = 0;
     TempSplit.score = -1;

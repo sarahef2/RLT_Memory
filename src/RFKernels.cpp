@@ -11,7 +11,7 @@ using namespace Rcpp;
 using namespace arma;
 
 // [[Rcpp::export()]]
-List UniKernel_Self(arma::field<arma::ivec>& SplitVar,
+List Kernel_Self(arma::field<arma::ivec>& SplitVar,
                     arma::field<arma::vec>& SplitValue,
                     arma::field<arma::uvec>& LeftNode,
                     arma::field<arma::uvec>& RightNode,
@@ -28,7 +28,7 @@ List UniKernel_Self(arma::field<arma::ivec>& SplitVar,
   
   for (size_t nt = 0; nt < ntrees; nt++)
   {
-    Uni_Tree_Class OneTree(SplitVar(nt),
+    Tree_Class OneTree(SplitVar(nt),
                            SplitValue(nt),
                            LeftNode(nt),
                            RightNode(nt));
@@ -38,7 +38,7 @@ List UniKernel_Self(arma::field<arma::ivec>& SplitVar,
     uvec TermNode(N, fill::zeros);
     
     // get terminal node id
-    Uni_Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);
+    Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);
     
     //record
     uvec UniqueNode = unique(TermNode);
@@ -58,7 +58,7 @@ List UniKernel_Self(arma::field<arma::ivec>& SplitVar,
 }
 
 // [[Rcpp::export()]]
-List UniKernel_Cross(arma::field<arma::ivec>& SplitVar,
+List Kernel_Cross(arma::field<arma::ivec>& SplitVar,
                      arma::field<arma::vec>& SplitValue,
                      arma::field<arma::uvec>& LeftNode,
                      arma::field<arma::uvec>& RightNode,
@@ -81,7 +81,7 @@ List UniKernel_Cross(arma::field<arma::ivec>& SplitVar,
   
   for (size_t nt = 0; nt < ntrees; nt++)
   {
-    Uni_Tree_Class OneTree(SplitVar(nt),
+    Tree_Class OneTree(SplitVar(nt),
                            SplitValue(nt),
                            LeftNode(nt),
                            RightNode(nt));
@@ -94,8 +94,8 @@ List UniKernel_Cross(arma::field<arma::ivec>& SplitVar,
     uvec TermNode2(N2, fill::zeros);
     
     // get terminal node ids
-    Uni_Find_Terminal_Node(0, OneTree, X1, Ncat, proxy_id1, real_id1, TermNode1);
-    Uni_Find_Terminal_Node(0, OneTree, X2, Ncat, proxy_id2, real_id2, TermNode2);
+    Find_Terminal_Node(0, OneTree, X1, Ncat, proxy_id1, real_id1, TermNode1);
+    Find_Terminal_Node(0, OneTree, X2, Ncat, proxy_id2, real_id2, TermNode2);
     
     // record
     uvec UniqueNode = intersect(unique(TermNode1), unique(TermNode2));
@@ -117,7 +117,7 @@ List UniKernel_Cross(arma::field<arma::ivec>& SplitVar,
 }
 
 // [[Rcpp::export()]]
-List UniKernel_Train(arma::field<arma::ivec>& SplitVar,
+List Kernel_Train(arma::field<arma::ivec>& SplitVar,
                      arma::field<arma::vec>& SplitValue,
                      arma::field<arma::uvec>& LeftNode,
                      arma::field<arma::uvec>& RightNode,
@@ -141,7 +141,7 @@ List UniKernel_Train(arma::field<arma::ivec>& SplitVar,
   
   for (size_t nt = 0; nt < ntrees; nt++)
   {
-    Uni_Tree_Class OneTree(SplitVar(nt),
+    Tree_Class OneTree(SplitVar(nt),
                            SplitValue(nt),
                            LeftNode(nt),
                            RightNode(nt));
@@ -154,8 +154,8 @@ List UniKernel_Train(arma::field<arma::ivec>& SplitVar,
     uvec TermNode2(N2, fill::zeros);
     
     // get terminal node ids
-    Uni_Find_Terminal_Node(0, OneTree, X1, Ncat, proxy_id1, real_id1, TermNode1);
-    Uni_Find_Terminal_Node(0, OneTree, X2, Ncat, proxy_id2, real_id2, TermNode2);
+    Find_Terminal_Node(0, OneTree, X1, Ncat, proxy_id1, real_id1, TermNode1);
+    Find_Terminal_Node(0, OneTree, X2, Ncat, proxy_id2, real_id2, TermNode2);
     
     // record
     uvec UniqueNode = intersect(unique(TermNode1), unique(TermNode2));

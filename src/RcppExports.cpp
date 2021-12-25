@@ -45,9 +45,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// UniKernel_Self
-List UniKernel_Self(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X, arma::uvec& Ncat, size_t verbose);
-RcppExport SEXP _RLT_UniKernel_Self(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP verboseSEXP) {
+// Kernel_Self
+List Kernel_Self(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X, arma::uvec& Ncat, size_t verbose);
+RcppExport SEXP _RLT_Kernel_Self(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -58,13 +58,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
     Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(UniKernel_Self(SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose));
+    rcpp_result_gen = Rcpp::wrap(Kernel_Self(SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
-// UniKernel_Cross
-List UniKernel_Cross(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X1, arma::mat& X2, arma::uvec& Ncat, size_t verbose);
-RcppExport SEXP _RLT_UniKernel_Cross(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP X1SEXP, SEXP X2SEXP, SEXP NcatSEXP, SEXP verboseSEXP) {
+// Kernel_Cross
+List Kernel_Cross(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X1, arma::mat& X2, arma::uvec& Ncat, size_t verbose);
+RcppExport SEXP _RLT_Kernel_Cross(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP X1SEXP, SEXP X2SEXP, SEXP NcatSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -76,13 +76,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type X2(X2SEXP);
     Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
     Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(UniKernel_Cross(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose));
+    rcpp_result_gen = Rcpp::wrap(Kernel_Cross(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
-// UniKernel_Train
-List UniKernel_Train(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X1, arma::mat& X2, arma::uvec& Ncat, arma::umat& ObsTrack, size_t verbose);
-RcppExport SEXP _RLT_UniKernel_Train(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP X1SEXP, SEXP X2SEXP, SEXP NcatSEXP, SEXP ObsTrackSEXP, SEXP verboseSEXP) {
+// Kernel_Train
+List Kernel_Train(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::mat& X1, arma::mat& X2, arma::uvec& Ncat, arma::umat& ObsTrack, size_t verbose);
+RcppExport SEXP _RLT_Kernel_Train(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP X1SEXP, SEXP X2SEXP, SEXP NcatSEXP, SEXP ObsTrackSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -95,13 +95,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
     Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
     Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(UniKernel_Train(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose));
+    rcpp_result_gen = Rcpp::wrap(Kernel_Train(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
-// RegMultiForestFit
-List RegMultiForestFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, arma::vec& obsweight, arma::vec& varweight, arma::umat& ObsTrack, List& param);
-RcppExport SEXP _RLT_RegMultiForestFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP ObsTrackSEXP, SEXP paramSEXP) {
+// RegUniCombForestFit
+List RegUniCombForestFit(arma::mat& X, arma::vec& Y, arma::uvec& Ncat, arma::vec& obsweight, arma::vec& varweight, arma::umat& ObsTrack, List& param);
+RcppExport SEXP _RLT_RegUniCombForestFit(SEXP XSEXP, SEXP YSEXP, SEXP NcatSEXP, SEXP obsweightSEXP, SEXP varweightSEXP, SEXP ObsTrackSEXP, SEXP paramSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -112,7 +112,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec& >::type varweight(varweightSEXP);
     Rcpp::traits::input_parameter< arma::umat& >::type ObsTrack(ObsTrackSEXP);
     Rcpp::traits::input_parameter< List& >::type param(paramSEXP);
-    rcpp_result_gen = Rcpp::wrap(RegMultiForestFit(X, Y, Ncat, obsweight, varweight, ObsTrack, param));
+    rcpp_result_gen = Rcpp::wrap(RegUniCombForestFit(X, Y, Ncat, obsweight, varweight, ObsTrack, param));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -159,10 +159,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RLT_ARMA_EMPTY_UMAT", (DL_FUNC) &_RLT_ARMA_EMPTY_UMAT, 0},
     {"_RLT_ARMA_EMPTY_VEC", (DL_FUNC) &_RLT_ARMA_EMPTY_VEC, 0},
     {"_RLT_mysample", (DL_FUNC) &_RLT_mysample, 4},
-    {"_RLT_UniKernel_Self", (DL_FUNC) &_RLT_UniKernel_Self, 7},
-    {"_RLT_UniKernel_Cross", (DL_FUNC) &_RLT_UniKernel_Cross, 8},
-    {"_RLT_UniKernel_Train", (DL_FUNC) &_RLT_UniKernel_Train, 9},
-    {"_RLT_RegMultiForestFit", (DL_FUNC) &_RLT_RegMultiForestFit, 7},
+    {"_RLT_Kernel_Self", (DL_FUNC) &_RLT_Kernel_Self, 7},
+    {"_RLT_Kernel_Cross", (DL_FUNC) &_RLT_Kernel_Cross, 8},
+    {"_RLT_Kernel_Train", (DL_FUNC) &_RLT_Kernel_Train, 9},
+    {"_RLT_RegUniCombForestFit", (DL_FUNC) &_RLT_RegUniCombForestFit, 7},
     {"_RLT_RegUniForestFit", (DL_FUNC) &_RLT_RegUniForestFit, 7},
     {"_RLT_RegUniForestPred", (DL_FUNC) &_RLT_RegUniForestPred, 11},
     {NULL, NULL, 0}

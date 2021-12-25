@@ -73,7 +73,7 @@ List RegUniForestFit(arma::mat& X,
                        (const uvec&) obs_id,
                        (const uvec&) var_id,
                        ObsTrack,
-                       1,
+                       true,
                        Prediction,
                        OOBPrediction,
                        VarImp);

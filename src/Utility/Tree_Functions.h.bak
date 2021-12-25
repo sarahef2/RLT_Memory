@@ -22,16 +22,16 @@ using namespace arma;
 #ifndef RLT_TREE_FUNCTIONS
 #define RLT_TREE_FUNCTIONS
 
-void Find_Terminal_Node(size_t Node, 
-              							const Tree_Class& OneTree,
+void Uni_Find_Terminal_Node(size_t Node, 
+              							const Uni_Tree_Class& OneTree,
               							const mat& X,
               							const uvec& Ncat,
               							uvec& proxy_id,
               							const uvec& real_id,
               							uvec& TermNode);
 
-void Find_Terminal_Node_ShuffleJ(size_t Node, 
-                                     const Tree_Class& OneTree,
+void Uni_Find_Terminal_Node_ShuffleJ(size_t Node, 
+                                     const Uni_Tree_Class& OneTree,
                                      const mat& X,
                                      const uvec& Ncat,
                                      uvec& proxy_id,
@@ -87,3 +87,15 @@ bool cat_reduced_collapse(Cat_Class& a, Cat_Class& b);
 void goright_roller(arma::uvec& goright_cat);
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+

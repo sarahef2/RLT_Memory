@@ -15,13 +15,13 @@ using namespace arma;
 // otherwise Rcpp won't find it
 
 // [[Rcpp::export()]]
-List RegMultiForestFit(arma::mat& X,
-            					 arma::vec& Y,
-            					 arma::uvec& Ncat,
-            					 arma::vec& obsweight,
-            					 arma::vec& varweight,
-            					 arma::umat& ObsTrack,
-            					 List& param)
+List RegUniCombForestFit(arma::mat& X,
+						 arma::vec& Y,
+						 arma::uvec& Ncat,
+						 arma::vec& obsweight,
+						 arma::vec& varweight,
+						 arma::umat& ObsTrack,
+						 List& param)
 {
   // reading parameters 
   PARAM_GLOBAL Param;
@@ -48,12 +48,12 @@ List RegMultiForestFit(arma::mat& X,
   arma::field<arma::vec> NodeAve(ntrees);
 
   // Initiate forest object
-  Reg_Multi_Forest_Class REG_FOREST(SplitVar,
-                                    SplitLoad,
-                                    SplitValue,
-                                    LeftNode,
-                                    RightNode,
-                                    NodeAve);
+  Reg_Uni_Comb_Forest_Class REG_FOREST(SplitVar,
+										SplitLoad,
+										SplitValue,
+										LeftNode,
+										RightNode,
+										NodeAve);
   
   // initiate obs id and var id
   uvec obs_id = linspace<uvec>(0, N-1, N);
@@ -69,15 +69,16 @@ List RegMultiForestFit(arma::mat& X,
     VarImp.zeros(P);  
   
   // Run model fitting
-  Reg_Multi_Forest_Build((const RLT_REG_DATA&) REG_DATA,
-                         REG_FOREST,
-                         (const PARAM_GLOBAL&) Param,
-                         obs_id,
-                         var_id,
-                         ObsTrack,
-                         Prediction,
-                         OOBPrediction,
-                         VarImp);
+  Reg_Uni_Comb_Forest_Build((const RLT_REG_DATA&) REG_DATA,
+							 REG_FOREST,
+							 (const PARAM_GLOBAL&) Param,
+							 obs_id,
+							 var_id,
+							 ObsTrack,
+							 true, // do prediction
+							 Prediction,
+							 OOBPrediction,
+							 VarImp);
   
   
   //initialize return objects

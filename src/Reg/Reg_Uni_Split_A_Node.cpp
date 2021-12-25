@@ -31,7 +31,7 @@ TERMINATENODE:
   }else{
 
     //Set up another split
-    Uni_Split_Class OneSplit;
+    Split_Class OneSplit;
 
     //regular univariate split
     Reg_Uni_Find_A_Split(OneSplit,
@@ -104,9 +104,9 @@ TERMINATENODE:
 
 // terminate and record a node
 
-void Reg_Uni_Terminate_Node(size_t Node, 
+void Reg_Uni_Terminate_Node(size_t Node,
                             Reg_Uni_Tree_Class& OneTree,
-                            uvec& obs_id,                            
+                            uvec& obs_id,
                             const vec& Y,
                             const vec& obs_weight,
                             bool useobsweight)

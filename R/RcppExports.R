@@ -19,20 +19,20 @@ mysample <- function(Num, min, max, seed) {
     .Call('_RLT_mysample', PACKAGE = 'RLT', Num, min, max, seed)
 }
 
-UniKernel_Self <- function(SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose) {
-    .Call('_RLT_UniKernel_Self', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose)
+Kernel_Self <- function(SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose) {
+    .Call('_RLT_Kernel_Self', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X, Ncat, verbose)
 }
 
-UniKernel_Cross <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose) {
-    .Call('_RLT_UniKernel_Cross', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose)
+Kernel_Cross <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose) {
+    .Call('_RLT_Kernel_Cross', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, verbose)
 }
 
-UniKernel_Train <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose) {
-    .Call('_RLT_UniKernel_Train', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose)
+Kernel_Train <- function(SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose) {
+    .Call('_RLT_Kernel_Train', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, X1, X2, Ncat, ObsTrack, verbose)
 }
 
-RegMultiForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
-    .Call('_RLT_RegMultiForestFit', PACKAGE = 'RLT', X, Y, Ncat, obsweight, varweight, ObsTrack, param)
+RegUniCombForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param) {
+    .Call('_RLT_RegUniCombForestFit', PACKAGE = 'RLT', X, Y, Ncat, obsweight, varweight, ObsTrack, param)
 }
 
 RegUniForestFit <- function(X, Y, Ncat, obsweight, varweight, ObsTrack, param_r) {

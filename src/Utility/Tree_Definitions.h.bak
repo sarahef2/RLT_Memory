@@ -194,14 +194,14 @@ void field_vec_resize(arma::field<arma::ivec>& A, size_t size);
 //  Tree and forest class  //
 // *********************** //
 
-class Tree_Class{ // single split trees
+class Single_Tree_Class{ // single split trees
 public:
   arma::ivec& SplitVar;
   arma::vec& SplitValue;
   arma::uvec& LeftNode;
   arma::uvec& RightNode;
   
-  Tree_Class(arma::ivec& SplitVar,
+  Single_Tree_Class(arma::ivec& SplitVar,
                  arma::vec& SplitValue,
                  arma::uvec& LeftNode,
                  arma::uvec& RightNode) : SplitVar(SplitVar),

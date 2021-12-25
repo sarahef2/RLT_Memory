@@ -57,7 +57,7 @@ public:
                        NodeAveList(NodeAveList) {}
 };
 
-class Reg_Uni_Tree_Class : public Uni_Tree_Class{
+class Reg_Uni_Tree_Class : public Tree_Class{
 public:
   arma::vec& NodeAve;
 
@@ -65,7 +65,7 @@ public:
                      arma::vec& SplitValue,
                      arma::uvec& LeftNode,
                      arma::uvec& RightNode,
-                     arma::vec& NodeAve) : Uni_Tree_Class(
+                     arma::vec& NodeAve) : Tree_Class(
                      SplitVar,
                      SplitValue,
                      LeftNode,
@@ -122,7 +122,7 @@ public:
 };
 
 
-class Reg_Multi_Forest_Class{
+class Reg_Uni_Comb_Forest_Class{
 public:
   arma::field<arma::imat>& SplitVarList;
   arma::field<arma::mat>& SplitLoadList;
@@ -131,7 +131,7 @@ public:
   arma::field<arma::uvec>& RightNodeList;
   arma::field<arma::vec>& NodeAveList;
   
-  Reg_Multi_Forest_Class(arma::field<arma::imat>& SplitVarList,
+  Reg_Uni_Comb_Forest_Class(arma::field<arma::imat>& SplitVarList,
                          arma::field<arma::mat>& SplitLoadList,
                          arma::field<arma::vec>& SplitValueList,
                          arma::field<arma::uvec>& LeftNodeList,
@@ -146,17 +146,17 @@ public:
 };
 
 
-class Reg_Multi_Tree_Class : public Multi_Tree_Class{
+class Reg_Uni_Comb_Tree_Class : public Comb_Tree_Class{
 public:
   arma::vec& NodeAve;
   
-  Reg_Multi_Tree_Class(arma::imat& SplitVar,
+  Reg_Uni_Comb_Tree_Class(arma::imat& SplitVar,
                        arma::mat& SplitLoad,
                        arma::vec& SplitValue,
                        arma::uvec& LeftNode,
                        arma::uvec& RightNode,
                        arma::vec& NodeAve) : 
-                         Multi_Tree_Class(SplitVar,
+                         Comb_Tree_Class(SplitVar,
                                           SplitLoad,
                                           SplitValue,
                                           LeftNode,

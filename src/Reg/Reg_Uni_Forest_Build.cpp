@@ -110,7 +110,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
         uvec proxy_id = linspace<uvec>(0, N-1, N);
         uvec TermNode(N, fill::zeros);
       
-        Uni_Find_Terminal_Node(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, obs_id, TermNode);
+        Find_Terminal_Node(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, obs_id, TermNode);
       
         vec AllPred = OneTree.NodeAve(TermNode);
       
@@ -142,7 +142,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
         uvec proxy_id = linspace<uvec>(0, NTest-1, NTest);
         uvec TermNode(NTest, fill::zeros);
         
-        Uni_Find_Terminal_Node(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, oobagObs, TermNode);
+        Find_Terminal_Node(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, oobagObs, TermNode);
         
         vec oobpred = OneTree.NodeAve(TermNode);
         
@@ -162,7 +162,7 @@ void Reg_Uni_Forest_Build(const RLT_REG_DATA& REG_DATA,
           vec tildex = REG_DATA.X.col(suffle_var_j);
           tildex = tildex.elem( oob_ind );  //shuffle( REG_DATA.X.unsafe_col(j).elem( oobagObs ) );
           
-          Uni_Find_Terminal_Node_ShuffleJ(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, oobagObs, TermNode, tildex, suffle_var_j);
+          Find_Terminal_Node_ShuffleJ(0, OneTree, REG_DATA.X, REG_DATA.Ncat, proxy_id, oobagObs, TermNode, tildex, suffle_var_j);
           
           // get prediction
           vec oobpred = OneTree.NodeAve(TermNode);

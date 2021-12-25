@@ -7,22 +7,22 @@ library(ranger)
 
 set.seed(1)
 
-trainn = 100
+trainn = 1000
 testn = 1000
 n = trainn + testn
-p = 4
+p = 400
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
 X = data.frame(X1, X2)
 for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
-#y = 1 + X[, 2] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
+y = 1 + X[, 2] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 #y = 1 + rowSums(X[, 1:(p/4)]) + rowSums(data.matrix(X[, (p/2) : (p/1.5)])) + rnorm(n)
-y = 1 + X[, 1] + rnorm(n)
+#y = 1 + X[, 1] + rnorm(n)
 
-ntrees = 1
-ncores = 1
-nmin = 30
+ntrees = 200
+ncores = 6
+nmin = 10
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
@@ -52,15 +52,6 @@ metric[1, 2] = difftime(Sys.time(), start_time, units = "secs")
 metric[1, 3] = mean((RLTPred$Prediction - testY)^2)
 metric[1, 4] = object.size(RLTfit)
 metric[1, 5] = mean(unlist(lapply(RLTfit$FittedForest$SplitVar, length)))
-
-
-
-metric
-
-
-
-
-
 
 options(rf.cores = ncores)
 start_time <- Sys.time()
@@ -104,9 +95,10 @@ metric[4, 4] = object.size(rangerfit)
 metric[4, 5] = mean(unlist(lapply(rangerfit$forest$split.varIDs, length)))
 
 metric
+mean((RLTfit$OOBPrediction - trainY)^2)
 
 par(mfrow=c(2,2))
-par(mar = c(0.5, 2, 2, 2))
+par(mar = c(1, 2, 2, 2))
 
 barplot(as.vector(RLTfit$VarImp), main = "RLT")
 barplot(as.vector(rsffit$importance), main = "rsf")
@@ -148,7 +140,7 @@ testX = matrix(rnorm(n*p), n, p)
 testy = 1 + testX[, 1] + testX[, 9] + testX[, 3]  + rnorm(n)
 
 start_time <- Sys.time()
-RLTfit <- RLT(X, y, ntrees = 100, ncores = 1, nmin = 15,
+RLTfit <- RLT(X, y, ntrees = 100, ncores = 6, nmin = 15,
               mtry = 3, linear.comb = 1, reinforcement = TRUE,
               resample.prob = 0.75, resample.replace = FALSE,
               importance = TRUE, 

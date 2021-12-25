@@ -37,10 +37,9 @@ void Reg_Uni_Forest_Pred(mat& Pred,
                                  REG_FOREST.RightNodeList(nt),
                                  REG_FOREST.NodeAveList(nt));
       
-      Uni_Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);
+      Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);
       
       Pred.unsafe_col(nt).rows(real_id) = OneTree.NodeAve(TermNode);
     }
   }
 }
-

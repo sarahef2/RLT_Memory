@@ -278,8 +278,8 @@ void goright_roller(arma::uvec& goright_cat)
 }
 
 // Find the terminal node for X in one tree
-void Find_Terminal_Node(size_t Node, 
-                            const Tree_Class& OneTree,
+void Uni_Find_Terminal_Node(size_t Node, 
+                            const Uni_Tree_Class& OneTree,
                             const mat& X,
                             const uvec& Ncat,
                             uvec& proxy_id,
@@ -340,13 +340,13 @@ void Find_Terminal_Node(size_t Node,
     
     if (left_proxy.n_elem > 0)
     {
-      Find_Terminal_Node(OneTree.LeftNode[Node], OneTree, X, Ncat, left_proxy, real_id, TermNode);
+      Uni_Find_Terminal_Node(OneTree.LeftNode[Node], OneTree, X, Ncat, left_proxy, real_id, TermNode);
     }
     
     // right node
     if (proxy_id.n_elem > 0)
     {
-      Find_Terminal_Node(OneTree.RightNode[Node], OneTree, X, Ncat, proxy_id, real_id, TermNode);      
+      Uni_Find_Terminal_Node(OneTree.RightNode[Node], OneTree, X, Ncat, proxy_id, real_id, TermNode);      
     }
     
   }
@@ -357,8 +357,8 @@ void Find_Terminal_Node(size_t Node,
 
 
 //Function for variable importance
-void Find_Terminal_Node_ShuffleJ(size_t Node, 
-                                     const Tree_Class& OneTree,
+void Uni_Find_Terminal_Node_ShuffleJ(size_t Node, 
+                                     const Uni_Tree_Class& OneTree,
                                      const mat& X,
                                      const uvec& Ncat,
                                      uvec& proxy_id,
@@ -429,13 +429,13 @@ void Find_Terminal_Node_ShuffleJ(size_t Node,
     
     if (left_proxy.n_elem > 0)
     {
-      Find_Terminal_Node_ShuffleJ(OneTree.LeftNode[Node], OneTree, X, Ncat, left_proxy, real_id, TermNode, tildex, j);
+      Uni_Find_Terminal_Node_ShuffleJ(OneTree.LeftNode[Node], OneTree, X, Ncat, left_proxy, real_id, TermNode, tildex, j);
     }
     
     // right node
     if (proxy_id.n_elem > 0)
     {
-      Find_Terminal_Node_ShuffleJ(OneTree.RightNode[Node], OneTree, X, Ncat, proxy_id, real_id, TermNode, tildex, j);      
+      Uni_Find_Terminal_Node_ShuffleJ(OneTree.RightNode[Node], OneTree, X, Ncat, proxy_id, real_id, TermNode, tildex, j);      
     }
     
   }

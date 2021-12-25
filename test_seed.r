@@ -53,7 +53,7 @@ for (i in 1:3) {
   start_time <- Sys.time()
   RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, nmin = nmin/2, mtry = mtry,
                 split.gen = rule, nsplit = nsplit, resample.prob = sampleprob, resample.replace = TRUE,
-                importance = importance, seed = 1525405838)
+                importance = importance)
   result_metric[i, 1] = difftime(Sys.time(), start_time, units = "secs")
   start_time <- Sys.time()
   
@@ -69,10 +69,12 @@ for (i in 1:3) {
 result_metric
 
 ## check seed and reproducibility on variance estimation
+# still need to check this. 
 
 Var.Est = Reg_Var_Forest(trainX, trainY, testX, ncores = 10, nmin = 30,
                          mtry = p, split.gen = "random", nsplit = 3, 
                          ntrees = 5000, resample.prob = 0.5)
+
 
 Var.Est2 = Reg_Var_Forest(trainX, trainY, testX, ncores = 10, nmin = 30,
                          mtry = p, split.gen = "random", nsplit = 3, 

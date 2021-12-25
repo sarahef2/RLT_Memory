@@ -10,7 +10,7 @@ using namespace Rcpp;
 using namespace arma;
 
 //Find a split on a particular variable
-void Reg_Uni_Split_Cont(Uni_Split_Class& TempSplit,
+void Reg_Uni_Split_Cont(Split_Class& TempSplit,
                         const uvec& obs_id,
                         const vec& x,
                         const vec& Y,

@@ -32,7 +32,7 @@ TERMINATENODE:
   }else{
 
     //Set up another split
-    Uni_Split_Class OneSplit;
+    Split_Class OneSplit;
     
     uvec new_var_id(var_id);
     uvec new_var_protect(var_protect);

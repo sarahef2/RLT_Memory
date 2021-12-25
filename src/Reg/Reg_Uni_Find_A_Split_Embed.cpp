@@ -9,7 +9,7 @@
 using namespace Rcpp;
 using namespace arma;
 
-void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
+void Reg_Uni_Find_A_Split_Embed(Split_Class& OneSplit,
                                 const RLT_REG_DATA& REG_DATA,
                                 const PARAM_GLOBAL& Param,
                                 const uvec& obs_id,
@@ -91,7 +91,7 @@ void Reg_Uni_Find_A_Split_Embed(Uni_Split_Class& OneSplit,
                        obs_id,
                        (const uvec&) var_id,
                        ObsTrack,
-                       0, // no prediction
+                       false, // no prediction
                        Prediction,
                        OOBPrediction,
                        VarImp);
