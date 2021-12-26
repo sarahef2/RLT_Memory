@@ -65,10 +65,16 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
   size_t highindex = N - 2;
   
   // alpha is only effective when x can be sorted
+  // I need to do some changes to this
   // this will force nmin for each child node
   if (alpha > 0)
   {
-    if (N*alpha > nmin) nmin = (size_t) N*alpha;
+    // if (N*alpha > nmin) nmin = (size_t) N*alpha;
+    nmin = (size_t) N*alpha;
+    if (nmin < 1) nmin = 1;
+    
+    lowindex = nmin-1; // less equal goes to left
+    highindex = N - nmin - 1;
     
     // if there are ties, do further check
     if ( (x(indices(lowindex)) == x(indices(lowindex + 1))) | (x(indices(highindex)) == x(indices(highindex + 1))) )
@@ -77,12 +83,11 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
   }else{
     // move index if ties
     while( x(indices(lowindex)) == x(indices(lowindex + 1)) ) lowindex++;
-    while( x(indices(highindex)) == x(indices(highindex + 1)) ) highindex--;    
+    while( x(indices(highindex)) == x(indices(highindex + 1)) ) highindex--;
     
     //If there is nowhere to split
     if ((lowindex > highindex)|(lowindex==highindex)) return;
   }
-  
   
   if (split_gen == 2) // rank split
   {
@@ -263,6 +268,7 @@ void reg_cont_score_best(uvec& indices,
   //Trying the other splits
   for (size_t i = lowindex; i <= highindex; i++)
   {
+    
     //If there is a tie
     while (x(indices(i)) == x(indices(i+1))){
       i++;

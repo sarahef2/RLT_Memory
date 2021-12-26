@@ -315,8 +315,6 @@ RLT <- function(x, y, censor = NULL, model = NULL,
   
   if (model == "regression")
   {
-    if (verbose > 0) cat(" run regression forest ... \n ")
-
     RLT.fit = RegForest(x, y, ncat, 
                         obs.w, var.w, 
                         resample.preset, 

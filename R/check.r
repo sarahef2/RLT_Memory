@@ -56,14 +56,16 @@ check_input <- function(x, y, censor, model)
 #' @name check_param_RLT
 #' @description Check parameters
 #' 
+#' The following parameters, if needed can be specified in the \code{param.control} list.
+#' 
 #' \code{alpha} can specify a minimum number of observations required for each 
 #' child node as a portion of the parent node. Must be within `[0, 0.5)`. When 
 #' \code{alpha} $> 0$ and \code{split.gen} is `rank` or `best`, this will force 
 #' each child node to contain at least \eqn{\max(\texttt{nmin}, \alpha \times N_A)}
-#' number of number of observations, where $N_A$ is the sample size at the current 
+#' number of number of observations, where \eqn{N_A} is the sample size at the current 
 #' internal node. This is mainly for theoretical concern. 
 #' 
-#' \code{split.rule} spcifies the splitting rule for comparisons. For regression, 
+#' \code{split.rule} specifies the splitting rule for comparisons. For regression, 
 #' variance reduction `"var"` is used; for classification, `"gini"` index is used.
 #' For survival, `"logrank"`, `"suplogrank"`, `"LL"` and `"penLL"` are available. When 
 #' `"penLL"` is used, variable weights `"var.w"` are used as the penalty. 
@@ -179,13 +181,13 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
   
   if (is.null(param.control$alpha)) {
     alpha <- 0
-  } else alpha = min(max(alpha, 0), 0.5)
+  } else alpha = min(max(param.control$alpha, 0), 0.5)
   storage.mode(alpha) <- "double"
   
   param$'alpha' = alpha
-  param$'split.rule' = "var"
-  param$'failcount' = 0
-  param$'var.w.type' = 1
+  param$'split.rule' = "default"
+  param$'failcount' = 0L
+  param$'var.w.type' = 1L
   
   # return
   return(param)

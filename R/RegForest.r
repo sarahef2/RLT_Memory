@@ -13,13 +13,13 @@ RegForest <- function(x, y, ncat,
   storage.mode(y) <- "double"
 
   # check regression splitting rules
-  all.split.rule = c("var")
+  all.split.rule = c("default")
 
   param$"split.rule" <- match.arg(param$"split.rule", all.split.rule)
   param$"split.rule" <- match(param$"split.rule", all.split.rule)
   
   if (param$verbose > 0)
-    cat("Start fitting Regression Forest... \n")
+    cat("Fitting Regression Forest ... \n")
   
   if (param$linear.comb == 1)
   {

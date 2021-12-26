@@ -77,7 +77,7 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
   
   // rank split, figure out low and high index
   size_t lowindex = 0;
-  size_t highindex = true_cat - 2;  
+  size_t highindex = true_cat - 2;
   
   // alpha is only effective when x can be sorted
   // this will force nmin for each child node
@@ -85,9 +85,12 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
   {
     size_t N = obs_id.n_elem;
     
-    if (N*alpha > nmin) nmin = (size_t) N*alpha;
+    //if (N*alpha > nmin) nmin = (size_t) N*alpha;
+    nmin = (size_t) N*alpha;
+    if (nmin < 1) nmin = 1;
     
     move_cat_index(lowindex, highindex, cat_reduced, true_cat, nmin);
+    
   }
 
   // start split 

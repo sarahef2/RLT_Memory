@@ -23,7 +23,7 @@ void Reg_Uni_Split_A_Node(size_t Node,
   bool useobsweight = Param.useobsweight;
 
   // in rf, it is N <= nmin
-  if (N < 2*nmin)
+  if (N <= nmin)
   {
 TERMINATENODE:
       Reg_Uni_Terminate_Node(Node, OneTree, obs_id, REG_DATA.Y, REG_DATA.obsweight, useobsweight);

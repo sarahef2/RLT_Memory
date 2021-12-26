@@ -120,65 +120,77 @@ public:
   };
 
   void print() {
-      Rcout << "----- RLT Forest Parameters -----" << std::endl;
-      Rcout << "         (N, P) = (" << N << ", " << P << ")"<< std::endl;
-      Rcout << "         ntrees = " << ntrees << std::endl;
-      Rcout << "           mtry = " << mtry << std::endl;
-      Rcout << "           nmin = " << nmin << std::endl;
-      Rcout << "      split_gen = " << ((split_gen == 1) ? "Random" : (split_gen == 2) ? "Rank" : "Best") << std::endl;
+    
+      Rcout << "---------- Parameters Summary ----------" << std::endl;
+      Rcout << "              (N, P) = (" << N << ", " << P << ")" << std::endl;
+      Rcout << "          # of trees = " << ntrees << std::endl;
+      Rcout << "        (mtry, nmin) = (" << mtry << ", " << nmin << ")" << std::endl;
+      
+      if (split_gen == 3)
+        Rcout << "      splitting rule = Best" << std::endl;
+      
       if (split_gen < 3)
-      Rcout << "         nsplit = " << nsplit << std::endl;
-      Rcout << "    replacement = " << replacement << std::endl;
-      Rcout << "  resample prob = " << resample_prob << std::endl;
-      Rcout << "    Obs weights = " << (useobsweight ? "Yes" : "No") << std::endl;
-      Rcout << "    Var weights = " << (usevarweight ? "Yes" : "No") << std::endl;
-      Rcout << "  reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
-      Rcout << std::endl;
+        Rcout << "      splitting rule = " << ((split_gen == 1) ? "Random, " : "Rank, ") << nsplit << std::endl;
+
+      Rcout << "            sampling = " << resample_prob << (replacement ? " w/ replace" : " w/o replace") << std::endl;
+      
+      Rcout << "  (Obs, Var) Weights = (" << (useobsweight ? "Yes" : "No") << ", " << (usevarweight ? "Yes" : "No") << ")" << std::endl;
+
+      if (alpha > 0)
+        Rcout << "               alpha = " << alpha << std::endl;
+      
+      Rcout << "       reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
+      Rcout << "----------------------------------------" << std::endl;
   };
   
   void print() const {
     
-    Rcout << "----- RLT Forest Parameters -----" << std::endl;
-    Rcout << "         (N, P) = (" << N << ", " << P << ")"<< std::endl;
-    Rcout << "         ntrees = " << ntrees << std::endl;
-    Rcout << "           mtry = " << mtry << std::endl;
-    Rcout << "           nmin = " << nmin << std::endl;
-    Rcout << "      split_gen = " << ((split_gen == 1) ? "Random" : (split_gen == 2) ? "Rank" : "Best") << std::endl;
-    if (split_gen < 3)
-      Rcout << "         nsplit = " << nsplit << std::endl;
-    Rcout << "    replacement = " << replacement << std::endl;
-    Rcout << "  resample prob = " << resample_prob << std::endl;
-    Rcout << "    Obs weights = " << (useobsweight ? "Yes" : "No") << std::endl;
-    Rcout << "    Var weights = " << (usevarweight ? "Yes" : "No") << std::endl;
-    Rcout << "  reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
-    Rcout << std::endl;    
+    Rcout << "---------- Parameters Summary ----------" << std::endl;
+    Rcout << "              (N, P) = (" << N << ", " << P << ")" << std::endl;
+    Rcout << "          # of trees = " << ntrees << std::endl;
+    Rcout << "        (mtry, nmin) = (" << mtry << ", " << nmin << ")" << std::endl;
     
-  } 
+    if (split_gen == 3)
+      Rcout << "      splitting rule = Best" << std::endl;
+    
+    if (split_gen < 3)
+      Rcout << "      splitting rule = " << ((split_gen == 1) ? "Random, " : "Rank, ") << nsplit << std::endl;
+    
+    Rcout << "            sampling = " << resample_prob << (replacement ? " w/ replace" : " w/o replace") << std::endl;
+    
+    Rcout << "  (Obs, Var) Weights = (" << (useobsweight ? "Yes" : "No") << ", " << (usevarweight ? "Yes" : "No") << ")" << std::endl;
+    
+    if (alpha > 0)
+      Rcout << "               alpha = " << alpha << std::endl;
+    
+    Rcout << "       reinforcement = " << (reinforcement ? "Yes" : "No") << std::endl;
+    Rcout << "----------------------------------------" << std::endl;
+  };
   
   void rlt_print() {
     
-    Rcout << "     embed.ntrees        = " << embed_ntrees << std::endl;
-    Rcout << "     embed.resample_prob = " << embed_resample_prob << std::endl;
-    Rcout << "     embed.mtry          = " << embed_mtry << std::endl;
-    Rcout << "     embed.nmin          = " << embed_nmin << std::endl;
-    Rcout << "     embed.split_gen     = " << embed_split_gen << std::endl;
-    Rcout << "     embed.nsplit        = " << embed_nsplit << std::endl;
-    Rcout << "     embed.mute          = " << embed_mute << std::endl;
-    Rcout << "     embed.protect       = " << embed_protect << std::endl;
+    Rcout << " embed.ntrees        = " << embed_ntrees << std::endl;
+    Rcout << " embed.resample_prob = " << embed_resample_prob << std::endl;
+    Rcout << " embed.mtry          = " << embed_mtry << std::endl;
+    Rcout << " embed.nmin          = " << embed_nmin << std::endl;
+    Rcout << " embed.split_gen     = " << embed_split_gen << std::endl;
+    Rcout << " embed.nsplit        = " << embed_nsplit << std::endl;
+    Rcout << " embed.mute          = " << embed_mute << std::endl;
+    Rcout << " embed.protect       = " << embed_protect << std::endl;
     
   };
   
   void rlt_print() const {
     
-    Rcout << "     embed_ntrees        = " << embed_ntrees << std::endl;
-    Rcout << "     embed_resample_prob = " << embed_resample_prob << std::endl;
-    Rcout << "     embed_mtry          = " << embed_mtry << std::endl;
-    Rcout << "     embed_nmin          = " << embed_nmin << std::endl;
-    Rcout << "     embed_split_gen     = " << embed_split_gen << std::endl;
-    Rcout << "     embed_nsplit        = " << embed_nsplit << std::endl;
-    Rcout << "     embed_mute          = " << embed_mute << std::endl;
-    Rcout << "     embed.protect       = " << embed_protect << std::endl;
-    
+    Rcout << " embed.ntrees        = " << embed_ntrees << std::endl;
+    Rcout << " embed.resample_prob = " << embed_resample_prob << std::endl;
+    Rcout << " embed.mtry          = " << embed_mtry << std::endl;
+    Rcout << " embed.nmin          = " << embed_nmin << std::endl;
+    Rcout << " embed.split_gen     = " << embed_split_gen << std::endl;
+    Rcout << " embed.nsplit        = " << embed_nsplit << std::endl;
+    Rcout << " embed.mute          = " << embed_mute << std::endl;
+    Rcout << " embed.protect       = " << embed_protect << std::endl;
+
   };
 };
 

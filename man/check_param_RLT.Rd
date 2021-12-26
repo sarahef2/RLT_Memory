@@ -29,14 +29,16 @@ check_param_RLT(
 \description{
 Check parameters
 
+The following parameters, if needed can be specified in the \code{param.control} list.
+
 \code{alpha} can specify a minimum number of observations required for each
 child node as a portion of the parent node. Must be within \verb{[0, 0.5)}. When
 \code{alpha} $> 0$ and \code{split.gen} is \code{rank} or \code{best}, this will force
 each child node to contain at least \eqn{\max(\texttt{nmin}, \alpha \times N_A)}
-number of number of observations, where $N_A$ is the sample size at the current
+number of number of observations, where \eqn{N_A} is the sample size at the current
 internal node. This is mainly for theoretical concern.
 
-\code{split.rule} spcifies the splitting rule for comparisons. For regression,
+\code{split.rule} specifies the splitting rule for comparisons. For regression,
 variance reduction \code{"var"} is used; for classification, \code{"gini"} index is used.
 For survival, \code{"logrank"}, \code{"suplogrank"}, \code{"LL"} and \code{"penLL"} are available. When
 \code{"penLL"} is used, variable weights \code{"var.w"} are used as the penalty.

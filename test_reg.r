@@ -21,8 +21,8 @@ y = 1 + X[, 2] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 #y = 1 + X[, 1] + rnorm(n)
 
 ntrees = 200
-ncores = 6
-nmin = 10
+ncores = 10
+nmin = 5
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
@@ -38,13 +38,14 @@ testY = y[1:testn + trainn]
 metric = data.frame(matrix(NA, 4, 5))
 rownames(metric) = c("rlt", "rsf", "rf", "ranger")
 colnames(metric) = c("fit.time", "pred.time", "pred.error", 
-                     "obj.size", "ave.tree.size")
+                     "obj.size", "tree.size")
 
 start_time <- Sys.time()
 RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, 
-              nmin = nmin/2, mtry = mtry, nsplit = nsplit,
+              nmin = nmin, mtry = mtry, nsplit = nsplit,
               split.gen = rule, resample.prob = sampleprob,
-              importance = importance)
+              importance = importance, param.control = list("alpha" = 0), 
+              verbose = TRUE)
 metric[1, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
 RLTPred <- predict(RLTfit, testX, ncores = ncores)

@@ -58,7 +58,7 @@ get.one.tree <- function(x, tree = 1, ...)
     
     NodeAve = x$FittedForest$NodeAve[[tree]]
   
-    OneTree = data.frame("SplitVar" = newnames[SplitVar + 1],
+    OneTree = data.frame("SplitVar (Type)" = newnames[SplitVar + 1],
                          "SplitValue" = SplitValue,
                          "LeftNode" = LeftNode,
                          "RightNode" = RightNode,
