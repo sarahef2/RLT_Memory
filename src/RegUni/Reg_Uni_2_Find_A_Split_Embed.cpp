@@ -4,7 +4,7 @@
 //  **********************************
 
 // my header file
-# include "regForest.h"
+# include "../RLT.h"
 
 using namespace Rcpp;
 using namespace arma;

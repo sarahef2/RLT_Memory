@@ -12,15 +12,15 @@
 using namespace Rcpp;
 using namespace arma;
 
-# include "Tree_Definitions.h"
+# include "Tree_Definition.h"
 # include "Utility.h"
 
 // ********************//
 // functions for trees //
 // ********************//
 
-#ifndef RLT_TREE_FUNCTIONS
-#define RLT_TREE_FUNCTIONS
+#ifndef RLT_TREE_FUNCTION
+#define RLT_TREE_FUNCTION
 
 void Find_Terminal_Node(size_t Node, 
               							const Tree_Class& OneTree,

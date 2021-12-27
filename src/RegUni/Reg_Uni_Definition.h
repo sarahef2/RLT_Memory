@@ -3,14 +3,16 @@
 //  Regression
 //  **********************************
 
-#include <RcppArmadillo.h>
-#include <Rcpp.h>
+// my header files
+# include "../Utility/Tree_Definition.h"
+# include "../Utility/Utility.h"
+# include "../Utility/Tree_Function.h"
 
 using namespace Rcpp;
 using namespace arma;
 
-#ifndef RLT_REG_DEFINITION // include guard
-#define RLT_REG_DEFINITION
+#ifndef RLT_REG_UNI_DEFINITION
+#define RLT_REG_UNI_DEFINITION
 
 // ************ //
 //  data class  //
@@ -218,15 +220,6 @@ public:
     NodeAve.subvec(OldLength, NewLength-1).zeros();
   }
 };
-
-
-
-
-
-
-
-
-
 
 
 class Reg_Cat_Class: public Cat_Class{

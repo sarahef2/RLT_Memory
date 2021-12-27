@@ -22,7 +22,7 @@ y = 1 + X[, 2] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 
 ntrees = 200
 ncores = 10
-nmin = 5
+nmin = 6
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
@@ -106,45 +106,49 @@ barplot(as.vector(rsffit$importance), main = "rsf")
 barplot(rf.fit$importance[, 1], main = "rf")
 barplot(as.vector(rangerfit$variable.importance), main = "ranger")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # multivariate split 
 
-RLTfit <- RLT(trainX, trainY, ntrees = 1, ncores = 1, nmin = 100, 
-              mtry = 3, linear.comb = 2)
+set.seed(1)
+
+n = 30
+p = 10
+X1 = matrix(rnorm(n*p/2), n, p/2)
+X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
+
+X = data.frame(X1, X2)
+for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
+y = 1 + X[, 1] + X[, 2] + (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
+
+trainX = X[1:(n/2), ]
+trainY = y[1:(n/2)]
+
+testX = X[-(1:(n/2)), ]
+testY = y[-(1:(n/2))]
+
+RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 10, 
+              mtry = 5, linear.comb = 3, 
+              split.gen = "random", nsplit = 3,
+              param.control = list("split.rule" = "pca"))
 
 
 
 # RLT split 
-
 
 set.seed(1)
 
 n = 1000
 p = 1000
 X = matrix(rnorm(n*p), n, p)
-y = 1 + X[, 1] + X[, 9] + X[, 3]  + rnorm(n)
+y = 1 + X[, 1] + X[, 9] + X[, 3] + rnorm(n)
 
 testX = matrix(rnorm(n*p), n, p)
 testy = 1 + testX[, 1] + testX[, 9] + testX[, 3]  + rnorm(n)
 
 start_time <- Sys.time()
-RLTfit <- RLT(X, y, ntrees = 100, ncores = 6, nmin = 15,
-              mtry = 3, linear.comb = 1, reinforcement = TRUE,
-              resample.prob = 0.75, resample.replace = FALSE,
-              importance = TRUE, 
+RLTfit <- RLT(X, y, ntrees = 100, ncores = 6, nmin = 10,
+              split.gen = "random", nsplit = 1, linear.comb = 1, 
+              resample.prob = 0.85, resample.replace = FALSE,
+              reinforcement = TRUE, importance = TRUE, 
               param.control = list("embed.ntrees" = 100,
                                    "embed.mtry" = 1/3,
                                    "embed.nmin" = 10,
@@ -156,7 +160,6 @@ RLTfit <- RLT(X, y, ntrees = 100, ncores = 6, nmin = 15,
 difftime(Sys.time(), start_time, units = "secs")
 
 barplot(as.vector(RLTfit$VarImp[1:50]), main = "RLT")
-
 
 get.one.tree(RLTfit, 1)
 
@@ -171,3 +174,4 @@ RLTfit <- RLT(X, y, ntrees = 1000, ncores = 6, nmin = 10,
 mean((RLTfit$OOBPrediction - y)^2, na.rm = TRUE)
 pred = predict(RLTfit, testX)
 mean((pred$Prediction - testy)^2)
+barplot(as.vector(RLTfit$VarImp[1:50]), main = "RLT")

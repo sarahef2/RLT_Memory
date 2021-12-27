@@ -4,7 +4,7 @@
 //  **********************************
 
 // my header file
-# include "regForest.h"
+# include "../RLT.h"
   
 using namespace Rcpp;
 using namespace arma;
@@ -82,11 +82,11 @@ void Reg_Uni_Comb_Forest_Build(const RLT_REG_DATA& REG_DATA,
       // initialize a tree (combination split)      
       
       Reg_Uni_Comb_Tree_Class OneTree(REG_FOREST.SplitVarList(nt),
-								   REG_FOREST.SplitLoadList(nt),
-                                   REG_FOREST.SplitValueList(nt),
-                                   REG_FOREST.LeftNodeList(nt),
-                                   REG_FOREST.RightNodeList(nt),
-                                   REG_FOREST.NodeAveList(nt));
+                                      REG_FOREST.SplitLoadList(nt),
+                                      REG_FOREST.SplitValueList(nt),
+                                      REG_FOREST.LeftNodeList(nt),
+                                      REG_FOREST.RightNodeList(nt),
+                                      REG_FOREST.NodeAveList(nt));
       
       size_t TreeLength = 3 + size/nmin*3;
       OneTree.initiate(TreeLength, linear_comb);
@@ -97,10 +97,10 @@ void Reg_Uni_Comb_Forest_Build(const RLT_REG_DATA& REG_DATA,
         uvec var_protect;
         
         Reg_Uni_Comb_Split_A_Node_Embed(0, OneTree, REG_DATA, 
-                                   Param, inbag_id, var_id, var_protect, rngl);
+                                        Param, inbag_id, var_id, var_protect, rngl);
       }else{
         Reg_Uni_Comb_Split_A_Node(0, OneTree, REG_DATA, 
-                               Param, inbag_id, var_id, rngl);
+                                  Param, inbag_id, var_id, rngl);
       }
       
       // trim tree

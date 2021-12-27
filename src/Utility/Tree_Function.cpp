@@ -4,9 +4,8 @@
 //  **********************************
 
 // my header file
-# include "../RLT.h"
-# include "Utility.h"
-# include "Tree_Functions.h"
+# include "Tree_Definition.h"
+# include "Tree_Function.h"
 
 using namespace Rcpp;
 using namespace arma;

@@ -4,7 +4,7 @@
 //  **********************************
 
 // my header file
-# include "regForest.h"
+# include "Reg_Uni_Function.h"
 
 using namespace Rcpp;
 using namespace arma;

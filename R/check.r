@@ -184,8 +184,15 @@ check_param_RLT <- function(n, p, ntrees, mtry, nmin,
   } else alpha = min(max(param.control$alpha, 0), 0.5)
   storage.mode(alpha) <- "double"
   
+  if (is.null(param.control$split.rule)) {
+    split.rule <- "default"
+  } else split.rule = as.character(param.control$split.rule)
+  storage.mode(split.rule) <- "character"
+  
   param$'alpha' = alpha
-  param$'split.rule' = "default"
+  param$'split.rule' = split.rule
+  
+  
   param$'failcount' = 0L
   param$'var.w.type' = 1L
   

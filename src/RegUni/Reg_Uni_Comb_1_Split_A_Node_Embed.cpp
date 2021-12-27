@@ -4,23 +4,20 @@
 //  **********************************
 
 // my header file
-# include "regForest.h"
+# include "../RLT.h"
 
 using namespace Rcpp;
 using namespace arma;
 
-void Reg_Uni_Comb_Find_A_Split_Embed(Comb_Split_Class& OneSplit,
+//Split a node
+void Reg_Uni_Comb_Split_A_Node_Embed(size_t Node,
+                                  Reg_Uni_Comb_Tree_Class& OneTree,
                                   const RLT_REG_DATA& REG_DATA,
                                   const PARAM_GLOBAL& Param,
-                                  const uvec& obs_id,
+                                  uvec& obs_id,
                                   const uvec& var_id,
+                                  const uvec& var_protect,
                                   Rand& rngl)
 {
-  
-  Rcout << "Reg_Uni_Comb_Find_A_Split_Embed" << std::endl;
-  
-  PARAM_GLOBAL Embed_Param = Param;
-  
-  Embed_Param.print();
+  Rcout << "Reg_Uni_Comb_Split_A_Node_Embed" << std::endl;
 }
-

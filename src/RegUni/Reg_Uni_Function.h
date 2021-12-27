@@ -3,17 +3,17 @@
 //  Regression Functions
 //  **********************************
 
-// my header file
-# include "../RLT.h"
-# include "../Utility/Tree_Functions.h"
+// my header files
+# include "../Utility/Tree_Definition.h"
 # include "../Utility/Utility.h"
-# include "Reg_Definition.h"
+# include "../Utility/Tree_Function.h"
+# include "Reg_Uni_Definition.h"
 
 using namespace Rcpp;
 using namespace arma;
 
-#ifndef RLT_RegForest
-#define RLT_RegForest
+#ifndef RLT_REG_UNI_FUNCTION
+#define RLT_REG_UNI_FUNCTION
 
 // univariate tree split functions 
 
@@ -232,6 +232,25 @@ void Reg_Uni_Comb_Find_A_Split_Embed(Comb_Split_Class& OneSplit,
                                   const uvec& var_id,
                                   Rand& rngl);
 
+void Reg_Uni_Comb_Split_Cont(Comb_Split_Class& OneSplit,
+                             const mat& newX,
+                             const vec& newY,
+                             const vec& newW,
+                             int split_gen,
+                             int split_rule,
+                             int nsplit,
+                             size_t nmin,
+                             double alpha,
+                             bool useobsweight,
+                             Rand& rngl);
 
+double reg_full_cont_score_at_cut(const vec& xj, 
+                                  const vec& y, 
+                                  double temp_cut);
 
+double reg_full_cont_score_at_cut_w(const vec& xj, 
+                                    const vec& y,
+                                    double temp_cut,
+                                    const vec& w);
+  
 #endif

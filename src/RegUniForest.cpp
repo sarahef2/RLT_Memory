@@ -5,8 +5,6 @@
 
 // my header file
 # include "RLT.h"
-# include "Utility/Tree_Functions.h"
-# include "Reg/regForest.h"
 
 using namespace Rcpp;
 using namespace arma;

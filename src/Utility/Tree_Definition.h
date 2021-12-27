@@ -11,8 +11,8 @@
 using namespace Rcpp;
 using namespace arma;
 
-#ifndef RLT_DEFINITION
-#define RLT_DEFINITION
+#ifndef RLT_TREE_DEFINITION
+#define RLT_TREE_DEFINITION
 
 class PARAM_GLOBAL{
 public:
@@ -307,7 +307,7 @@ public:
   double score = -1;
   
   void print(void) {
-    Rcout << "Splitting varible is " << var << " value is " << value << " score is " << score << std::endl;
+    Rcout << "Splitting variable is " << var << " value is " << value << " score is " << score << std::endl;
   }
 };
 
@@ -324,7 +324,7 @@ public:
     load(load) {}
   
   void print(void) {
-    Rcout << "Splitting varible is\n" << var << "load is\n" << load << "value is " << value << "; score is " << score << std::endl;
+    Rcout << "Splitting variable is\n" << var << "load is\n" << load << "value is " << value << "; score is " << score << std::endl;
   }
 };
 
