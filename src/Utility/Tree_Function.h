@@ -77,6 +77,8 @@ void get_samples(arma::uvec& inbagObs,
 
 
 void move_cont_index(size_t& lowindex, size_t& highindex, const vec& x, const uvec& indices, size_t nmin);
+void check_cont_index_sub(size_t& lowindex, size_t& highindex, const vec& x, const uvec& indices);
+void check_cont_index(size_t& lowindex, size_t& highindex, const vec& x);
 void split_id(const vec& x, double value, uvec& left_id, uvec& obs_id);
 void split_id_cat(const vec& x, double value, uvec& left_id, uvec& obs_id, size_t ncat);
 

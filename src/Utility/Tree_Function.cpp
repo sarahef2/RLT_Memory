@@ -94,7 +94,9 @@ void get_samples(arma::uvec& inbagObs,
 // moveindex (continuous variable) so that both low and high are not at a tie location 
 // and has sufficient number of observations
 
-void move_cont_index(size_t& lowindex, size_t& highindex, const vec& x, const uvec& indices, size_t nmin)
+void move_cont_index(size_t& lowindex, 
+                     size_t& highindex, 
+                     const vec& x, const uvec& indices, size_t nmin)
 {
   // in this case, we will not be able to control for nmin
   // but extremely small nmin should not have a high splitting score
@@ -136,6 +138,56 @@ void move_cont_index(size_t& lowindex, size_t& highindex, const vec& x, const uv
     }
   }
 }
+
+void check_cont_index_sub(size_t& lowindex, 
+                          size_t& highindex, 
+                          const vec& x,
+                          const uvec& indices)
+{
+  // x(indices) must be sorted
+  // ties must already happened when running this function 
+  // also x must contain different elements
+  size_t N = indices.n_elem;
+  
+  // check with extremes
+  // make sure lowindex has space to move up
+  while ( x(indices(lowindex)) == x(indices(N-1)) ) lowindex--;
+  
+  // make sure highindex has space to move down
+  while ( x(indices(highindex+1)) == x(indices(0)) ) highindex++;
+  
+  // make sure lowindex is not at a tie, o.w. move up
+  while ( x(indices(lowindex)) == x(indices(lowindex+1)) ) lowindex++;
+  
+  // make sure highindex is not at a tie, o.w. move down
+  while ( x(indices(highindex)) == x(indices(highindex+1)) ) highindex--;  
+  
+}
+
+
+void check_cont_index(size_t& lowindex, 
+                      size_t& highindex, 
+                      const vec& x)
+{
+  // x must be sorted
+  // ties must already happened when running this function 
+  // also x must contain different elements
+  
+  // check with extremes
+  // make sure lowindex has space to move up
+  while (x(lowindex) == x(x.n_elem-1)) lowindex--;
+  
+  // make sure highindex has space to move down
+  while (x(highindex+1) == x(0)) highindex++;
+  
+  // make sure lowindex is not at a tie, o.w. move up
+  while (x(lowindex) == x(lowindex+1)) lowindex++;
+  
+  // make sure highindex is not at a tie, o.w. move down
+  while (x(highindex) == x(highindex+1)) highindex--;  
+
+}
+
 
 // construct id vectors for left and right nodes
 

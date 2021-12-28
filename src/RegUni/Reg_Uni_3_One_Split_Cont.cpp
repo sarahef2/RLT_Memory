@@ -41,9 +41,9 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
 
       // calculate score
       if (useobsweight)
-        temp_score = reg_cont_score_at_cut_w(obs_id, x, Y, temp_cut, obs_weight);
+        temp_score = reg_uni_cont_score_cut_sub_w(obs_id, x, Y, temp_cut, obs_weight);
       else
-        temp_score = reg_cont_score_at_cut(obs_id, x, Y, temp_cut);
+        temp_score = reg_uni_cont_score_cut_sub(obs_id, x, Y, temp_cut);
       
       if (temp_score > TempSplit.score)
       {
@@ -86,7 +86,7 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
     while( x(indices(highindex)) == x(indices(highindex + 1)) ) highindex--;
     
     //If there is nowhere to split
-    if ((lowindex > highindex)|(lowindex==highindex)) return;
+    if (lowindex > highindex) return;
   }
   
   if (split_gen == 2) // rank split
@@ -97,9 +97,9 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
       temp_ind = rngl.rand_sizet( lowindex, highindex); //intRand(lowindex, highindex);
       
       if (useobsweight)
-        temp_score = reg_cont_score_at_index_w(indices, Y, temp_ind, obs_weight);
+        temp_score = reg_uni_cont_score_rank_sub_w(indices, Y, temp_ind, obs_weight);
       else
-        temp_score = reg_cont_score_at_index(indices, Y, temp_ind);
+        temp_score = reg_uni_cont_score_rank_sub(indices, Y, temp_ind);
       
       if (temp_score > TempSplit.score)
       {
@@ -115,9 +115,9 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
   {
     // get score
     if (useobsweight)
-      reg_cont_score_best_w(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score, obs_weight);
+      reg_uni_cont_score_best_sub_w(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score, obs_weight);
     else
-      reg_cont_score_best(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score);
+      reg_uni_cont_score_best_sub(indices, x, Y, lowindex, highindex, TempSplit.value, TempSplit.score);
     
     return;
   }
@@ -125,10 +125,10 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
 }
 
 //Calculate a score at a random cut
-double reg_cont_score_at_cut(const uvec& obs_id,
-                        const vec& x,
-                        const vec& Y,
-                        double a_random_cut)
+double reg_uni_cont_score_cut_sub(const uvec& obs_id,
+                                  const vec& x,
+                                  const vec& Y,
+                                  double a_random_cut)
 {
   size_t N = obs_id.size();
   
@@ -156,11 +156,11 @@ double reg_cont_score_at_cut(const uvec& obs_id,
 }
 
 
-double reg_cont_score_at_cut_w(const uvec& obs_id,
-                          const vec& x,
-                          const vec& Y,
-                          double a_random_cut,
-                          const vec& obs_weight)
+double reg_uni_cont_score_cut_sub_w(const uvec& obs_id,
+                                    const vec& x,
+                                    const vec& Y,
+                                    double a_random_cut,
+                                    const vec& obs_weight)
 {
   size_t N = obs_id.size();
   
@@ -192,9 +192,9 @@ double reg_cont_score_at_cut_w(const uvec& obs_id,
 
 
 //For rank split
-double reg_cont_score_at_index(uvec& indices,
-                               const vec& Y,
-                               size_t a_random_ind)
+double reg_uni_cont_score_rank_sub(uvec& indices,
+                                   const vec& Y,
+                                   size_t a_random_ind)
 {
   size_t N = indices.size();
   
@@ -214,10 +214,10 @@ double reg_cont_score_at_index(uvec& indices,
 
 
 
-double reg_cont_score_at_index_w(uvec& indices,
-                                 const vec& Y,
-                                 size_t a_random_ind,
-                                 const vec& obs_weight)
+double reg_uni_cont_score_rank_sub_w(uvec& indices,
+                                     const vec& Y,
+                                     size_t a_random_ind,
+                                     const vec& obs_weight)
 {
   size_t N = indices.size();
   
@@ -242,13 +242,13 @@ double reg_cont_score_at_index_w(uvec& indices,
 
 
 //For best split
-void reg_cont_score_best(uvec& indices,
-                    const vec& x,
-                    const vec& Y,
-                    size_t lowindex, 
-                    size_t highindex, 
-                    double& temp_cut, 
-                    double& temp_score)
+void reg_uni_cont_score_best_sub(uvec& indices,
+                                 const vec& x,
+                                 const vec& Y,
+                                 size_t lowindex, 
+                                 size_t highindex, 
+                                 double& temp_cut, 
+                                 double& temp_score)
 {
 
   double score = 0;
@@ -298,14 +298,14 @@ void reg_cont_score_best(uvec& indices,
 }
 
 
-void reg_cont_score_best_w(uvec& indices,
-                      const vec& x,
-                      const vec& Y,
-                      size_t lowindex, 
-                      size_t highindex, 
-                      double& temp_cut, 
-                      double& temp_score,
-                      const vec& obs_weight)
+void reg_uni_cont_score_best_sub_w(uvec& indices,
+                                   const vec& x,
+                                   const vec& Y,
+                                   size_t lowindex, 
+                                   size_t highindex, 
+                                   double& temp_cut, 
+                                   double& temp_score,
+                                   const vec& obs_weight)
 {
   double score = 0;
   

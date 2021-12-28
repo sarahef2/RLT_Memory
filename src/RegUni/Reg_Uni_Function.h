@@ -107,67 +107,67 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
 
 // splitting score calculations (continuous)
 
-double reg_cont_score_at_cut(const uvec& obs_id,
-                             const vec& x,
-                             const vec& Y,
-                             double a_random_cut);
+double reg_uni_cont_score_cut_sub(const uvec& obs_id,
+                                  const vec& x,
+                                  const vec& Y,
+                                  double a_random_cut);
 
-double reg_cont_score_at_cut_w(const uvec& obs_id,
-                               const vec& x,
-                               const vec& Y,
-                               double a_random_cut,
-                               const vec& obs_weight);
+double reg_uni_cont_score_cut_sub_w(const uvec& obs_id,
+                                    const vec& x,
+                                    const vec& Y,
+                                    double a_random_cut,
+                                    const vec& obs_weight);
 
-double reg_cont_score_at_index(uvec& indices,
-                               const vec& Y,
-                               size_t a_random_ind);
+double reg_uni_cont_score_rank_sub(uvec& indices,
+                                   const vec& Y,
+                                   size_t a_random_ind);
 
-double reg_cont_score_at_index_w(uvec& indices,
+double reg_uni_cont_score_rank_sub_w(uvec& indices,
+                                     const vec& Y,
+                                     size_t a_random_ind,
+                                     const vec& obs_weight);
+
+void reg_uni_cont_score_best_sub(uvec& indices,
+                                 const vec& x,
                                  const vec& Y,
-                                 size_t a_random_ind,
-                                 const vec& obs_weight);
-
-void reg_cont_score_best(uvec& indices,
-                         const vec& x,
-                         const vec& Y,
-                         size_t lowindex, 
-                         size_t highindex, 
-                         double& temp_cut, 
-                         double& temp_score);
+                                 size_t lowindex, 
+                                 size_t highindex, 
+                                 double& temp_cut, 
+                                 double& temp_score);
 
 
-void reg_cont_score_best_w(uvec& indices,
-                           const vec& x,
-                           const vec& Y,
-                           size_t lowindex, 
-                           size_t highindex, 
-                           double& temp_cut, 
-                           double& temp_score,
-                           const vec& obs_weight);
+void reg_uni_cont_score_best_sub_w(uvec& indices,
+                                   const vec& x,
+                                   const vec& Y,
+                                   size_t lowindex, 
+                                   size_t highindex, 
+                                   double& temp_cut, 
+                                   double& temp_score,
+                                   const vec& obs_weight);
 
 // splitting score calculations (categorical)
 
-double reg_cat_score(std::vector<Reg_Cat_Class>& cat_reduced, 
-                     size_t temp_cat, 
-                     size_t true_cat);
+double reg_uni_cat_score_cut(std::vector<Reg_Cat_Class>& cat_reduced, 
+                             size_t temp_cat,
+                             size_t true_cat);
 
-double reg_cat_score_w(std::vector<Reg_Cat_Class>& cat_reduced, 
-                       size_t temp_cat, 
-                       size_t true_cat);
+double reg_uni_cat_score_cut_w(std::vector<Reg_Cat_Class>& cat_reduced, 
+                               size_t temp_cat,
+                               size_t true_cat);
 
-void reg_cat_score_best(std::vector<Reg_Cat_Class>& cat_reduced, 
-                        size_t lowindex,
-                        size_t highindex,
-                        size_t true_cat,
-                        size_t& best_cat,
-                        double& best_score);
+void reg_uni_cat_score_best(std::vector<Reg_Cat_Class>& cat_reduced, 
+                            size_t lowindex,
+                            size_t highindex,
+                            size_t true_cat,
+                            size_t& best_cat,
+                            double& best_score);
 
-void reg_cat_score_best_w(std::vector<Reg_Cat_Class>& cat_reduced, 
-                          size_t lowindex,
-                          size_t highindex,
-                          size_t true_cat,
-                          size_t& best_cat,
-                          double& best_score);
+void reg_uni_cat_score_best_w(std::vector<Reg_Cat_Class>& cat_reduced, 
+                              size_t lowindex,
+                              size_t highindex,
+                              size_t true_cat,
+                              size_t& best_cat,
+                              double& best_score);
 
 // for prediction 
 
@@ -232,25 +232,27 @@ void Reg_Uni_Comb_Find_A_Split_Embed(Comb_Split_Class& OneSplit,
                                   const uvec& var_id,
                                   Rand& rngl);
 
+void Reg_Uni_Comb_Pre_Screen(uvec& var,
+                             vec& score,
+                             const RLT_REG_DATA& REG_DATA, 
+                             const PARAM_GLOBAL& Param,
+                             const uvec& obs_id,
+                             Rand& rngl);
+  
 void Reg_Uni_Comb_Split_Cont(Comb_Split_Class& OneSplit,
-                             const mat& newX,
-                             const vec& newY,
-                             const vec& newW,
-                             int split_gen,
-                             int split_rule,
-                             int nsplit,
-                             size_t nmin,
-                             double alpha,
-                             bool useobsweight,
+                             const uvec& use_var,
+                             const RLT_REG_DATA& REG_DATA, 
+                             const PARAM_GLOBAL& Param,
+                             const uvec& obs_id,
                              Rand& rngl);
 
-double reg_full_cont_score_at_cut(const vec& xj, 
-                                  const vec& y, 
-                                  double temp_cut);
+double reg_uni_cont_score_cut_full(const vec& xj, 
+                                   const vec& y, 
+                                   double temp_cut);
 
-double reg_full_cont_score_at_cut_w(const vec& xj, 
-                                    const vec& y,
-                                    double temp_cut,
-                                    const vec& w);
+double reg_uni_cont_score_cut_full_w(const vec& xj, 
+                                     const vec& y,
+                                     double temp_cut,
+                                     const vec& w);
   
 #endif

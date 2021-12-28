@@ -125,10 +125,11 @@ trainY = y[1:(n/2)]
 testX = X[-(1:(n/2)), ]
 testY = y[-(1:(n/2))]
 
-RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 10, 
-              mtry = 5, linear.comb = 3, 
-              split.gen = "random", nsplit = 3,
-              param.control = list("split.rule" = "pca"))
+RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 3, 
+              mtry = 7, linear.comb = 4, resample.replace = TRUE, resample.prob = 0.3,
+              split.gen = "best", nsplit = 3,
+              param.control = list("split.rule" = "pca"),
+              seed = RLTfit$parameters$seed)
 
 
 

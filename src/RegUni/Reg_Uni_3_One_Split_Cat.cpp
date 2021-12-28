@@ -99,12 +99,12 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
   {
     for ( int k = 0; k < nsplit; k++ )
     {
-      size_t temp_cat = rngl.rand_sizet( lowindex, highindex); //intRand(lowindex, highindex);
+      size_t temp_cat = rngl.rand_sizet( lowindex, highindex);
       
       if (useobsweight)
-        temp_score = reg_cat_score_w(cat_reduced, temp_cat, true_cat);
+        temp_score = reg_uni_cat_score_cut_w(cat_reduced, temp_cat, true_cat);
       else
-        temp_score = reg_cat_score(cat_reduced, temp_cat, true_cat);
+        temp_score = reg_uni_cat_score_cut(cat_reduced, temp_cat, true_cat);
       
       if (temp_score > best_score)
       {      
@@ -116,9 +116,11 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
     // best split
     
     if (useobsweight)
-      reg_cat_score_best_w(cat_reduced, lowindex, highindex, true_cat, best_cat, best_score);
+      reg_uni_cat_score_best_w(cat_reduced, lowindex, highindex, 
+                               true_cat, best_cat, best_score);
     else
-      reg_cat_score_best(cat_reduced, lowindex, highindex, true_cat, best_cat, best_score);
+      reg_uni_cat_score_best(cat_reduced, lowindex, highindex, 
+                             true_cat, best_cat, best_score);
   }
   
   if (best_score > TempSplit.score)
@@ -131,7 +133,9 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
   }
 }
 
-double reg_cat_score(std::vector<Reg_Cat_Class>& cat_reduced, size_t temp_cat, size_t true_cat)
+double reg_uni_cat_score_cut(std::vector<Reg_Cat_Class>& cat_reduced, 
+                             size_t temp_cat, 
+                             size_t true_cat)
 {
   size_t leftn = 0;
   size_t rightn = 0;  
@@ -157,7 +161,9 @@ double reg_cat_score(std::vector<Reg_Cat_Class>& cat_reduced, size_t temp_cat, s
 }
 
 
-double reg_cat_score_w(std::vector<Reg_Cat_Class>& cat_reduced, size_t temp_cat, size_t true_cat)
+double reg_uni_cat_score_cut_w(std::vector<Reg_Cat_Class>& cat_reduced, 
+                               size_t temp_cat, 
+                               size_t true_cat)
 {
   double leftw = 0;
   double rightw = 0;
@@ -182,7 +188,12 @@ double reg_cat_score_w(std::vector<Reg_Cat_Class>& cat_reduced, size_t temp_cat,
   return -1;
 }
 
-void reg_cat_score_best(std::vector<Reg_Cat_Class>& cat_reduced, size_t lowindex, size_t highindex, size_t true_cat, size_t& best_cat, double& best_score)
+void reg_uni_cat_score_best(std::vector<Reg_Cat_Class>& cat_reduced, 
+                            size_t lowindex, 
+                            size_t highindex, 
+                            size_t true_cat, 
+                            size_t& best_cat, 
+                            double& best_score)
 {
 
   size_t leftn = 0;
@@ -224,7 +235,12 @@ void reg_cat_score_best(std::vector<Reg_Cat_Class>& cat_reduced, size_t lowindex
 }
 
 
-void reg_cat_score_best_w(std::vector<Reg_Cat_Class>& cat_reduced, size_t lowindex, size_t highindex, size_t true_cat, size_t& best_cat, double& best_score)
+void reg_uni_cat_score_best_w(std::vector<Reg_Cat_Class>& cat_reduced, 
+                              size_t lowindex, 
+                              size_t highindex, 
+                              size_t true_cat, 
+                              size_t& best_cat, 
+                              double& best_score)
 {
   
   double leftw = 0;

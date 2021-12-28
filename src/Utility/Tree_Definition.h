@@ -134,7 +134,7 @@ public:
 
       Rcout << "            sampling = " << resample_prob << (replacement ? " w/ replace" : " w/o replace") << std::endl;
       
-      Rcout << "  (Obs, Var) Weights = (" << (useobsweight ? "Yes" : "No") << ", " << (usevarweight ? "Yes" : "No") << ")" << std::endl;
+      Rcout << "  (Obs, Var) weights = (" << (useobsweight ? "Yes" : "No") << ", " << (usevarweight ? "Yes" : "No") << ")" << std::endl;
 
       if (alpha > 0)
         Rcout << "               alpha = " << alpha << std::endl;
@@ -158,7 +158,7 @@ public:
     
     Rcout << "            sampling = " << resample_prob << (replacement ? " w/ replace" : " w/o replace") << std::endl;
     
-    Rcout << "  (Obs, Var) Weights = (" << (useobsweight ? "Yes" : "No") << ", " << (usevarweight ? "Yes" : "No") << ")" << std::endl;
+    Rcout << "  (Obs, Var) weights = (" << (useobsweight ? "Yes" : "No") << ", " << (usevarweight ? "Yes" : "No") << ")" << std::endl;
     
     if (alpha > 0)
       Rcout << "               alpha = " << alpha << std::endl;
