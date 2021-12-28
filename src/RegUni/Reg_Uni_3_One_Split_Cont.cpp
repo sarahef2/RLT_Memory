@@ -26,9 +26,9 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
 {
   size_t N = obs_id.n_elem;
 
-  arma::vec temp_cut_arma;
-  double temp_cut;
-  size_t temp_ind;
+  //arma::vec temp_cut_arma;
+  //double temp_cut;
+  //size_t temp_ind;
   double temp_score;
 
   if (split_gen == 1) // random split
@@ -36,8 +36,11 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
     for (int k = 0; k < nsplit; k++)
     {
       // generate a random cut off
-      temp_cut_arma = x(obs_id( rngl.rand_sizet(0,N-1) )); 
-      temp_cut = temp_cut_arma(0);
+      size_t temp_id = obs_id( rngl.rand_sizet(0,N-1) );
+      double temp_cut = x(temp_id);
+        
+      //temp_cut_arma = x(obs_id( rngl.rand_sizet(0,N-1) )); 
+      //temp_cut = temp_cut_arma(0);
 
       // calculate score
       if (useobsweight)
@@ -110,7 +113,7 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
     for (int k = 0; k < nsplit; k++)
     {
       // generate a cut off
-      temp_ind = rngl.rand_sizet( lowindex, highindex); //intRand(lowindex, highindex);
+      size_t temp_ind = rngl.rand_sizet( lowindex, highindex );
       
       if (useobsweight)
         temp_score = reg_uni_cont_score_rank_sub_w(indices, Y, temp_ind, obs_weight);
