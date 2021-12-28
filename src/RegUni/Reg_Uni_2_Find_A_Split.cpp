@@ -55,8 +55,7 @@ void Reg_Uni_Find_A_Split(Split_Class& OneSplit,
                         0.0, // penalty
                         split_gen, 
                         split_rule, 
-                        nsplit, 
-                        nmin, 
+                        nsplit,
                         alpha, 
                         useobsweight,
                         rngl);
@@ -72,7 +71,6 @@ void Reg_Uni_Find_A_Split(Split_Class& OneSplit,
                          split_gen,
                          split_rule,
                          nsplit,
-                         nmin,
                          alpha,
                          useobsweight,
                          rngl);

@@ -17,8 +17,6 @@ void Reg_Uni_Comb_Pre_Screen(uvec& var,
                              const uvec& obs_id,
                              Rand& rngl)
 {
-  size_t nmin = Param.nmin;
-  double alpha = Param.alpha;
   bool useobsweight = Param.useobsweight;
   
   //explore each variable in var_try
@@ -42,11 +40,10 @@ void Reg_Uni_Comb_Pre_Screen(uvec& var,
                         REG_DATA.Y, 
                         REG_DATA.obsweight, 
                         0.0, // penalty
-                        3, // best split
+                        3, // use best split
                         1, // splitting rule var (not used in function)
-                        0, 
-                        nmin, 
-                        alpha, 
+                        0, // nsplit
+                        0.0, // alpha
                         useobsweight,
                         rngl);
       
@@ -58,11 +55,10 @@ void Reg_Uni_Comb_Pre_Screen(uvec& var,
                          REG_DATA.Y,
                          REG_DATA.obsweight,
                          0.0, // penalty
-                         3, // best split
+                         3, // use best split
                          1, // splitting rule var (not used in function)
-                         0,
-                         nmin,
-                         alpha,
+                         0, // nsplit
+                         0.0, // alpha
                          useobsweight,
                          rngl);
       

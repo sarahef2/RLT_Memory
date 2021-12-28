@@ -80,8 +80,7 @@ void Reg_Uni_Comb_Find_A_Split(Comb_Split_Class& OneSplit,
                       0.0, // penalty
                       split_gen,
                       1, // splitting rule var (not used in function)
-                      nsplit, 
-                      nmin, 
+                      nsplit,
                       alpha, 
                       useobsweight,
                       rngl);
@@ -130,7 +129,6 @@ void Reg_Uni_Comb_Find_A_Split(Comb_Split_Class& OneSplit,
                        split_gen,
                        1, // splitting rule: var (not used in function)
                        nsplit,
-                       nmin,
                        alpha,
                        useobsweight,
                        rngl);

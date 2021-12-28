@@ -19,7 +19,6 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
                         int split_gen,
                         int split_rule,
                         int nsplit,
-                        size_t nmin,
                         double alpha,
                         bool useobsweight,
                         Rand& rngl)
@@ -73,7 +72,7 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
   if (alpha > 0)
   {
     // if (N*alpha > nmin) nmin = (size_t) N*alpha;
-    nmin = (size_t) N*alpha;
+    size_t nmin = (size_t) N*alpha;
     if (nmin < 1) nmin = 1;
     
     lowindex = nmin-1; // less equal goes to left

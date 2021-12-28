@@ -118,7 +118,6 @@ void Reg_Uni_Find_A_Split_Embed(Split_Class& OneSplit,
   size_t split_gen = Param.split_gen;
   size_t split_rule = Param.split_rule;    
   size_t nsplit = Param.nsplit;
-  size_t nmin = Param.nmin;
   double alpha = Param.alpha; 
   bool useobsweight = Param.useobsweight;  
   
@@ -135,8 +134,7 @@ void Reg_Uni_Find_A_Split_Embed(Split_Class& OneSplit,
                       0.0, // penalty
                       split_gen, 
                       split_rule, 
-                      nsplit, 
-                      nmin, 
+                      nsplit,
                       alpha, 
                       useobsweight,
                       rngl);
@@ -152,7 +150,6 @@ void Reg_Uni_Find_A_Split_Embed(Split_Class& OneSplit,
                        split_gen,
                        split_rule,
                        nsplit,
-                       nmin,
                        alpha,
                        useobsweight,
                        rngl);

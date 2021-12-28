@@ -71,6 +71,8 @@ src/*/*.o
 */*.o
 *.o
 *.gitignore
+src-i386/**
+src-x64/**
 .Rhistory
 .Rbuildignore
 *.dll
