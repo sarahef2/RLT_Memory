@@ -75,7 +75,22 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
     
     lowindex = nmin-1; // less equal goes to left
     highindex = N - nmin - 1;
+  }
+  
+  // if ties
+  // move index to better locations
+  if ( x(indices(lowindex)) == x(indices(lowindex+1)) or x(indices(highindex)) == x(indices(highindex+1)) )
+  {
+    check_cont_index_sub(lowindex, highindex, x, indices);
     
+    if (lowindex > highindex)
+    {
+      Rcout << "lowindex > highindex... this shouldn't happen." << std::endl;
+      return;
+    }
+  }
+  
+  /*
     // if there are ties, do further check
     if ( (x(indices(lowindex)) == x(indices(lowindex + 1))) | (x(indices(highindex)) == x(indices(highindex + 1))) )
       move_cont_index(lowindex, highindex, x, indices, nmin);
@@ -88,6 +103,7 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
     //If there is nowhere to split
     if (lowindex > highindex) return;
   }
+  */
   
   if (split_gen == 2) // rank split
   {

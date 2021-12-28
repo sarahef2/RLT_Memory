@@ -7,8 +7,8 @@ library(ranger)
 
 set.seed(1)
 
-trainn = 1000
-testn = 1000
+trainn = 10000
+testn = 10000
 n = trainn + testn
 p = 400
 X1 = matrix(rnorm(n*p/2), n, p/2)
@@ -20,9 +20,9 @@ y = 1 + X[, 2] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 #y = 1 + rowSums(X[, 1:(p/4)]) + rowSums(data.matrix(X[, (p/2) : (p/1.5)])) + rnorm(n)
 #y = 1 + X[, 1] + rnorm(n)
 
-ntrees = 200
+ntrees = 5
 ncores = 10
-nmin = 6
+nmin = 60
 mtry = p/2
 sampleprob = 0.85
 rule = "best"

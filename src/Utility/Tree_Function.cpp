@@ -86,14 +86,10 @@ void get_samples(arma::uvec& inbagObs,
 	}
 }
 
-
-
-
-
-
+// this is an older version, I have now moved to a less complicated one
 // moveindex (continuous variable) so that both low and high are not at a tie location 
 // and has sufficient number of observations
-
+/*
 void move_cont_index(size_t& lowindex, 
                      size_t& highindex, 
                      const vec& x, const uvec& indices, size_t nmin)
@@ -138,6 +134,7 @@ void move_cont_index(size_t& lowindex,
     }
   }
 }
+*/
 
 void check_cont_index_sub(size_t& lowindex, 
                           size_t& highindex, 
