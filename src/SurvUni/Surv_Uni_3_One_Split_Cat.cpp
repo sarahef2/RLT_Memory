@@ -23,7 +23,6 @@ void Surv_Uni_Split_Cat(Split_Class& TempSplit,
                        int split_gen,
                        int split_rule,
                        int nsplit,
-                       size_t nmin,
                        double alpha,
                        bool useobsweight,
                        Rand& rngl)
@@ -89,7 +88,7 @@ void Surv_Uni_Split_Cat(Split_Class& TempSplit,
     size_t N = obs_id.n_elem;
     
     //if (N*alpha > nmin) nmin = (size_t) N*alpha;
-    nmin = (size_t) N*alpha;
+    size_t nmin = (size_t) N*alpha;
     if (nmin < 1) nmin = 1;
     
     move_cat_index(lowindex, highindex, cat_reduced, true_cat, nmin);
