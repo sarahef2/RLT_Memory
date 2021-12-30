@@ -35,3 +35,7 @@
 // regression
 # include "RegUni/Reg_Uni_Definition.h"
 # include "RegUni/Reg_Uni_Function.h"
+
+// survival
+# include "SurvUni/Surv_Uni_Definition.h"
+# include "SurvUni/Surv_Uni_Function.h"

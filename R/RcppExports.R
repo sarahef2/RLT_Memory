@@ -43,3 +43,11 @@ RegUniForestPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeAve,
     .Call('_RLT_RegUniForestPred', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, NodeAve, X, Ncat, VarEst, keep_all, usecores, verbose)
 }
 
+SurvUniForestFit <- function(X, Y, Censor, Ncat, obsweight, varweight, ObsTrack, param_r) {
+    .Call('_RLT_SurvUniForestFit', PACKAGE = 'RLT', X, Y, Censor, Ncat, obsweight, varweight, ObsTrack, param_r)
+}
+
+SurvUniForestPred <- function(SplitVar, SplitValue, LeftNode, RightNode, NodeHaz, X, Ncat, VarEst, keep_all, usecores, verbose) {
+    .Call('_RLT_SurvUniForestPred', PACKAGE = 'RLT', SplitVar, SplitValue, LeftNode, RightNode, NodeHaz, X, Ncat, VarEst, keep_all, usecores, verbose)
+}
+
