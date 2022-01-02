@@ -9,17 +9,18 @@
 using namespace Rcpp;
 using namespace arma;
 
-void Surv_Uni_Forest_Pred(mat& Pred,
+void Surv_Uni_Forest_Pred(cube& Pred,
                          const Surv_Uni_Forest_Class& SURV_FOREST,
                   			 const mat& X,
                   			 const uvec& Ncat,
+                  			 size_t& NFail,
                   			 size_t usecores,
                   			 size_t verbose)
 {
   size_t N = X.n_rows;
   size_t ntrees = SURV_FOREST.SplitVarList.size();
   
-  Pred.zeros(N, ntrees);
+  Pred.zeros(NFail + 1, ntrees, N);
   
   #pragma omp parallel num_threads(usecores)
   {
@@ -39,7 +40,11 @@ void Surv_Uni_Forest_Pred(mat& Pred,
       
       Find_Terminal_Node(0, OneTree, X, Ncat, proxy_id, real_id, TermNode);
       
-      /*Pred.unsafe_col(nt).rows(real_id) = OneTree.NodeAve(TermNode);*/
+      for (size_t i = 0; i < N; i++)
+      {
+        Pred.slice(i).col(nt) = OneTree.NodeHaz(TermNode(i));
+      }
     }
   }
+  Pred.shed_row(0);
 }

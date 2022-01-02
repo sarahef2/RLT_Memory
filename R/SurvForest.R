@@ -10,7 +10,21 @@ SurvForest <- function(x, y, censor, ncat,
                       ...)
 {
   # prepare y
-  storage.mode(y) <- "double"
+
+  timepoints = sort(unique(y[censor == 1]))
+  
+  y.point = rep(NA, length(y))
+  
+  for (i in 1:length(y))
+  {
+    if (censor[i] == 1)
+      y.point[i] = match(y[i], timepoints)
+    else
+      y.point[i] = sum(y[i] >= timepoints)
+  }
+  
+  storage.mode(y.point) <- "integer"
+  storage.mode(censor) <- "integer"
   
 
   
@@ -20,23 +34,35 @@ SurvForest <- function(x, y, censor, ncat,
       cat("Fitting Survival Forest IN DEVELOPMENT... \n")    
       
     # check splitting rules
-    all.split.rule = c("default", "logrank", "suplogrank")
-    param$"split.rule" <- match.arg(param$"split.rule", all.split.rule)
-    param$"split.rule" <- as.integer(match(param$"split.rule", all.split.rule))
-
+    if (is.null(param$"split.rule"))
+      param$"split.rule" = "logrank"
+    
+    all.split.rule = c("logrank", "suplogrank", "coxgrad")
+    
+    #param$"split.rule" <- match.arg(param$"split.rule", all.split.rule)
+    param$"split.rule" <- match(param$"split.rule", all.split.rule)
+    if(is.na(param$"split.rule")){
+      print("split.rule chosen not currently implemented: using logrank.")
+      print(paste0("Implemented split rules: ", paste0(all.split.rule, collapse = ", ")))
+      param$"split.rule" = 1
+    }
+    
     # fit single variable split model
-    fit = SurvUniForestFit(x, y, censor, ncat,
+    fit = SurvUniForestFit(x, y.point, censor, ncat,
                           obs.w, var.w,
                           resample.preset,
                           param)
   
+    fit[["timepoints"]] = timepoints
     fit[["parameters"]] = param
     fit[["ncat"]] = ncat
     fit[["obs.w"]] = obs.w
     fit[["var.w"]] = var.w
     fit[["y"]] = y
+    fit[["y.point"]] = y.point
+    fit[["censor"]] = censor
     
-    class(fit) <- c("RLT", "fit", "reg", "uni", "single")
+    class(fit) <- c("RLT", "fit", "surv", "uni", "single")
   }else{
     cat("Linear combination fitting not implemented for survival random forests.")
   }

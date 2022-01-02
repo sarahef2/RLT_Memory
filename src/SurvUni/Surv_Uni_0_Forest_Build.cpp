@@ -16,8 +16,8 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
                           const uvec& var_id,
                           umat& ObsTrack,
                           bool do_prediction,
-                          vec& Prediction,
-                          vec& OOBPrediction,
+                          mat& Prediction,
+                          mat& OOBPrediction,
                           vec& VarImp)
 {
   // parameters to use
@@ -110,7 +110,7 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
       }
         Surv_Uni_Split_A_Node(0, OneTree, SURV_DATA, 
                              Param, inbag_id, var_id, rngl);
-
+      
       // trim tree 
       TreeLength = OneTree.get_tree_length();
       OneTree.trim(TreeLength);
@@ -141,14 +141,16 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
 
       // calculate importance - NOT YET IMPLEMENTED
     }
-  }
+  }  
   
   if (do_prediction)
   {
     Prediction.shed_col(0);    
     Prediction /= ntrees;
-    OOBPrediction.shed_col(0);    
-    OOBPrediction = OOBPrediction/oob_count;
+    OOBPrediction.shed_col(0);   
+    for(size_t i = 0; i < N; i++){
+      OOBPrediction.row(i)/=oob_count(i);
+    }
   }  
-  
+
 }

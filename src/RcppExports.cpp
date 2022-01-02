@@ -173,8 +173,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // SurvUniForestPred
-List SurvUniForestPred(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::field<arma::vec>>& NodeHaz, arma::mat& X, arma::uvec& Ncat, bool VarEst, bool keep_all, size_t usecores, size_t verbose);
-RcppExport SEXP _RLT_SurvUniForestPred(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeHazSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP VarEstSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
+List SurvUniForestPred(arma::field<arma::ivec>& SplitVar, arma::field<arma::vec>& SplitValue, arma::field<arma::uvec>& LeftNode, arma::field<arma::uvec>& RightNode, arma::field<arma::field<arma::vec>>& NodeHaz, arma::mat& X, arma::uvec& Ncat, size_t& NFail, bool VarEst, bool keep_all, size_t usecores, size_t verbose);
+RcppExport SEXP _RLT_SurvUniForestPred(SEXP SplitVarSEXP, SEXP SplitValueSEXP, SEXP LeftNodeSEXP, SEXP RightNodeSEXP, SEXP NodeHazSEXP, SEXP XSEXP, SEXP NcatSEXP, SEXP NFailSEXP, SEXP VarEstSEXP, SEXP keep_allSEXP, SEXP usecoresSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -185,11 +185,25 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::field<arma::field<arma::vec>>& >::type NodeHaz(NodeHazSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< arma::uvec& >::type Ncat(NcatSEXP);
+    Rcpp::traits::input_parameter< size_t& >::type NFail(NFailSEXP);
     Rcpp::traits::input_parameter< bool >::type VarEst(VarEstSEXP);
     Rcpp::traits::input_parameter< bool >::type keep_all(keep_allSEXP);
     Rcpp::traits::input_parameter< size_t >::type usecores(usecoresSEXP);
     Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(SurvUniForestPred(SplitVar, SplitValue, LeftNode, RightNode, NodeHaz, X, Ncat, VarEst, keep_all, usecores, verbose));
+    rcpp_result_gen = Rcpp::wrap(SurvUniForestPred(SplitVar, SplitValue, LeftNode, RightNode, NodeHaz, X, Ncat, NFail, VarEst, keep_all, usecores, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cindex_d
+double cindex_d(arma::vec& Y, arma::uvec& Censor, arma::vec& pred);
+RcppExport SEXP _RLT_cindex_d(SEXP YSEXP, SEXP CensorSEXP, SEXP predSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< arma::uvec& >::type Censor(CensorSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type pred(predSEXP);
+    rcpp_result_gen = Rcpp::wrap(cindex_d(Y, Censor, pred));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -205,7 +219,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RLT_RegUniForestFit", (DL_FUNC) &_RLT_RegUniForestFit, 7},
     {"_RLT_RegUniForestPred", (DL_FUNC) &_RLT_RegUniForestPred, 11},
     {"_RLT_SurvUniForestFit", (DL_FUNC) &_RLT_SurvUniForestFit, 8},
-    {"_RLT_SurvUniForestPred", (DL_FUNC) &_RLT_SurvUniForestPred, 11},
+    {"_RLT_SurvUniForestPred", (DL_FUNC) &_RLT_SurvUniForestPred, 12},
+    {"_RLT_cindex_d", (DL_FUNC) &_RLT_cindex_d, 3},
     {NULL, NULL, 0}
 };
 

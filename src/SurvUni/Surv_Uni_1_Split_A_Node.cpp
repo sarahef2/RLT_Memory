@@ -43,7 +43,7 @@ void Surv_Uni_Split_A_Node(size_t Node,
                          obs_id,
                          var_id,
                          rngl);
-    
+
     // if did not find a good split, terminate
     if (OneSplit.score <= 0)
       goto TERMINATENODE;
@@ -116,7 +116,7 @@ void Surv_Uni_Terminate_Node(size_t Node,
                             const vec& obs_weight,
                             bool useobsweight)
 {
-  
+
   OneTree.SplitVar(Node) = -1; // -1 says this node is a terminal node. Ow, it would be the variable num
   OneTree.LeftNode(Node) = obs_id.n_elem; // save node size on LeftNode
   
@@ -147,6 +147,5 @@ void Surv_Uni_Terminate_Node(size_t Node,
       N -= OneTree.NodeHaz(Node)(j) + NodeCensor(j);
       OneTree.NodeHaz(Node)(j) = h;
     }
-    
   }
 }

@@ -81,20 +81,21 @@ void Surv_Uni_Split_Cont(Split_Class& TempSplit,
     
     lowindex = nmin-1; // less equal goes to left
     highindex = N - nmin - 1;
-    
-    // if there are ties, do further check
-    if ( (x(indices(lowindex)) == x(indices(lowindex + 1))) | (x(indices(highindex)) == x(indices(highindex + 1))) )
-      move_cont_index(lowindex, highindex, x, indices, nmin);
-    
-  }else{
-    // move index if ties
-    while( x(indices(lowindex)) == x(indices(lowindex + 1)) ) lowindex++;
-    while( x(indices(highindex)) == x(indices(highindex + 1)) ) highindex--;
-    
-    //If there is nowhere to split
-    if ((lowindex > highindex)|(lowindex==highindex)) return;
   }
   
+  // if ties
+  // move index to better locations
+  if ( x(indices(lowindex)) == x(indices(lowindex+1)) or x(indices(highindex)) == x(indices(highindex+1)) )
+  {
+    check_cont_index_sub(lowindex, highindex, x, indices);
+    
+    if (lowindex > highindex)
+    {
+      Rcout << "lowindex > highindex... this shouldn't happen." << std::endl;
+      return;
+    }
+  }
+
   if (split_gen == 2) // rank split
   {
     for (int k = 0; k < nsplit; k++)
@@ -198,10 +199,10 @@ double surv_cont_score_at_index(uvec& indices,
   
   for (size_t i = 0; i <= a_random_ind; i++)
   {
-    Left_Risk(Y(indices(i))) ++;
+    Left_Risk(Y(i)) ++;
     
-    if (Censor(indices(i)) == 1)
-      Left_Fail(Y(indices(i))) ++;
+    if (Censor(i) == 1)
+      Left_Fail(Y(i)) ++;
   }
   
   if (split_rule == 1)
@@ -225,6 +226,7 @@ void surv_cont_score_best(uvec& indices,
                     double& temp_score,
                     int split_rule)
 {
+
   double score;
   uvec Left_Risk(NFail+1);
   uvec Left_Fail(NFail+1);
@@ -235,24 +237,24 @@ void surv_cont_score_best(uvec& indices,
   // initiate the failure and censoring counts
   for (size_t i = 0; i<= lowindex; i++)
   {
-    Left_Risk(Y(indices(i))) ++;
+    Left_Risk(Y(i)) ++;
     
-    if (Censor(indices(i)) == 1)
-      Left_Fail(Y(indices(i))) ++;
+    if (Censor(i) == 1)
+      Left_Fail(Y(i)) ++;
   }
   
   for (size_t i = lowindex; i <= highindex; i++)
   {
     // to use this, highindex cannot be a tie location. 
-    // This should be checked already at move_cont_index
+    // This should be checked already at check_cont_index
     
     while (x(indices(i)) == x(indices(i+1))){
       i++;
       
-      Left_Risk(Y(indices(i))) ++;
+      Left_Risk(Y(i)) ++;
       
-      if (Censor(indices(i)) == 1)
-        Left_Fail(Y(indices(i))) ++;
+      if (Censor(i) == 1)
+        Left_Fail(Y(i)) ++;
     }
     
     if (split_rule == 1)
@@ -267,14 +269,14 @@ void surv_cont_score_best(uvec& indices,
     
     if (i + 1 <= highindex)
     {
-      Left_Risk(Y(indices(i+1))) ++;
+      Left_Risk(Y(i+1)) ++;
       
-      if (Censor(indices(i+1)) == 1)
-        Left_Fail(Y(indices(i+1))) ++;
+      if (Censor(i+1) == 1)
+        Left_Fail(Y(i+1)) ++;
     }
-    
+
     }
-  
+
 }
 
 double logrank(const uvec& Left_Fail, 

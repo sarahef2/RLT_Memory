@@ -59,8 +59,8 @@ List SurvUniForestFit(arma::mat& X,
   uvec var_id = linspace<uvec>(0, P-1, P);
   
   // Initiate prediction objects
-  vec Prediction;
-  vec OOBPrediction;
+  mat Prediction; // initialization means they will be calculated
+  mat OOBPrediction;
   
   // VarImp
   vec VarImp;
@@ -81,6 +81,7 @@ List SurvUniForestFit(arma::mat& X,
   
   //initialize return objects
   List ReturnList;
+  ReturnList["NFail"] = NFail;
   
   List Forest_R;
   
@@ -100,7 +101,28 @@ List SurvUniForestFit(arma::mat& X,
   ReturnList["Prediction"] = Prediction;
   ReturnList["OOBPrediction"] = OOBPrediction;
   
-  // May implement c-index for model fitting later
+  
+  // c index for model fitting 
+  
+  uvec nonNAs = find_finite(OOBPrediction.col(0));
+  
+  ReturnList["cindex"] = datum::nan;
+
+  if (nonNAs.n_elem > 2)
+  {
+    vec oobpred(N, fill::zeros);
+    
+    for (auto i : nonNAs)
+    {
+      oobpred(i) = sum( cumsum( OOBPrediction.row(i) ) ); // sum of cumulative hazard as prediction
+    }
+    
+    uvec oobY = Y(nonNAs);
+    uvec oobC = Censor(nonNAs);
+    vec oobP = oobpred(nonNAs);
+    
+    ReturnList["cindex"] =  cindex_i( oobY, oobC, oobP );
+  }
   
   return ReturnList;
 }
@@ -113,6 +135,7 @@ List SurvUniForestPred(arma::field<arma::ivec>& SplitVar,
                       arma::field<arma::field<arma::vec>>& NodeHaz,
                       arma::mat& X,
                       arma::uvec& Ncat,
+                      size_t& NFail,
                       bool VarEst,
                       bool keep_all,
                       size_t usecores,
@@ -130,42 +153,45 @@ List SurvUniForestPred(arma::field<arma::ivec>& SplitVar,
                                   NodeHaz);
   
   // Initialize prediction objects  
-  mat PredAll;
+  cube Pred;
   
   // Run prediction
-  Surv_Uni_Forest_Pred(PredAll,
+  Surv_Uni_Forest_Pred(Pred,
                       (const Surv_Uni_Forest_Class&) SURV_FOREST,
                       X,
                       Ncat,
+                      NFail,
                       usecores,
                       verbose);
   
   // Initialize return list
   List ReturnList;
   
-  ReturnList["Prediction"] = mean(PredAll, 1);
+  mat H(Pred.n_slices, Pred.n_rows);
   
-  if (VarEst)
+#pragma omp parallel num_threads(usecores)
+#pragma omp for schedule(static)
+  for (size_t i = 0; i < Pred.n_slices; i++)
   {
-    size_t B = (size_t) SURV_FOREST.SplitVarList.size()/2;
-    
-    uvec firsthalf = linspace<uvec>(0, B-1, B);
-    uvec secondhalf = linspace<uvec>(B, 2*B-1, B);
-    
-    vec SVar = var(PredAll, 0, 1); // norm_type = 1 means using n-1 as constant
-    
-    mat TreeDiff = PredAll.cols(firsthalf) - PredAll.cols(secondhalf);
-    vec TreeVar = mean(square(TreeDiff), 1) / 2;
-    
-    vec Var = TreeVar*(1 + 1/2/B) - SVar*(1 - 1/2/B);
-    
-    ReturnList["Variance"] = Var;
+    H.row(i) = mean(Pred.slice(i), 1).t();
   }
   
+  ReturnList["hazard"] = H;  
   
-  // If keeping predictions for every tree  
+  mat Surv(H);
+  vec surv(H.n_rows, fill::ones);
+  vec Ones(H.n_rows, fill::ones);
+  
+  for (size_t j=0; j < Surv.n_cols; j++)
+  {
+    surv = surv % (Ones - Surv.col(j)); //KM estimator
+    Surv.col(j) = surv;
+  }
+  
+  ReturnList["Survival"] = Surv;  
+  
   if (keep_all)
-    ReturnList["PredictionAll"] = PredAll;
+    ReturnList["Allhazard"] = Pred;
   
   return ReturnList;
-}
+  }

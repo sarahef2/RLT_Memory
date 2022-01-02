@@ -17,7 +17,6 @@ void Surv_Uni_Find_A_Split(Split_Class& OneSplit,
                           const uvec& var_id,
                           Rand& rngl)
 {
-  
   size_t mtry = Param.mtry;
   size_t nmin = Param.nmin;
   size_t N = obs_id.n_elem;

@@ -4,11 +4,12 @@ library(RLT)
 library(randomForest)
 library(randomForestSRC)
 library(ranger)
+library(survival)
 
 set.seed(1)
 
-trainn = 1000
-testn = 1000
+trainn = 250
+testn = 250
 n = trainn + testn
 p = 400
 X1 = matrix(rnorm(n*p/2), n, p/2)
@@ -21,163 +22,81 @@ FT = rexp(n, rate = 1/xlink(X) )
 CT = rexp(n, rate = 1)
 
 y = pmin(FT, CT)
-censor = as.numeric(FT <= CT)
-mean(censor)
+Censor = as.numeric(FT <= CT)
+mean(Censor)
 
-ntrees = 200
+ntrees = 2000
 ncores = 10
-nmin = 25
+nmin = 100
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
 nsplit = ifelse(rule == "best", 0, 3)
-importance = TRUE 
+importance = FALSE
 
 trainX = X[1:trainn, ]
 trainY = y[1:trainn]
-traincensor = censor[1:trainn]
+trainCensor = Censor[1:trainn]
 
 testX = X[1:testn + trainn, ]
 testY = y[1:testn + trainn]
-testcensor = censor[1:testn + trainn]
+testCensor = Censor[1:testn + trainn]
 
-metric = data.frame(matrix(NA, 4, 5))
+# get true survival function 
+timepoints = sort(unique(trainY[trainCensor==1]))
+yloc = rep(NA, length(timepoints))
+for (i in 1:length(timepoints)) yloc[i] = sum( timepoints[i] >= trainY )
+
+SurvMat = matrix(NA, testn, length(timepoints))
+
+for (j in 1:length(timepoints))
+{
+  SurvMat[, j] = 1 - pexp(timepoints[j], rate = 1/xlink(testX) )
+}
+
+metric = data.frame(matrix(NA, 4, 6))
 rownames(metric) = c("rlt", "rsf", "rf", "ranger")
-colnames(metric) = c("fit.time", "pred.time", "pred.error", 
+colnames(metric) = c("fit.time", "pred.time", "pred.error", "L1", 
                      "obj.size", "tree.size")
 
 start_time <- Sys.time()
-RLTfit <- RLT(trainX, trainY, traincensor, ntrees = ntrees, ncores = ncores, 
+RLTfit <- RLT(trainX, trainY, trainCensor, ntrees = ntrees, ncores = ncores, 
               nmin = nmin, mtry = mtry, nsplit = nsplit,
               split.gen = rule, resample.prob = sampleprob,
               importance = importance, param.control = list("alpha" = 0), 
-              verbose = TRUE)
+              verbose = TRUE, resample.replace=FALSE)
 metric[1, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
 RLTPred <- predict(RLTfit, testX, ncores = ncores)
 metric[1, 2] = difftime(Sys.time(), start_time, units = "secs")
-metric[1, 3] = mean((RLTPred$Prediction - testY)^2)
-metric[1, 4] = object.size(RLTfit)
-metric[1, 5] = mean(unlist(lapply(RLTfit$FittedForest$SplitVar, length)))
+metric[1, 3] = 1- cindex(testY, testCensor, colSums(apply(RLTPred$hazard, 1, cumsum)))
+metric[1, 4] = mean(colMeans(abs(RLTPred$Survival - SurvMat)))
+metric[1, 5] = object.size(RLTfit)
+metric[1, 6] = mean(unlist(lapply(RLTfit$FittedForest$SplitVar, length)))
 
 options(rf.cores = ncores)
 start_time <- Sys.time()
-rsffit <- rfsrc(y ~ ., data = data.frame(trainX, "y"= trainY), 
-                ntree = ntrees, nodesize = nmin/2, mtry = mtry, 
-                nsplit = nsplit, sampsize = trainn*sampleprob, 
-                importance = ifelse(importance, "permute", "none"))
+rsffit <- rfsrc(Surv(trainY, trainCensor) ~ ., data = data.frame(trainX, trainY, trainCensor), ntree = ntrees, nodesize = nmin, mtry = mtry,
+                nsplit = nsplit, sampsize = trainn*sampleprob, importance = "none", samptype = "swor")
 metric[2, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
 rsfpred = predict(rsffit, data.frame(testX))
 metric[2, 2] = difftime(Sys.time(), start_time, units = "secs")
-metric[2, 3] = mean((rsfpred$predicted - testY)^2)
-metric[2, 4] = object.size(rsffit)
-metric[2, 5] = rsffit$forest$totalNodeCount / rsffit$ntree
+metric[2, 3] = 1- cindex(testY, testCensor, rowSums(rsfpred$chf))
+metric[2, 4] = mean(colMeans(abs(rsfpred$survival - SurvMat)))
+metric[2, 5] = object.size(rsffit)
+metric[2, 6] = sum(is.na(rsffit$forest$nativeArray[,4]))/ntrees
 
 start_time <- Sys.time()
-rf.fit <- randomForest(trainX, trainY, ntree = ntrees, 
-                       mtry = mtry, nodesize = nmin, 
-                       sampsize = trainn*sampleprob, 
-                       importance = importance)
-metric[3, 1] = difftime(Sys.time(), start_time, units = "secs")
-start_time <- Sys.time()
-rf.pred <- predict(rf.fit, testX)
-metric[3, 2] = difftime(Sys.time(), start_time, units = "secs")
-metric[3, 3] = mean((rf.pred - testY)^2)
-metric[3, 4] = object.size(rf.fit)
-metric[3, 5] = mean(colSums(rf.fit$forest$nodestatus != 0))
-
-start_time <- Sys.time()
-rangerfit <- ranger(trainY ~ ., data = data.frame(trainX), 
-                    num.trees = ntrees, min.node.size = nmin, 
-                    mtry = mtry, num.threads = ncores, 
-                    sample.fraction = sampleprob, 
-                    importance = "permutation",
-                    respect.unordered.factors = "partition")
+rangerfit <- ranger(Surv(trainY, trainCensor) ~ ., data = data.frame(trainX, trainY, trainCensor), num.trees = ntrees, 
+                    min.node.size = nmin, mtry = mtry, splitrule = "logrank", num.threads = ncores, 
+                    sample.fraction = sampleprob, importance = "none")
 metric[4, 1] = difftime(Sys.time(), start_time, units = "secs")
+start_time <- Sys.time()
 rangerpred = predict(rangerfit, data.frame(testX))
 metric[4, 2] = difftime(Sys.time(), start_time, units = "secs")
-metric[4, 3] = mean((rangerpred$predictions - testY)^2)
-metric[4, 4] = object.size(rangerfit)
-metric[4, 5] = mean(unlist(lapply(rangerfit$forest$split.varIDs, length)))
+metric[4, 3] = 1- cindex(testY, testCensor, rowSums(rangerpred$chf))
+metric[4, 4] = mean(colMeans(abs(rangerpred$survival[, yloc] - SurvMat)))
+metric[4, 5] = object.size(rangerfit)
 
 metric
-mean((RLTfit$OOBPrediction - trainY)^2)
-
-par(mfrow=c(2,2))
-par(mar = c(1, 2, 2, 2))
-
-barplot(as.vector(RLTfit$VarImp), main = "RLT")
-barplot(as.vector(rsffit$importance), main = "rsf")
-barplot(rf.fit$importance[, 1], main = "rf")
-barplot(as.vector(rangerfit$variable.importance), main = "ranger")
-
-# multivariate split 
-
-set.seed(1)
-
-n = 30
-p = 10
-X1 = matrix(rnorm(n*p/2), n, p/2)
-X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
-
-X = data.frame(X1, X2)
-for (j in (p/2 + 1):p) X[,j] = as.factor(X[,j])
-y = 1 + X[, 1] + X[, 2] + (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
-
-trainX = X[1:(n/2), ]
-trainY = y[1:(n/2)]
-
-testX = X[-(1:(n/2)), ]
-testY = y[-(1:(n/2))]
-
-RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 10, 
-              mtry = 5, linear.comb = 3, 
-              split.gen = "random", nsplit = 3,
-              param.control = list("split.rule" = "pca"))
-
-
-
-# RLT split 
-
-set.seed(1)
-
-n = 1000
-p = 1000
-X = matrix(rnorm(n*p), n, p)
-y = 1 + X[, 1] + X[, 9] + X[, 3] + rnorm(n)
-
-testX = matrix(rnorm(n*p), n, p)
-testy = 1 + testX[, 1] + testX[, 9] + testX[, 3]  + rnorm(n)
-
-start_time <- Sys.time()
-RLTfit <- RLT(X, y, ntrees = 100, ncores = 6, nmin = 10,
-              split.gen = "random", nsplit = 1, linear.comb = 1, 
-              resample.prob = 0.85, resample.replace = FALSE,
-              reinforcement = TRUE, importance = TRUE, 
-              param.control = list("embed.ntrees" = 100,
-                                   "embed.mtry" = 1/3,
-                                   "embed.nmin" = 10,
-                                   "embed.split.gen" = "random",
-                                   "embed.nsplit" = 1,
-                                   "embed.resample.prob" = 0.75,
-                                   "embed.mute" = 0.75,
-                                   "embed.protect" = 2))
-difftime(Sys.time(), start_time, units = "secs")
-
-barplot(as.vector(RLTfit$VarImp[1:50]), main = "RLT")
-
-get.one.tree(RLTfit, 1)
-
-mean((RLTfit$OOBPrediction - y)^2, na.rm = TRUE)
-pred = predict(RLTfit, testX)
-mean((pred$Prediction - testy)^2)
-
-
-RLTfit <- RLT(X, y, ntrees = 1000, ncores = 6, nmin = 10,
-              mtry = p, resample.prob = 0.85, 
-              importance = TRUE)
-mean((RLTfit$OOBPrediction - y)^2, na.rm = TRUE)
-pred = predict(RLTfit, testX)
-mean((pred$Prediction - testy)^2)
-barplot(as.vector(RLTfit$VarImp[1:50]), main = "RLT")

@@ -33,8 +33,8 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
                           const uvec& var_id,
                           umat& ObsTrack,
                           bool do_prediction,
-                          vec& Prediction,
-                          vec& OOBPrediction,
+                          mat& Prediction,
+                          mat& OOBPrediction,
                           vec& VarImp);
 
 void Surv_Uni_Split_A_Node(size_t Node,
@@ -171,10 +171,11 @@ void surv_cat_score_best_w(std::vector<Surv_Cat_Class>& cat_reduced,
 
 // for prediction 
 
-void Surv_Uni_Forest_Pred(mat& Pred,
+void Surv_Uni_Forest_Pred(cube& Pred,
                          const Surv_Uni_Forest_Class& SURV_FOREST,
                          const mat& X,
                          const uvec& Ncat,
+                         size_t& NFail,
                          size_t usecores,
                          size_t verbose);
 
