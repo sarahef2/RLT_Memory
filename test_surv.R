@@ -32,7 +32,7 @@ mtry = p/2
 sampleprob = 0.85
 rule = "best"
 nsplit = ifelse(rule == "best", 0, 3)
-importance = FALSE
+importance = TRUE
 
 trainX = X[1:trainn, ]
 trainY = y[1:trainn]
@@ -100,3 +100,10 @@ metric[4, 4] = mean(colMeans(abs(rangerpred$survival[, yloc] - SurvMat)))
 metric[4, 5] = object.size(rangerfit)
 
 metric
+
+group <- factor(ifelse(c(1:(p/2))==3, "Imp", "Not Imp"))
+plot(c(1:(p/2)),RLTfit$VarImp[1:200,1], pch=19, col=group, xlab="X",ylab="Avg. Diff in C-index Error")
+legend("bottomleft",
+       legend = levels(factor(group)),
+       pch = 19,
+       col = factor(levels(factor(group))))

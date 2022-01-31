@@ -140,6 +140,53 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
       }
 
       // calculate importance - NOT YET IMPLEMENTED
+      // calculate importance 
+      
+      if (importance and oobagObs.n_elem > 1)
+      {
+        uvec AllVar = conv_to<uvec>::from(unique( OneTree.SplitVar( find( OneTree.SplitVar >= 0 ) ) ));
+        
+        size_t NTest = oobagObs.n_elem;
+        
+        uvec oobY = SURV_DATA.Y(oobagObs);
+        uvec oobCensor = SURV_DATA.Censor(oobagObs);
+        vec oobpred(NTest);
+        
+        uvec proxy_id = linspace<uvec>(0, NTest-1, NTest);
+        uvec TermNode(NTest, fill::zeros);
+        
+        Find_Terminal_Node(0, OneTree, SURV_DATA.X, SURV_DATA.Ncat, proxy_id, oobagObs, TermNode);
+        
+        for (size_t i = 0; i < NTest; i++)
+          oobpred(i) = accu( cumsum( OneTree.NodeHaz(TermNode(i)) ) ); // sum of cumulative hazard as prediction
+        
+        double baseImp = 1-cindex_i( oobY, oobCensor, oobpred );  
+        
+        for (size_t j = 0; j < P; j++)
+        {
+          size_t suffle_var_j = var_id(j);
+          
+          if (!any(AllVar == suffle_var_j))
+            continue;
+          
+          uvec proxy_id = linspace<uvec>(0, NTest-1, NTest);
+          uvec TermNode(NTest, fill::zeros);
+
+          uvec oob_ind = rngl.shuffle(oobagObs);
+          vec tildex = SURV_DATA.X.col(suffle_var_j);
+          tildex = tildex.elem( oob_ind );  //shuffle( REG_DATA.X.unsafe_col(j).elem( oobagObs ) );
+          
+          Find_Terminal_Node_ShuffleJ(0, OneTree, SURV_DATA.X, SURV_DATA.Ncat, proxy_id, oobagObs, TermNode, tildex, suffle_var_j);
+          
+          // get prediction
+          for (size_t i = 0; i < NTest; i++)
+            oobpred(i) = accu( cumsum( OneTree.NodeHaz(TermNode(i)) ) ); // sum of cumulative hazard as prediction
+          
+          // record
+          AllImp(nt, j) =  1-cindex_i( oobY, oobCensor, oobpred) - baseImp;
+        }
+      }
+      
     }
   }  
   
@@ -151,6 +198,10 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
     for(size_t i = 0; i < N; i++){
       OOBPrediction.row(i)/=oob_count(i);
     }
-  }  
+  }
+  
+  if (importance)
+    VarImp = mean(AllImp, 0).t();
+  
 
 }
