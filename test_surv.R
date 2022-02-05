@@ -17,7 +17,7 @@ X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 C = rexp(n, 1)
 
 X = data.frame(X1, X2)
-xlink <- function(x) exp(x[, 3]) # + x[, 7] + x[, 16] + x[, 25] + x[, p]) 
+xlink <- function(x) exp(x[, 7] + x[, 16] + x[, 25] + x[, p]) 
 FT = rexp(n, rate = 1/xlink(X) )
 CT = rexp(n, rate = 1)
 
@@ -27,7 +27,7 @@ mean(Censor)
 
 ntrees = 2000
 ncores = 10
-nmin = 100
+nmin = 25
 mtry = p/2
 sampleprob = 0.85
 rule = "best"
@@ -77,7 +77,9 @@ metric[1, 6] = mean(unlist(lapply(RLTfit$FittedForest$SplitVar, length)))
 options(rf.cores = ncores)
 start_time <- Sys.time()
 rsffit <- rfsrc(Surv(trainY, trainCensor) ~ ., data = data.frame(trainX, trainY, trainCensor), ntree = ntrees, nodesize = nmin, mtry = mtry,
-                nsplit = nsplit, sampsize = trainn*sampleprob, importance = "none", samptype = "swor")
+                nsplit = nsplit, sampsize = trainn*sampleprob, 
+                importance = ifelse(importance==TRUE,"random", "none"), samptype = "swor",
+                block.size = 1)
 metric[2, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
 rsfpred = predict(rsffit, data.frame(testX))
@@ -101,9 +103,16 @@ metric[4, 5] = object.size(rangerfit)
 
 metric
 
-group <- factor(ifelse(c(1:(p/2))==3, "Imp", "Not Imp"))
+group <- factor(ifelse(c(1:(p/2)) %in% c(7, 16, 25, p), "Imp", "Not Imp"))
 plot(c(1:(p/2)),RLTfit$VarImp[1:200,1], pch=19, col=group, xlab="X",ylab="Avg. Diff in C-index Error")
 legend("bottomleft",
+       legend = levels(factor(group)),
+       pch = 19,
+       col = factor(levels(factor(group))))
+
+plot(rsffit$importance[1:200],RLTfit$VarImp[1:200,1], pch=19, col=group, 
+     xlab="RSF Fit",ylab="RLT Fit")
+legend("topleft",
        legend = levels(factor(group)),
        pch = 19,
        col = factor(levels(factor(group))))

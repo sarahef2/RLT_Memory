@@ -60,8 +60,8 @@ void Surv_Uni_Split_Cont(Split_Class& TempSplit,
     return;
   }
   
-  uvec obs_ranked = sort_index(x(obs_id)); // this is the sorted obs_id
-  uvec indices = obs_id(sort_index(x(obs_id))); // this is the sorted obs_id  
+  uvec obs_ranked = sort_index(x(obs_id)); // this is the sorted obs_id by x
+  uvec indices = obs_id(sort_index(x(obs_id))); // this is the sorted obs_id by x  
   
   // check identical 
   if ( x(indices(0)) == x(indices(N-1)) ) return;  
@@ -106,7 +106,7 @@ void Surv_Uni_Split_Cont(Split_Class& TempSplit,
       if (useobsweight)
         Rcout << "Weighting not implemented" << std::endl;
       else
-        temp_score = surv_cont_score_at_index(indices, Y, Censor, NFail,
+        temp_score = surv_cont_score_at_index(indices, obs_ranked, Y, Censor, NFail,
                                               All_Fail, All_Risk,  temp_ind,
                                               split_rule);
       
@@ -126,7 +126,7 @@ void Surv_Uni_Split_Cont(Split_Class& TempSplit,
     if (useobsweight)
       Rcout << "Weighting not implemented" << std::endl;
     else
-      surv_cont_score_best(indices, x, Y, Censor,  NFail,
+      surv_cont_score_best(indices, obs_ranked, x, Y, Censor,  NFail,
                            All_Fail, All_Risk, lowindex, highindex, 
                            TempSplit.value, TempSplit.score,
                            split_rule);
@@ -182,6 +182,7 @@ double surv_cont_score_at_cut(const uvec& obs_id,
 
 //For rank split
 double surv_cont_score_at_index(uvec& indices,
+                                uvec& obs_ranked,
                                const uvec& Y,
                                const uvec& Censor,
                                const size_t NFail,
@@ -199,10 +200,10 @@ double surv_cont_score_at_index(uvec& indices,
   
   for (size_t i = 0; i <= a_random_ind; i++)
   {
-    Left_Risk(Y(i)) ++;
+    Left_Risk(Y(obs_ranked(i))) ++;
     
-    if (Censor(i) == 1)
-      Left_Fail(Y(i)) ++;
+    if (Censor(obs_ranked(i)) == 1)
+      Left_Fail(Y(obs_ranked(i))) ++;
   }
   
   if (split_rule == 1)
@@ -214,7 +215,8 @@ double surv_cont_score_at_index(uvec& indices,
 
 //For best split
 void surv_cont_score_best(uvec& indices,
-                    const vec& x,
+                          uvec& obs_ranked,
+                          const vec& x,
                     const uvec& Y,
                     const uvec& Censor,
                     const size_t NFail,
@@ -233,14 +235,14 @@ void surv_cont_score_best(uvec& indices,
   
   Left_Risk.zeros();
   Left_Fail.zeros();
-  
+
   // initiate the failure and censoring counts
   for (size_t i = 0; i<= lowindex; i++)
   {
-    Left_Risk(Y(i)) ++;
+    Left_Risk(Y(obs_ranked(i))) ++;
     
-    if (Censor(i) == 1)
-      Left_Fail(Y(i)) ++;
+    if (Censor(obs_ranked(i)) == 1)
+      Left_Fail(Y(obs_ranked(i))) ++;
   }
   
   for (size_t i = lowindex; i <= highindex; i++)
@@ -251,10 +253,10 @@ void surv_cont_score_best(uvec& indices,
     while (x(indices(i)) == x(indices(i+1))){
       i++;
       
-      Left_Risk(Y(i)) ++;
+      Left_Risk(Y(obs_ranked(i))) ++;
       
-      if (Censor(i) == 1)
-        Left_Fail(Y(i)) ++;
+      if (Censor(obs_ranked(i)) == 1)
+        Left_Fail(Y(obs_ranked(i))) ++;
     }
     
     if (split_rule == 1)
@@ -269,10 +271,10 @@ void surv_cont_score_best(uvec& indices,
     
     if (i + 1 <= highindex)
     {
-      Left_Risk(Y(i+1)) ++;
+      Left_Risk(Y(obs_ranked(i+1))) ++;
       
-      if (Censor(i+1) == 1)
-        Left_Fail(Y(i+1)) ++;
+      if (Censor(obs_ranked(i+1)) == 1)
+        Left_Fail(Y(obs_ranked(i+1))) ++;
     }
 
     }
@@ -298,21 +300,21 @@ double logrank(const uvec& Left_Fail,
   
   double var = 0;
   double diff = 0;
-  
+
   for(size_t i=0; i < Left_Risk_All.n_elem; i++){
     if(All_Risk(i)>=2){
       var += Left_Risk_All(i)/All_Risk(i) * (1.0-Left_Risk_All(i)/All_Risk(i)) * All_Fail(i) * 
         (All_Risk(i) - All_Fail(i))/(All_Risk(i)-1);
+      diff += Left_Fail(i)- Left_Risk_All(i)/All_Risk(i) * All_Fail(i);
     }
-    diff += Left_Fail(i)- Left_Risk_All(i)/All_Risk(i) * All_Fail(i);
   }
 
   // Variance: N_{1j} / N_{j} * (1 - N_{1j} / N_{j}) * O_{j} * ( N_{j} - O_{j} ) / (N_{j} - 1)
 
   // Difference: O_{1j} - N_{1j} * O_{j} / N_{j}
-
-  double num = diff;
   
-  return num*num/var;
+  double num = diff*diff;
+
+  return num/var;
 }
 

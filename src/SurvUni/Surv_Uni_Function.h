@@ -124,7 +124,8 @@ double surv_cont_score_at_cut(const uvec& obs_id,
                              int split_rule);
 
 double surv_cont_score_at_index(uvec& indices,
-                               const uvec& Y,
+                                uvec& obs_ranked,
+                                const uvec& Y,
                                const uvec& Censor,
                                const size_t NFail,
                                uvec& All_Fail,
@@ -133,7 +134,8 @@ double surv_cont_score_at_index(uvec& indices,
                                int split_rule);
 
 void surv_cont_score_best(uvec& indices,
-                         const vec& x,
+                          uvec& obs_ranked,
+                          const vec& x,
                          const uvec& Y,
                          const uvec& Censor,
                          const size_t NFail,
