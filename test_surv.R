@@ -9,7 +9,7 @@ library(survival)
 set.seed(1)
 
 trainn = 250
-testn = 250
+testn = 5
 n = trainn + testn
 p = 400
 X1 = matrix(rnorm(n*p/2), n, p/2)
@@ -116,3 +116,16 @@ legend("topleft",
        legend = levels(factor(group)),
        pch = 19,
        col = factor(levels(factor(group))))
+
+start_time <- Sys.time()
+RLTfit <- RLT(trainX, trainY, trainCensor, ntrees = ntrees, ncores = ncores, 
+              nmin = nmin, mtry = mtry, nsplit = nsplit,
+              split.gen = rule, resample.prob = 0.5,
+              importance = importance, param.control = list("alpha" = 0), 
+              verbose = TRUE, resample.replace=FALSE, var.ready = TRUE)
+print(difftime(Sys.time(), start_time, units = "secs"))
+start_time <- Sys.time()
+RLTPred <- predict(RLTfit, testX, ncores = ncores, var.est = TRUE, keep.all = TRUE)
+print(difftime(Sys.time(), start_time, units = "secs"))
+
+plot(diag(RLTPred$Covariance[,,5]))

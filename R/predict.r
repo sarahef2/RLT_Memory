@@ -54,7 +54,7 @@ predict.RLT<- function(object,
     testx <- data.matrix(testx)
     
     if (var.est & !object$parameters$var.ready)
-      stop("The original forest is not fitted with `var.ready`")
+      stop("The original forest is not fitted with `var.ready` Please check the conditions and build another forest.")
 
     pred <- RegUniForestPred(object$FittedForest$SplitVar,
                              object$FittedForest$SplitValue,

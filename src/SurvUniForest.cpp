@@ -168,15 +168,23 @@ List SurvUniForestPred(arma::field<arma::ivec>& SplitVar,
   List ReturnList;
   
   mat H(Pred.n_slices, Pred.n_rows);
+  cube CumPred(size(Pred));
   
 #pragma omp parallel num_threads(usecores)
-#pragma omp for schedule(static)
+{
+  #pragma omp for schedule(static)
   for (size_t i = 0; i < Pred.n_slices; i++)
   {
     H.row(i) = mean(Pred.slice(i), 1).t();
+    CumPred.slice(i) = cumsum(Pred.slice(i), 0);
   }
   
-  ReturnList["hazard"] = H;  
+}
+  
+  ReturnList["hazard"] = H; 
+  
+  mat CumHaz = cumsum(H,1);
+  ReturnList["CumHazard"] = CumHaz; 
   
   mat Surv(H);
   vec surv(H.n_rows, fill::ones);
@@ -192,6 +200,71 @@ List SurvUniForestPred(arma::field<arma::ivec>& SplitVar,
   
   if (keep_all)
     ReturnList["Allhazard"] = Pred;
+  
+  
+  if (VarEst)
+  {
+    size_t B = (size_t) SURV_FOREST.SplitVarList.size()/2;
+    int tmpts = Surv.n_cols;
+    int N = Surv.n_rows;
+
+    arma::cube Cov_Est(tmpts, tmpts, N, fill::zeros);
+    arma::cube Tree_Cov_Est(tmpts, tmpts, N, fill::zeros);
+    arma::cube Dep_Cov_Est(tmpts, tmpts, N, fill::zeros);
+    arma::mat tmp_slice;
+    size_t count = 0;
+
+    for(size_t n = 0; n < N; n++){
+        tmp_slice = CumPred.slice(n);
+        for(size_t nt = 0; nt < B; nt++){
+          for(size_t tm = 0; tm < tmpts; tm++){
+            for(size_t tm2 = tm; tm2 < tmpts; tm2++){
+              Tree_Cov_Est(tm, tm2, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt+B)) *
+                (tmp_slice(tm2, nt) - tmp_slice(tm2, nt+B))/2;
+              if(tm!=tm2){
+                Tree_Cov_Est(tm2, tm, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt+B)) * 
+                  (tmp_slice(tm2, nt) - tmp_slice(tm2, nt+B))/2;
+              }
+            }
+          }
+        }
+        Tree_Cov_Est.slice(n) = Tree_Cov_Est.slice(n)/B;
+        
+        for(size_t nt = 0;  nt < 2*B; nt++){
+          for(size_t tm = 0; tm < tmpts; tm++){
+            for(size_t tm2 = tm; tm2 < tmpts; tm2++){
+              Dep_Cov_Est(tm, tm2, n) += (tmp_slice(tm, nt) - CumHaz(n, tm)) *
+                (tmp_slice(tm2, nt) - CumHaz(n, tm2));
+              if(tm!=tm2){
+                Dep_Cov_Est(tm2, tm, n) += (tmp_slice(tm, nt) - CumHaz(n, tm)) *
+                  (tmp_slice(tm2, nt) - CumHaz(n, tm2));
+              }
+            }
+          }
+          // for(size_t nt2 = nt; nt2 < 2*B; nt2++){
+          //   count++;
+          //   for(size_t tm = 0; tm < tmpts; tm++){
+          //     for(size_t tm2 = tm; tm2 < tmpts; tm2++){
+          //       Dep_Cov_Est(tm, tm2, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt2)) *
+          //         (tmp_slice(tm2, nt) - tmp_slice(tm2, nt2))/2;
+          //       if(tm!=tm2){
+          //         Dep_Cov_Est(tm2, tm, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt2)) *
+          //           (tmp_slice(tm2, nt) - tmp_slice(tm2, nt2))/2;
+          //       }
+          //     }
+          //   }
+          // }
+        }
+        
+        Dep_Cov_Est.slice(n) = Dep_Cov_Est.slice(n)/(2*B);
+        
+        Cov_Est.slice(n) = Tree_Cov_Est.slice(n) - Dep_Cov_Est.slice(n);
+      }
+      
+    ReturnList["Covariance"] = Cov_Est;
+    ReturnList["AllCumPred"] = CumPred;
+  }
+  
   
   return ReturnList;
   }

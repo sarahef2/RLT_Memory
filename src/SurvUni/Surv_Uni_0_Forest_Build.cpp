@@ -139,7 +139,6 @@ void Surv_Uni_Forest_Build(const RLT_SURV_DATA& SURV_DATA,
         }
       }
 
-      // calculate importance - NOT YET IMPLEMENTED
       // calculate importance 
       
       if (importance and oobagObs.n_elem > 1)
