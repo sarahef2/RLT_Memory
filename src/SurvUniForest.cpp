@@ -198,73 +198,51 @@ List SurvUniForestPred(arma::field<arma::ivec>& SplitVar,
   
   ReturnList["Survival"] = Surv;  
   
-  if (keep_all)
+  if (keep_all){
     ReturnList["Allhazard"] = Pred;
-  
+    ReturnList["AllCHF"] = CumPred;
+  }
   
   if (VarEst)
   {
+
+    size_t N = CumPred.n_slices;
+    size_t ntrees = CumPred.n_cols;
+    size_t tmpts = CumPred.n_rows;
     size_t B = (size_t) SURV_FOREST.SplitVarList.size()/2;
-    int tmpts = Surv.n_cols;
-    int N = Surv.n_rows;
 
-    arma::cube Cov_Est(tmpts, tmpts, N, fill::zeros);
-    arma::cube Tree_Cov_Est(tmpts, tmpts, N, fill::zeros);
-    arma::cube Dep_Cov_Est(tmpts, tmpts, N, fill::zeros);
+    arma::mat Tree_Var_Est(N, tmpts, fill::zeros);
     arma::mat tmp_slice;
-    size_t count = 0;
-
+    arma::mat tmp_diff;
+    arma::cube Tree_Cov_Est(tmpts, tmpts, N, fill::zeros);
+    arma::cube Cov_Est(tmpts, tmpts, N, fill::zeros);
+    
     for(size_t n = 0; n < N; n++){
-        tmp_slice = CumPred.slice(n);
-        for(size_t nt = 0; nt < B; nt++){
-          for(size_t tm = 0; tm < tmpts; tm++){
-            for(size_t tm2 = tm; tm2 < tmpts; tm2++){
-              Tree_Cov_Est(tm, tm2, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt+B)) *
+      tmp_slice = CumPred.slice(n);
+      for(size_t nt = 0; nt < B; nt++){
+        for(size_t tm = 0; tm < tmpts; tm++){
+          for(size_t tm2 = tm; tm2 < tmpts; tm2++){
+            Tree_Cov_Est(tm, tm2, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt+B)) *
+              (tmp_slice(tm2, nt) - tmp_slice(tm2, nt+B))/2;
+            if(tm==tm2){
+            }else{
+              Tree_Cov_Est(tm2, tm, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt+B)) *
                 (tmp_slice(tm2, nt) - tmp_slice(tm2, nt+B))/2;
-              if(tm!=tm2){
-                Tree_Cov_Est(tm2, tm, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt+B)) * 
-                  (tmp_slice(tm2, nt) - tmp_slice(tm2, nt+B))/2;
-              }
             }
           }
         }
-        Tree_Cov_Est.slice(n) = Tree_Cov_Est.slice(n)/B;
-        
-        for(size_t nt = 0;  nt < 2*B; nt++){
-          for(size_t tm = 0; tm < tmpts; tm++){
-            for(size_t tm2 = tm; tm2 < tmpts; tm2++){
-              Dep_Cov_Est(tm, tm2, n) += (tmp_slice(tm, nt) - CumHaz(n, tm)) *
-                (tmp_slice(tm2, nt) - CumHaz(n, tm2));
-              if(tm!=tm2){
-                Dep_Cov_Est(tm2, tm, n) += (tmp_slice(tm, nt) - CumHaz(n, tm)) *
-                  (tmp_slice(tm2, nt) - CumHaz(n, tm2));
-              }
-            }
-          }
-          // for(size_t nt2 = nt; nt2 < 2*B; nt2++){
-          //   count++;
-          //   for(size_t tm = 0; tm < tmpts; tm++){
-          //     for(size_t tm2 = tm; tm2 < tmpts; tm2++){
-          //       Dep_Cov_Est(tm, tm2, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt2)) *
-          //         (tmp_slice(tm2, nt) - tmp_slice(tm2, nt2))/2;
-          //       if(tm!=tm2){
-          //         Dep_Cov_Est(tm2, tm, n) += (tmp_slice(tm, nt) - tmp_slice(tm, nt2)) *
-          //           (tmp_slice(tm2, nt) - tmp_slice(tm2, nt2))/2;
-          //       }
-          //     }
-          //   }
-          // }
-        }
-        
-        Dep_Cov_Est.slice(n) = Dep_Cov_Est.slice(n)/(2*B);
-        
-        Cov_Est.slice(n) = Tree_Cov_Est.slice(n) - Dep_Cov_Est.slice(n);
       }
-      
-    ReturnList["Covariance"] = Cov_Est;
-    ReturnList["AllCumPred"] = CumPred;
+      Cov_Est.slice(n)=cov(tmp_slice.t());
+    }
+    
+    Tree_Cov_Est/=B;
+
+    arma::cube cov = Tree_Cov_Est - Cov_Est;
+
+    ReturnList["cov.estimation"] = Cov_Est;
+    ReturnList["tree.cov"] = Tree_Cov_Est;
+    ReturnList["Covariance"] = cov;
   }
-  
   
   return ReturnList;
   }

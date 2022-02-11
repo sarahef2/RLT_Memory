@@ -129,3 +129,7 @@ RLTPred <- predict(RLTfit, testX, ncores = ncores, var.est = TRUE, keep.all = TR
 print(difftime(Sys.time(), start_time, units = "secs"))
 
 plot(diag(RLTPred$Covariance[,,5]))
+plot(diag(RLTPred$Covariance[,,4]))
+plot(diag(RLTPred$Covariance[,,3]))
+plot(diag(RLTPred$Covariance[,,2]))
+plot(diag(RLTPred$Covariance[,,1]))
