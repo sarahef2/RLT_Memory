@@ -1,18 +1,21 @@
 Package: RLT
 Type: Package
 Title: Reinforcement Learning Trees
-Version: 4.1.2
+Version: 4.1.3
 Authors@R: c(
     person("Ruoqing", "Zhu",
            email = "teazrq@gmail.com", 
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-0753-5716")),
     person("Sarah", "Formentini",
-           email = "sarahef2@illinois.edu", 
+           email = "sarahef2@illinois.edu",
            role = c("aut")),
     person("Haowen", "Zhou",
            email = "pja9pw@virginia.edu", 
-           role = c("ctb"))
+           role = c("ctb")),
+    person("Zhechao", "Huang",
+           email = "huangzhechao1995@gmail.com", 
+           role = c("ctb")
     )
 Description: Random forest with a variety of additional features for regression, 
     classification and survival analysis. The features include: parallel computing 
