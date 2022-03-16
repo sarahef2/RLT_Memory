@@ -16,9 +16,9 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
                         const vec& Y,
                         const vec& obs_weight,
                         double penalty,
-                        int split_gen,
-                        int split_rule,
-                        int nsplit,
+                        size_t split_gen,
+                        size_t split_rule,
+                        size_t nsplit,
                         double alpha,
                         bool useobsweight,
                         Rand& rngl)
@@ -32,7 +32,7 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
 
   if (split_gen == 1) // random split
   {
-    for (int k = 0; k < nsplit; k++)
+    for (size_t k = 0; k < nsplit; k++)
     {
       // generate a random cut off
       size_t temp_id = obs_id( rngl.rand_sizet(0,N-1) );
@@ -109,10 +109,21 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
   
   if (split_gen == 2) // rank split
   {
-    for (int k = 0; k < nsplit; k++)
+    for (size_t k = 0; k < nsplit; k++)
     {
       // generate a cut off
       size_t temp_ind = rngl.rand_sizet( lowindex, highindex );
+      
+      // there could be ties here. need to fix this issue. 
+      if ( x(indices(temp_ind)) == x(indices(temp_ind+1)) )
+      {
+        if (rngl.rand_01() > 0.5)
+        { // move up
+          while( x(indices(temp_ind)) == x(indices(temp_ind+1)) ) temp_ind++;
+        }else{ // move down
+          while( x(indices(temp_ind)) == x(indices(temp_ind+1)) ) temp_ind--;
+        }
+      }
       
       if (useobsweight)
         temp_score = reg_uni_cont_score_rank_sub_w(indices, Y, temp_ind, obs_weight);

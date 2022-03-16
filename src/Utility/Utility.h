@@ -91,6 +91,14 @@ public:
     
   };
   
+  // Random 01
+  double rand_01(){
+    
+    //boost::uniform_01<dqrng::xoshiro256plus> rand(this -> lrng);
+    boost::random::uniform_real_distribution<double> rand(0, 1);
+    return  rand(this -> lrng);
+  };
+  
   // Discrete Uniform
   arma::uvec rand_uvec(size_t min, size_t max, size_t Num){
     

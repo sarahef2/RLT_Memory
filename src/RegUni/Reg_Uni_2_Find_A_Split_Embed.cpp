@@ -56,7 +56,7 @@ void Reg_Uni_Find_A_Split_Embed(Split_Class& OneSplit,
     
   // start fitting embedded model 
   
-  size_t N = Embed_Param.N;
+  // size_t N = Embed_Param.N;
   size_t P = Embed_Param.P;
   size_t ntrees = Embed_Param.ntrees;
 

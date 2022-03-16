@@ -25,7 +25,7 @@ y = pmin(FT, CT)
 Censor = as.numeric(FT <= CT)
 mean(Censor)
 
-ntrees = 2000
+ntrees = 200
 ncores = 10
 nmin = 25
 mtry = p/2

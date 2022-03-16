@@ -4,11 +4,12 @@ library(RLT)
 library(randomForest)
 library(randomForestSRC)
 library(ranger)
+library(parallel)
 
 set.seed(1)
 
-trainn = 10000
-testn = 10000
+trainn = 1000
+testn = 1000
 n = trainn + testn
 p = 400
 X1 = matrix(rnorm(n*p/2), n, p/2)
@@ -20,8 +21,8 @@ y = 1 + X[, 2] + 2 * (X[, p/2+1] %in% c(1, 3)) + rnorm(n)
 #y = 1 + rowSums(X[, 1:(p/4)]) + rowSums(data.matrix(X[, (p/2) : (p/1.5)])) + rnorm(n)
 #y = 1 + X[, 1] + rnorm(n)
 
-ntrees = 5
-ncores = 10
+ntrees = 100
+ncores = detectCores() - 1
 nmin = 60
 mtry = p/2
 sampleprob = 0.85
@@ -44,7 +45,7 @@ start_time <- Sys.time()
 RLTfit <- RLT(trainX, trainY, ntrees = ntrees, ncores = ncores, 
               nmin = nmin, mtry = mtry, nsplit = nsplit,
               split.gen = rule, resample.prob = sampleprob,
-              importance = importance, param.control = list("alpha" = 0), 
+              importance = importance, param.control = list("alpha" = 0),
               verbose = TRUE)
 metric[1, 1] = difftime(Sys.time(), start_time, units = "secs")
 start_time <- Sys.time()
@@ -110,8 +111,8 @@ barplot(as.vector(rangerfit$variable.importance), main = "ranger")
 
 set.seed(1)
 
-n = 30
-p = 10
+n = 300
+p = 100
 X1 = matrix(rnorm(n*p/2), n, p/2)
 X2 = matrix(as.integer(runif(n*p/2)*3), n, p/2)
 
@@ -125,11 +126,11 @@ trainY = y[1:(n/2)]
 testX = X[-(1:(n/2)), ]
 testY = y[-(1:(n/2))]
 
-RLTfit <- RLT(X, y, ntrees = 1, ncores = 1, nmin = 3, 
-              mtry = 7, linear.comb = 4, resample.replace = TRUE, resample.prob = 0.3,
-              split.gen = "best", nsplit = 3,
-              param.control = list("split.rule" = "pca"),
-              seed = RLTfit$parameters$seed)
+RLTfit <- RLT(X, y, ntrees = 100, ncores = 15, nmin = 3, 
+              mtry = 50, linear.comb = 4, 
+              resample.replace = TRUE, resample.prob = 0.6,
+              split.gen = "rank", nsplit = 1, 
+              param.control = list("split.rule" = "save"))
 
 
 
@@ -146,7 +147,7 @@ testX = matrix(rnorm(n*p), n, p)
 testy = 1 + testX[, 1] + testX[, 9] + testX[, 3]  + rnorm(n)
 
 start_time <- Sys.time()
-RLTfit <- RLT(X, y, ntrees = 100, ncores = 6, nmin = 10,
+RLTfit <- RLT(X, y, ntrees = 100, ncores = 15, nmin = 10,
               split.gen = "random", nsplit = 1, linear.comb = 1, 
               resample.prob = 0.85, resample.replace = FALSE,
               reinforcement = TRUE, importance = TRUE, 

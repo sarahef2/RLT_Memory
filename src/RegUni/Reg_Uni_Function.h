@@ -82,9 +82,9 @@ void Reg_Uni_Split_Cont(Split_Class& TempSplit,
                         const vec& Y,
                         const vec& obs_weight,
                         double penalty,
-                        int split_gen,
-                        int split_rule,
-                        int nsplit,
+                        size_t split_gen,
+                        size_t split_rule,
+                        size_t nsplit,
                         double alpha,
                         bool useobsweight,
                         Rand& rngl);
@@ -96,9 +96,9 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
                        const vec& Y,
                        const vec& obs_weight,
                        double penalty,
-                       int split_gen,
-                       int split_rule,
-                       int nsplit,
+                       size_t split_gen,
+                       size_t split_rule,
+                       size_t nsplit,
                        double alpha,
                        bool useobsweight,
                        Rand& rngl);
@@ -252,5 +252,24 @@ double reg_uni_cont_score_cut_full_w(const vec& xj,
                                      const vec& y,
                                      double temp_cut,
                                      const vec& w);
+
+double reg_uni_cont_score_rank_full(const vec& y,
+                                    size_t a_random_ind);
   
+double reg_uni_cont_score_rank_full_w(const vec& y,
+                                      size_t a_random_ind,
+                                      const vec& w);
+
+arma::mat sir(arma::mat& newX, 
+              arma::vec& newY, 
+              arma::vec& newW,
+              bool useobsweight,
+              size_t nslice);
+
+arma::mat save(arma::mat& newX, 
+               arma::vec& newY, 
+               arma::vec& newW,
+               bool useobsweight,
+               size_t nslice);
+
 #endif

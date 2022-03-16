@@ -16,9 +16,9 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
                        const vec& Y,
                        const vec& obs_weight,
                        double penalty,
-                       int split_gen,
-                       int split_rule,
-                       int nsplit,
+                       size_t split_gen,
+                       size_t split_rule,
+                       size_t nsplit,
                        double alpha,
                        bool useobsweight,
                        Rand& rngl)
@@ -96,7 +96,7 @@ void Reg_Uni_Split_Cat(Split_Class& TempSplit,
   
   if ( split_gen == 1 or split_gen == 2 )
   {
-    for ( int k = 0; k < nsplit; k++ )
+    for ( size_t k = 0; k < nsplit; k++ )
     {
       size_t temp_cat = rngl.rand_sizet( lowindex, highindex);
       

@@ -29,39 +29,63 @@ void Reg_Uni_Comb_Split_Cont(Comb_Split_Class& OneSplit,
   
   // some parameters
   // there are three split_rule types: sir (default), save, and pca
-  size_t N = newX.n_rows;
+  size_t N = obs_id.n_elem;
+  size_t P = use_var.n_elem;
   size_t split_rule = Param.split_rule;
   size_t split_gen = Param.split_gen;
   size_t nsplit = Param.nsplit;
 
   // find splitting rule 
-  mat V;
+  vec v;
   
-  if (split_rule == 1) // default sir
+  if (split_rule == 1 and N >= 15) // default sir
   {
-    Rcout << "using SIR split \n" << std::endl;
+    Rcout << "using SIR split --- not done yet, switching to pca \n" << std::endl;
+    split_rule = 3;
+    
+    //mat M = sir(newX, newY, newW, useobsweight, sqrt(N));
+    
+    //mat xcov = wcov(newX, newW, useobsweight);
+    
+    //vec eigval;
+    //mat eigvec;
+    //eig_sym(eigval, eigvec, M);
+    
+    // eigenvalues are ascending
+    //v = eigvec.col( eigvec.n_cols );
   }
   
-  if (split_rule == 2) // save
+  if (split_rule == 2 and N >= 15) // save
   {
-    Rcout << "using SAVE split \n" << std::endl;    
+    Rcout << "using SAVE split --- not done yet, switching to pca \n" << std::endl;
+    split_rule = 3;
+    
+    //mat M = save(newX, newY, newW, useobsweight, sqrt(N));
+    
+    //vec eigval;
+    //mat eigvec;
+    //eig_sym(eigval, eigvec, M);
+    
+    // eigenvalues are ascending
+    //v = eigvec.col( eigvec.n_cols );
   }
   
-  if (split_rule == 3) // pca
+  if (split_rule == 3 or N < 15) // pca
   {
     Rcout << "using PCA split \n" << std::endl;
 
-    V = princomp(newX);
+    mat coeff = princomp(newX);
     
-    Rcout << "PCA loadings \n" << V << std::endl;
+    // eigenvalues are descending
+    v = coeff.col(0);
   }
   
   // record splitting variable and loading
-  OneSplit.var = use_var;
-  OneSplit.load = V.col(0);
+  OneSplit.var.subvec(0, P-1) = use_var;
+  OneSplit.load.subvec(0, P-1) = v;
   
   // search for the best split
-  arma::vec U1 = newX * V.col(0);
+  arma::vec U1 = newX * v;
   //Rcout << "new linear combination x \n" << U1 << std::endl;
   
   if (split_gen == 1) // random split
@@ -84,8 +108,8 @@ void Reg_Uni_Comb_Split_Cont(Comb_Split_Class& OneSplit,
       
       if (temp_score > OneSplit.score)
       {
-        OneSplit.score = temp_score;
         OneSplit.value = temp_cut;
+        OneSplit.score = temp_score;
       }
     }
     return;
@@ -96,8 +120,8 @@ void Reg_Uni_Comb_Split_Cont(Comb_Split_Class& OneSplit,
   U1 = U1(indices);
   newY = newY(indices);
   if (useobsweight) newW = newW(indices);
-
-  if (U1(0) == U1(U1.n_elem)) return;
+  
+  if (U1(0) == U1(U1.n_elem-1)) return;
   
   double alpha = Param.alpha;
   
@@ -134,13 +158,49 @@ void Reg_Uni_Comb_Split_Cont(Comb_Split_Class& OneSplit,
   
   if (split_gen == 2) // rank split
   {
-    Rcout << "Rank split" << std::endl;
+    Rcout << "Rank split\n" << std::endl;
+    
+    for (size_t k = 0; k < nsplit; k++)
+    {
+      
+      if ( U1(lowindex) == U1(lowindex+1) or U1(highindex) == U1(highindex+1) )
+        Rcout << "still something wrong here " << std::endl;
+      
+      // generate a cut off
+      size_t temp_ind = rngl.rand_sizet( lowindex, highindex );
+      double temp_score = -1;
+      
+      // there could be ties here. need to fix this issue. 
+      if (U1(temp_ind) == U1(temp_ind+1))
+      {
+        //Rcout << "ties at ranked split, move index ..." << std::endl;
+        
+        if (rngl.rand_01() > 0.5)
+        { // move up
+          while(U1(temp_ind) == U1(temp_ind+1)) temp_ind++;
+        }else{ // move down
+          while(U1(temp_ind) == U1(temp_ind+1)) temp_ind--;
+        }
+      }
+
+      if (useobsweight)
+        temp_score = reg_uni_cont_score_rank_full_w(newY, temp_ind, newW);
+      else
+        temp_score = reg_uni_cont_score_rank_full(newY, temp_ind);
+      
+      if (temp_score > OneSplit.score)
+      {
+        OneSplit.value = (U1(temp_ind) + U1(temp_ind+1))/2 ;
+        OneSplit.score = temp_score;
+      }
+    }
+    
     return;
   }
   
   if (split_gen == 3) // best split
   {
-    Rcout << "Best split" << std::endl;
+    Rcout << "Best split\n" << std::endl;
     return;
   }
 
@@ -207,3 +267,232 @@ double reg_uni_cont_score_cut_full_w(const vec& x,
   return -1;
   
 }
+
+double reg_uni_cont_score_rank_full(const vec& y,
+                                    size_t a_random_ind)
+{
+  size_t N = y.n_elem;
+  
+  double LeftSum = 0;
+  double RightSum = 0;  
+
+  //Count the number of observations with a smaller or equal index
+  for (size_t i = 0; i <= a_random_ind; i++)
+    LeftSum += y(i);
+  
+  //Count the other observations
+  for (size_t i = a_random_ind+1; i < N; i++)
+    RightSum += y(i);
+  
+  return LeftSum*LeftSum/(a_random_ind + 1) + RightSum*RightSum/(N - a_random_ind - 1);
+}
+
+double reg_uni_cont_score_rank_full_w(const vec& y,
+                                      size_t a_random_ind,
+                                      const vec& w)
+{
+  size_t N = y.n_elem;
+  
+  double LeftSum = 0;
+  double RightSum = 0;
+  double Left_w = 0;
+  double Right_w = 0;
+  
+  //Count the number of observations with a smaller or equal index
+  for (size_t i = 0; i <= a_random_ind; i++)
+  {
+    LeftSum += y(i)*w(i);
+    Left_w += w(i);
+  }
+  
+  //Count the other observations
+  for (size_t i = a_random_ind+1; i < N; i++)
+  {
+    RightSum += y(i)*w(i);
+    Right_w += w(i);
+  }
+  
+  return LeftSum*LeftSum/Left_w + RightSum*RightSum/Right_w;
+}
+
+
+arma::mat sir(arma::mat& newX, 
+              arma::vec& newY, 
+              arma::vec& newW,
+              bool useobsweight,
+              size_t nslice)
+{
+  uvec index = sort_index(newY);
+  size_t N = newY.n_elem;
+  size_t P = newX.n_cols;
+
+  mat M(P, P, fill::zeros);
+  
+  mat sortedx = newX.rows(index);
+  vec sortedy = newY(index);
+  
+  size_t slice_size = (size_t) N/nslice;
+  size_t res = N - nslice*slice_size;
+  
+  if (useobsweight)
+  {
+    // apply weights
+    sortedx.each_col() %= newW;
+    rowvec xbar = sum(sortedx, 0) / sum(newW);
+    
+    // obs index
+    size_t rownum = 0;
+    
+    for (size_t k =0; k < nslice; k++)
+    {
+      // sample size in this slice
+      // first res slices has one more obs
+      size_t nh = (k < res) ? (slice_size + 1) : slice_size;
+      
+      // slice weight
+      double wh = sum(newW.subvec(rownum, rownum + nh - 1));
+
+      // weighted slice mean
+      rowvec xhbar = sum(sortedx.rows(rownum, rownum + nh - 1), 0) / wh;
+      
+      // next slice
+      rownum += nh;
+
+      // add to estimation matrix 
+      M += (xhbar - xbar).t() * (xhbar - xbar) * wh;
+    }
+    
+  }else{
+    // x mean
+    rowvec xbar = mean(sortedx, 0);
+      
+    // obs index
+    size_t rownum = 0;
+    
+    for (size_t k =0; k < nslice; k++) 
+    {
+      // sample size in this slice
+      // first res slices has one more obs
+      size_t nh = (k < res) ? (slice_size + 1) : slice_size;
+      
+      // slice mean
+      rowvec xhbar = mean(sortedx.rows(rownum, rownum + nh - 1), 0);
+
+      // next slice
+      rownum += nh;
+      
+      // add to estimation matrix 
+      M += (xhbar - xbar).t() * (xhbar - xbar) * nh;
+    }
+  }
+  
+  return M;
+}
+
+// arma::mat wcov(arma::mat& newX, 
+//                arma::vec& newW, 
+//                bool useobsweight)
+// {
+//   if (useobsweight)
+//   {
+//     // apply weights
+//     // weighted x mean
+//     rowvec xwbar = sum(newX.each_col() % newW, 0) / sum(newW);
+//     
+//     // cov
+//     mat xrw = newX.each_row() - xwbar;
+//     mat xrw = newX.each_col() % sqrt(newW);    
+//     
+//     return xrw.t() * xrw / (1.0 -  norm(newW, "fro"));
+// 
+//   }else{
+//     return var(newX);
+//   }
+// }
+
+
+
+arma::mat save(arma::mat& newX, 
+               arma::vec& newY, 
+               arma::vec& newW,
+               bool useobsweight,
+               size_t nslice)
+{
+  uvec index = sort_index(newY);
+  size_t N = newY.n_elem;
+  size_t P = newX.n_cols;
+  
+  mat M(P, P, fill::zeros);
+  
+  mat sortedx = newX.rows(index);
+  vec sortedy = newY(index);
+  
+  size_t slice_size = (size_t) N/nslice;
+  size_t res = N - nslice*slice_size;
+  mat Diag(P, P, fill::eye);
+  
+  if (useobsweight)
+  {
+    
+    // obs index
+    size_t rownum = 0;
+    
+    for (size_t k =0; k < nslice; k++) 
+    {
+      // sample size in this slice
+      // first res slices has one more obs
+      size_t nh = (k < res) ? (slice_size + 1) : slice_size;
+      
+      // slice data
+      mat xslice = sortedx.rows(rownum, rownum + nh - 1);
+      vec wslice = newW.subvec(rownum, rownum + nh - 1);
+      
+      // next slice
+      rownum += nh;
+      
+      // center xslice
+      xslice.each_row() -= mean(xslice.each_col() % wslice, 0); 
+      
+      // apply weight
+      xslice.each_col() %= sqrt(wslice);
+      
+      // slice cov and M
+      double w = sum(wslice);
+      w = 1 - norm(wslice, "fro") / w / w;
+      
+      mat C = Diag - xslice.t() * xslice / w;
+      M += C * C.t();
+    }
+    
+    
+  }else{
+    // obs index
+    size_t rownum = 0;
+    
+    for (size_t k =0; k < nslice; k++) 
+    {
+      // sample size in this slice
+      // first res slices has one more obs
+      size_t nh = (k < res) ? (slice_size + 1) : slice_size;
+      
+      // slice data
+      mat xslice = sortedx.rows(rownum, rownum + nh - 1);
+      
+      // next slice
+      rownum += nh;
+      
+      Rcout << "k= " << k << std::endl;
+      
+      // slice cov and M
+      mat C = Diag - arma::cov(xslice);
+      M += C * C.t();
+      
+      Rcout << "complete " << k << std::endl;
+    }
+  }
+  
+  return M;
+  
+}
+
+

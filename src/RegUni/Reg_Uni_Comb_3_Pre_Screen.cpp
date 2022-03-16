@@ -61,7 +61,6 @@ void Reg_Uni_Comb_Pre_Screen(uvec& var,
                          0.0, // alpha
                          useobsweight,
                          rngl);
-      
     }
     
     score(j) = TempSplit.score;

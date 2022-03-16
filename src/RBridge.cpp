@@ -40,6 +40,3 @@ arma::uvec mysample(size_t Num, size_t min, size_t max, size_t seed)
   
   return(z);
 }
-
-
-

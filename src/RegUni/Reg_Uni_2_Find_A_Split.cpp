@@ -19,7 +19,6 @@ void Reg_Uni_Find_A_Split(Split_Class& OneSplit,
 {
   
   size_t mtry = Param.mtry;
-  size_t nmin = Param.nmin;
   double alpha = Param.alpha;
   bool useobsweight = Param.useobsweight;
   //bool usevarweight = Param.usevarweight;
